@@ -3,10 +3,11 @@ import { prisma } from '@/lib/prisma';
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const id = parseInt(params.id);
+        const { id } = await params;
+        const categoryId = parseInt(id);
 
         // Delete related products first if needed, or rely on cascade if configured
         // For simplicity, we'll try to delete directly. 

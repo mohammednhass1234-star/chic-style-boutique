@@ -3,10 +3,11 @@ import { prisma } from "@/lib/prisma";
 
 export async function PATCH(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const productId = parseInt(params.id);
+        const { id } = await params;
+        const productId = parseInt(id);
         const { isOfferActive, offerExpiry } = await request.json();
 
         const updatedProduct = await prisma.product.update({
