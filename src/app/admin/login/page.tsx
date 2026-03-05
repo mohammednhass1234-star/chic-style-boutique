@@ -43,43 +43,6 @@ export default function AdminLogin() {
                 <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>يرجى إدخال بياناتك للوصول إلى لوحة التحكم</p>
 
                 <form onSubmit={handleSubmit}>
-                    <div style={{ marginBottom: '1rem' }}>
-                        <input
-                            type="email"
-                            placeholder="البريد الإلكتروني"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            style={{
-                                width: '100%',
-                                padding: '1rem',
-                                borderRadius: '8px',
-                                border: '1px solid #ddd',
-                                textAlign: 'center',
-                                fontSize: '1.1rem'
-                            }}
-                        />
-                    </div>
-                    <div style={{ marginBottom: '1.5rem' }}>
-                        <input
-                            type="password"
-                            placeholder="كلمة السر"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            style={{
-                                width: '100%',
-                                padding: '1rem',
-                                borderRadius: '8px',
-                                border: '1px solid #ddd',
-                                textAlign: 'center',
-                                fontSize: '1.1rem'
-                            }}
-                        />
-                    </div>
-
-                    {error && <p style={{ color: '#f44336', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{error}</p>}
-
                     <button
                         type="submit"
                         disabled={isLoading}
@@ -97,18 +60,9 @@ export default function AdminLogin() {
                             marginBottom: '1rem'
                         }}
                     >
-                        {isLoading ? 'جاري التحقق...' : 'تسجيل الدخول'}
+                        {isLoading ? 'جاري الدخول...' : 'الدخول إلى لوحة التحكم'}
                     </button>
-
-                    <div style={{ marginTop: '1rem' }}>
-                        <button
-                            type="button"
-                            onClick={() => router.push('/admin/forgot-password')}
-                            style={{ background: 'none', border: 'none', color: 'var(--accent-rose)', cursor: 'pointer', textDecoration: 'underline' }}
-                        >
-                            نسيت كلمة السر؟
-                        </button>
-                    </div>
+                    {error && <p style={{ color: '#f44336', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{error}</p>}
                 </form>
             </div>
         </div>
