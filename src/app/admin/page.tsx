@@ -46,11 +46,36 @@ export default function AdminDashboard() {
         fetchData();
     }, []);
 
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/admin/logout', { method: 'POST' });
+            window.location.href = '/admin/login';
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+    };
+
     return (
         <div className="container" dir="rtl">
-            <header className={styles.sectionHeader} style={{ marginTop: '2rem' }}>
-                <h1 className="elegant-text">لوحة التحكم - Chic Jeune</h1>
-                <p>إدارة المنتجات والطلبات بكفاءة عالية</p>
+            <header className={styles.sectionHeader} style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                    <h1 className="elegant-text">لوحة التحكم - Chic Jeune</h1>
+                    <p>إدارة المنتجات والطلبات بكفاءة عالية</p>
+                </div>
+                <button
+                    onClick={handleLogout}
+                    style={{
+                        padding: '0.6rem 1.2rem',
+                        background: '#f44336',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold'
+                    }}
+                >
+                    تسجيل الخروج
+                </button>
             </header>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
