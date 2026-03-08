@@ -16,7 +16,7 @@ export default function Footer() {
                     <h3 className="elegant-text">Chic Jeune - شيك جون</h3>
                     <p>أناقة تليق بكِ وبأطفالكِ</p>
                     <div className={styles.contactButtons} style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                        <a href="https://wa.me/212535602375" target="_blank" rel="noopener noreferrer" className={styles.contactBtn + ' ' + styles.whatsapp}>
+                        <a href="https://wa.me/212667519240" target="_blank" rel="noopener noreferrer" className={styles.contactBtn + ' ' + styles.whatsapp}>
                             <Phone size={18} /> تواصل عبر واتساب
                         </a>
                         <a href="https://www.instagram.com/chicjeune2021?igsh=MXRtOHlkcTZhNTBvNQ==" target="_blank" rel="noopener noreferrer" className={styles.contactBtn + ' ' + styles.instagram}>
@@ -42,7 +42,7 @@ export default function Footer() {
                     <h3>{t('contactez_nous')}</h3>
                     <ul>
                         <li><MapPin size={16} /> حي زواغة، فاس</li>
-                        <li><Phone size={16} /> 0535602375</li>
+                        <li><Phone size={16} /> 0667519240</li>
                     </ul>
                     <div className={styles.socials} style={{ marginTop: '1rem' }}>
                         <a href="https://www.instagram.com/chicjeune2021?igsh=MXRtOHlkcTZhNTBvNQ==" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}><Instagram size={18} /></a>
