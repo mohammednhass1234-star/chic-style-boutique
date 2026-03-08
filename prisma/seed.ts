@@ -1,7 +1,24 @@
 import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
+    // Admin setup
+    const adminEmail = 'mohammednhass1234@gmail.com';
+    const adminPassword = 'Mohammed12341234';
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(adminPassword, salt);
+
+    await prisma.admin.upsert({
+        where: { email: adminEmail },
+        update: { password: hashedPassword },
+        create: {
+            email: adminEmail,
+            password: hashedPassword
+        }
+    });
+
+    console.log(`Admin ${adminEmail} initialized.`);
 
     // Sample Products for Women
     const womenProducts = [

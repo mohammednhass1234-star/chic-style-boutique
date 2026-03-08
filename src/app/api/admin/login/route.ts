@@ -4,7 +4,24 @@ import { comparePassword, hashPassword } from "@/lib/auth";
 
 export async function POST(request: Request) {
     try {
-        // Authentication bypassed temporarily
+        const { email, password } = await request.json();
+
+        // 1. Find admin by email
+        const admin = await prisma.admin.findUnique({
+            where: { email: email.toLowerCase() }
+        });
+
+        if (!admin) {
+            return NextResponse.json({ error: 'البريد الإلكتروني أو كلمة السر غير صحيحة' }, { status: 401 });
+        }
+
+        // 2. Compare password
+        const isPasswordCorrect = await comparePassword(password, admin.password);
+        if (!isPasswordCorrect) {
+            return NextResponse.json({ error: 'البريد الإلكتروني أو كلمة السر غير صحيحة' }, { status: 401 });
+        }
+
+        // 3. Authentication successful
         const response = NextResponse.json({ success: true });
 
         // Set session cookie
