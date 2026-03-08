@@ -27,9 +27,7 @@ export default function AdminLogin() {
                 router.push('/admin');
             } else {
                 const data = await res.json();
-                const detailedError = data.details || data.error || 'البيانات غير صحيحة';
-                const debugStr = data.debug ? ` | Debug: ${JSON.stringify(data.debug)}` : '';
-                setError(detailedError + debugStr);
+                setError(data.error || 'البيانات غير صحيحة');
             }
         } catch (err) {
             setError('حدث خطأ ما، يرجى المحاولة لاحقاً');
