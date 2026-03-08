@@ -43,6 +43,39 @@ export default function AdminLogin() {
                 <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>يرجى إدخال بياناتك للوصول إلى لوحة التحكم</p>
 
                 <form onSubmit={handleSubmit}>
+                    <div style={{ marginBottom: '1.2rem' }}>
+                        <input
+                            type="email"
+                            placeholder="البريد الإلكتروني"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            style={{
+                                width: '100%',
+                                padding: '0.9rem',
+                                borderRadius: '8px',
+                                border: '1px solid #ddd',
+                                textAlign: 'center'
+                            }}
+                        />
+                    </div>
+                    <div style={{ marginBottom: '1.5rem' }}>
+                        <input
+                            type="password"
+                            placeholder="كلمة السر"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            style={{
+                                width: '100%',
+                                padding: '0.9rem',
+                                borderRadius: '8px',
+                                border: '1px solid #ddd',
+                                textAlign: 'center'
+                            }}
+                        />
+                    </div>
+
                     <button
                         type="submit"
                         disabled={isLoading}

@@ -211,7 +211,7 @@ export default function NewProductPage() {
                         <input
                             type="url"
                             name="instagramUrl"
-                            placeholder="https://www.instagram.com/reels/..."
+                            placeholder="https://www.instagram.com/chicjeune2021?igsh=..."
                             value={formData.instagramUrl}
                             onChange={handleChange}
                             style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }}

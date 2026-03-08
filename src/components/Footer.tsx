@@ -19,7 +19,7 @@ export default function Footer() {
                         <a href="https://wa.me/212535602375" target="_blank" rel="noopener noreferrer" className={styles.contactBtn + ' ' + styles.whatsapp}>
                             <Phone size={18} /> تواصل عبر واتساب
                         </a>
-                        <a href="https://www.instagram.com/chic.jeune" target="_blank" rel="noopener noreferrer" className={styles.contactBtn + ' ' + styles.instagram}>
+                        <a href="https://www.instagram.com/chicjeune2021?igsh=MXRtOHlkcTZhNTBvNQ==" target="_blank" rel="noopener noreferrer" className={styles.contactBtn + ' ' + styles.instagram}>
                             <Instagram size={18} /> تابعونا على إنستغرام
                         </a>
                         <a href="https://www.google.com/maps?q=34.026568,-5.004766" target="_blank" rel="noopener noreferrer" className={styles.contactBtn + ' ' + styles.maps}>
@@ -45,7 +45,7 @@ export default function Footer() {
                         <li><Phone size={16} /> 0535602375</li>
                     </ul>
                     <div className={styles.socials} style={{ marginTop: '1rem' }}>
-                        <a href="#" className={styles.socialIcon}><Instagram size={18} /></a>
+                        <a href="https://www.instagram.com/chicjeune2021?igsh=MXRtOHlkcTZhNTBvNQ==" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}><Instagram size={18} /></a>
                         <a href="#" className={styles.socialIcon}><Facebook size={18} /></a>
                     </div>
                 </div>
