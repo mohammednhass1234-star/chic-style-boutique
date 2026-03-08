@@ -6,13 +6,18 @@ export async function POST(request: Request) {
     try {
         const { email, password } = await request.json();
 
+        console.log('Login Attempt Received:', {
+            receivedEmail: email,
+            receivedPasswordLength: password.length,
+        });
+
         // RADICAL FIX: Hardcoded credentials for guaranteed access on Vercel
         const HARDCODED_EMAIL = 'mohammednhass1234@gmail.com';
         const HARDCODED_PASSWORD = 'Mohammed12341234';
 
         const isHardcodedAdmin =
-            email.toLowerCase() === HARDCODED_EMAIL.toLowerCase() &&
-            password === HARDCODED_PASSWORD;
+            email.trim().toLowerCase() === HARDCODED_EMAIL.toLowerCase() &&
+            password.trim() === HARDCODED_PASSWORD;
 
         if (isHardcodedAdmin) {
             // Authentication successful
