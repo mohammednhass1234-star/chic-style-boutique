@@ -28,11 +28,21 @@ export async function POST(request: Request) {
                 total: parseFloat(total),
                 status: 'قيد المراجعة',
                 items: {
-                    create: items.map((item: any) => ({
-                        productId: parseInt(item.id),
-                        quantity: parseInt(item.quantity || 1),
-                        price: parseFloat(item.price)
-                    }))
+                    create: items.map((item: any) => {
+                        // Robust price parsing (handle strings with "درهم" or "DH")
+                        let cleanPrice = 0;
+                        if (typeof item.price === 'string') {
+                            cleanPrice = parseFloat(item.price.replace(/[^\d.]/g, '')) || 0;
+                        } else {
+                            cleanPrice = parseFloat(item.price) || 0;
+                        }
+
+                        return {
+                            productId: parseInt(item.productId || item.id),
+                            quantity: parseInt(item.quantity || 1),
+                            price: cleanPrice
+                        };
+                    })
                 }
             },
             include: { items: true }

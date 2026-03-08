@@ -4,9 +4,10 @@ import React, { useEffect, useState } from 'react';
 import styles from "../../page.module.css";
 import Link from 'next/link';
 import { Trash2, AlertCircle } from 'lucide-react';
+import { Order } from '@/types';
 
 export default function AdminOrders() {
-    const [orders, setOrders] = useState<any[]>([]);
+    const [orders, setOrders] = useState<Order[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     const fetchOrders = async () => {

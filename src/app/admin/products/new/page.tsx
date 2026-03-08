@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+
 export default function NewProductPage() {
     const router = useRouter();
 
@@ -12,7 +13,6 @@ export default function NewProductPage() {
         description: '',
         price: '',
         stock: '100',
-        categoryId: '1', // Forced as requested
         image: '',
         sizes: 'S,M,L,XL',
         colors: 'أبيض,أسود,أزرق',
@@ -24,6 +24,7 @@ export default function NewProductPage() {
     });
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -40,32 +41,33 @@ export default function NewProductPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+
         setIsLoading(true);
         try {
             const response = await fetch('/api/products', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ...formData,
-                    category: { id: 1, name: 'النساء' } // Auto-assign "النساء"
-                }),
+                body: JSON.stringify(formData),
             });
+
+            const result = await response.json();
 
             if (response.ok) {
                 alert('تم حفظ المنتج بنجاح!');
                 router.push('/admin/products');
             } else {
-                alert('حدث خطأ أثناء حفظ المنتج');
+                alert(`حدث خطأ: ${result.error || 'فشل في حفظ المنتج'}`);
             }
         } catch (error) {
             console.error('Error saving product:', error);
-            alert('خطأ في الاتصال بالخادم.');
+            alert('خطأ في الاتصال بالخادم. يرجى المحاولة لاحقاً.');
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target as HTMLInputElement;
         const val = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
         setFormData(prev => ({ ...prev, [name]: val }));
@@ -216,9 +218,6 @@ export default function NewProductPage() {
                         />
                     </div>
 
-                    <div style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '8px', fontSize: '0.9rem', color: '#666' }}>
-                        * سيتم تصنيف هذا المنتج تلقائياً في قسم <strong>"النساء"</strong>.
-                    </div>
 
                     <button type="submit" className="btn-primary" disabled={isLoading} style={{ padding: '1.2rem', marginTop: '1rem', fontSize: '1.2rem', opacity: isLoading ? 0.7 : 1 }}>
                         {isLoading ? 'جاري الحفظ...' : 'حفظ المنتج'}

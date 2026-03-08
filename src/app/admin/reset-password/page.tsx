@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from "../../page.module.css";
 
-export default function ResetPassword() {
+function ResetPasswordForm() {
     const [token, setToken] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -134,5 +134,13 @@ export default function ResetPassword() {
                 </form>
             </div>
         </div>
+    );
+}
+
+export default function ResetPassword() {
+    return (
+        <Suspense fallback={<div className="container" style={{ textAlign: 'center', padding: '5rem' }}>جاري التحميل...</div>}>
+            <ResetPasswordForm />
+        </Suspense>
     );
 }

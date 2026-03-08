@@ -4,9 +4,10 @@ import React, { useEffect, useState } from 'react';
 import Link from "next/link";
 import styles from "../../page.module.css";
 import { Trash2, Edit } from 'lucide-react';
+import { Product } from '@/types';
 
 export default function AdminProducts() {
-    const [products, setProducts] = useState<any[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {

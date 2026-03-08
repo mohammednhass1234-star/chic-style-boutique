@@ -4,16 +4,17 @@ import React, { useEffect, useState } from 'react';
 import styles from "../page.module.css";
 import Link from 'next/link';
 import CountdownTimer from '@/components/CountdownTimer';
+import { Product } from '@/types';
 
 export default function WomenPage() {
-    const [products, setProducts] = useState<any[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                // Fetch products specifically for "النساء" category
-                const response = await fetch('/api/products?category=النساء');
+                // Fetch products (all products are for women now)
+                const response = await fetch('/api/products');
                 if (response.ok) {
                     const data = await response.json();
                     setProducts(data);

@@ -6,10 +6,11 @@ import Hero from "@/components/Hero";
 import CountdownTimer from "@/components/CountdownTimer";
 import styles from "./page.module.css";
 import { useLanguage } from "@/context/LanguageContext";
+import { Product } from '@/types';
 
 export default function Home() {
   const { t, dir } = useLanguage();
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchLatest = async () => {
@@ -79,7 +80,7 @@ export default function Home() {
 
         <div className={styles.productGrid}>
           {products.length > 0 ? (
-            products.map(product => {
+            products.map((product: Product) => {
               const discount = product.originalPrice && product.isOfferActive ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
               return (
                 <Link key={product.id} href={`/product/${product.id}`} className={styles.placeholderCard} style={{ position: 'relative' }}>

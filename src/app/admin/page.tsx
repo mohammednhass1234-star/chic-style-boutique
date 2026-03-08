@@ -4,9 +4,10 @@ import React, { useEffect, useState } from 'react';
 import styles from "../page.module.css";
 import Link from "next/link";
 import { Package, ShoppingBag, TrendingUp } from 'lucide-react';
+import { Order, Product } from '@/types';
 
 export default function AdminDashboard() {
-    const [orders, setOrders] = useState<any[]>([]);
+    const [orders, setOrders] = useState<Order[]>([]);
     const [stats, setStats] = useState({
         totalOrders: 24,
         totalSales: 5420,
@@ -23,12 +24,12 @@ export default function AdminDashboard() {
                 ]);
 
                 if (ordersRes.ok && productsRes.ok) {
-                    const ordersData = await ordersRes.json();
-                    const productsData = await productsRes.json();
+                    const ordersData: Order[] = await ordersRes.json();
+                    const productsData: Product[] = await productsRes.json();
 
                     setOrders(ordersData.slice(0, 5)); // Latest 5 orders
 
-                    const totalSales = ordersData.reduce((acc: number, o: any) => acc + (o.total || 0), 0);
+                    const totalSales = ordersData.reduce((acc: number, o: Order) => acc + (o.total || 0), 0);
 
                     setStats({
                         totalOrders: ordersData.length > 0 ? ordersData.length : 24,

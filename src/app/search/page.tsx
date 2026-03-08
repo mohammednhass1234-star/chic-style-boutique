@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import styles from "../page.module.css";
 import Link from 'next/link';
+import { Product } from '@/types';
 
-export default function SearchPage() {
+function SearchContent() {
     const searchParams = useSearchParams();
     const query = searchParams.get('q');
-    const [products, setProducts] = useState<any[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -73,5 +74,13 @@ export default function SearchPage() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function SearchPage() {
+    return (
+        <Suspense fallback={<div className="container" style={{ textAlign: 'center', padding: '5rem' }}>جاري التحميل...</div>}>
+            <SearchContent />
+        </Suspense>
     );
 }

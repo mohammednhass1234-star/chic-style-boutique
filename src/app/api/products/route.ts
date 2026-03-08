@@ -4,14 +4,9 @@ import { prisma } from '@/lib/prisma';
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
-        const categoryName = searchParams.get('category');
         const query = searchParams.get('q')?.toLowerCase();
 
         let where: any = {};
-
-        if (categoryName) {
-            where.category = { name: categoryName };
-        }
 
         if (query) {
             where.OR = [
@@ -37,7 +32,6 @@ export async function GET(request: Request) {
 
         const products = await prisma.product.findMany({
             where,
-            include: { category: true },
             orderBy: { createdAt: 'desc' }
         });
 
@@ -51,33 +45,56 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { name, description, price, stock, categoryId, image, sizes, colors, videoUrl, instagramUrl, originalPrice, isOfferActive, offerExpiry } = body;
+        const {
+            name,
+            description,
+            price,
+            stock,
+            image,
+            sizes,
+            colors,
+            videoUrl,
+            instagramUrl,
+            originalPrice,
+            isOfferActive,
+            offerExpiry
+        } = body;
 
-        // Ensure "Women" category exists (id 1 usually)
-        let categoryIdToUse = categoryId || 1;
+        // Validation
+        if (!name || !price || !image) {
+            return NextResponse.json(
+                { error: 'Missing required fields: name, price, or image' },
+                { status: 400 }
+            );
+        }
+
+        const parsedPrice = parseFloat(price);
+        if (isNaN(parsedPrice)) {
+            return NextResponse.json({ error: 'Invalid price format' }, { status: 400 });
+        }
+
+        const parsedStock = parseInt(stock || '0');
 
         const newProduct = await prisma.product.create({
             data: {
                 name,
-                description,
-                price: parseFloat(price),
+                description: description || '',
+                price: parsedPrice,
                 originalPrice: originalPrice ? parseFloat(originalPrice) : null,
-                isOfferActive: isOfferActive || false,
+                isOfferActive: !!isOfferActive,
                 offerExpiry: offerExpiry ? new Date(offerExpiry) : null,
-                stock: parseInt(stock),
-                categoryId: parseInt(categoryIdToUse),
+                stock: isNaN(parsedStock) ? 0 : parsedStock,
                 image,
-                sizes,
-                colors,
-                videoUrl,
-                instagramUrl,
-            },
-            include: { category: true }
+                sizes: sizes || '',
+                colors: colors || '',
+                videoUrl: videoUrl || '',
+                instagramUrl: instagramUrl || '',
+            }
         });
 
         return NextResponse.json(newProduct, { status: 201 });
     } catch (error) {
         console.error('Error in POST /api/products:', error);
-        return NextResponse.json({ error: 'Failed to create product' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to create product. Make sure all fields are valid.' }, { status: 500 });
     }
 }

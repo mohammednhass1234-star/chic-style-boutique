@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState } from 'react';
 
 type Language = 'ar';
 
-export const translations: any = {
+export const translations: Record<string, string> = {
     accueil: 'الرئيسية',
     femmes: 'النساء',
     enfants: 'الأطفال',
@@ -53,6 +53,41 @@ export const translations: any = {
     festan_eid: 'فستان العيد المميز',
     taqm_waladi: 'طقم كاجوال أنيق',
     haqiba_fakhira: 'حقيبة يد فاخرة',
+    panier_vide: 'سلة التسوق فارغة حالياً',
+    commencer_achat: 'لم تقومي بإضافة أي منتج بعد، ابدئي التسوق الآن واكتشفي مجموعتنا المميزة.',
+    panier_titre: 'سلة التسوق الخاصة بكِ',
+    articles_dans_panier: 'منتجات في السلة',
+    taille_label: 'المقاس',
+    couleur_label: 'اللون',
+    supprimer_article: 'حذف المنتج',
+    vider_panier: 'مسح السلة بالكامل',
+    resume_commande: 'ملخص الطلب',
+    sous_total: 'المجموع الفرعي',
+    livraison: 'التوصيل',
+    gratuit: 'مجاني',
+    total: 'المجموع الكلي',
+    passer_commande: 'إتمام عملية الشراء',
+    details_commande_wa: 'تفاصيل الطلب للدفع',
+    nom_complet: 'الاسم الكامل',
+    telephone: 'رقم الهاتف',
+    adresse: 'العنوان بالتفصيل',
+    ville: 'المدينة',
+    تم_الارسال: 'تم إرسال الطلب بنجاح',
+    خطأ_في_الارسال: 'حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى',
+    recherche: 'بحث...',
+    checkout_titre: 'إتمام الطلب',
+    checkout_desc: 'يرجى ملء البيانات التالية لتأكيد طلبكِ وسنتصل بكِ في أقرب وقت',
+    prenom_nom: 'الاسم والعائلة',
+    num_tel: 'رقم الهاتف (واتساب)',
+    adresse_complete: 'العنوان الكامل',
+    adresse_placeholder: 'مثال: رقم الدار، الشارع، الحي...',
+    confirmation_commande: 'تأكيد الطلب الآن',
+    nb_produits: 'عدد المنتجات:',
+    paiement_livraison: '* الأداء يكون عند الاستلام. سنقوم بالتواصل معكِ فور تأكيد الطلب لتأكيد موعد التوصيل.',
+    succes_commande: 'تم تسجيل طلبكِ بنجاح! سنتواصل معكِ قريباً لتأكيد الإرسال.',
+    erreur_commande: 'عذراً، حدث خطأ أثناء تسجيل الطلب. يرجى المحاولة مرة أخرى.',
+    echec_connexion: 'فشل الاتصال بالخادم. يرجى التأكد من اتصالك بالإنترنت والمحاولة لاحقاً.',
+    en_cours_envoi: 'جاري تسجيل الطلب...',
 };
 
 interface LanguageContextType {
