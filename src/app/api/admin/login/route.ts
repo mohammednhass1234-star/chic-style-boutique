@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-// import { prisma } from '@/lib/prisma';
-import { comparePassword, hashPassword } from "@/lib/auth";
+// import { prisma } from '@/lib/prisma'; // Isolated for debugging
+// import { comparePassword, hashPassword } from "@/lib/auth"; // Isolated for debugging
 
 export async function POST(request: Request) {
     try {
@@ -31,18 +31,7 @@ export async function POST(request: Request) {
         }
 
         return NextResponse.json({ error: 'البريد الإلكتروني أو كلمة السر غير صحيحة' }, { status: 401 });
-
-        // Set session cookie
-        response.cookies.set('admin_session', 'true', {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 60 * 60 * 24 * 7, // 1 week
-            path: '/',
-        });
-
-        return response;
-    } catch (error) {
+    } catch (error: any) {
         console.error('Login error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
