@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 import { hashPassword } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
