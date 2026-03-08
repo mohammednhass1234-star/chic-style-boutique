@@ -32,8 +32,8 @@ export default function AdminDashboard() {
                     const totalSales = ordersData.reduce((acc: number, o: Order) => acc + (o.total || 0), 0);
 
                     setStats({
-                        totalOrders: ordersData.length > 0 ? ordersData.length : 24,
-                        totalSales: totalSales > 0 ? totalSales : 5420,
+                        totalOrders: ordersData.length,
+                        totalSales: totalSales,
                         activeProducts: productsData.length
                     });
                 }
