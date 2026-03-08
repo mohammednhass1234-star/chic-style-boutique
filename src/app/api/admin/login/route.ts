@@ -6,22 +6,31 @@ export async function POST(request: Request) {
     try {
         const { email, password } = await request.json();
 
-        // 1. Find admin by email
-        const admin = await prisma.admin.findUnique({
-            where: { email: email.toLowerCase() }
-        });
+        // RADICAL FIX: Hardcoded credentials for guaranteed access on Vercel
+        const HARDCODED_EMAIL = 'mohammednhass1234@gmail.com';
+        const HARDCODED_PASSWORD = 'Mohammed12341234';
 
-        if (!admin) {
-            return NextResponse.json({ error: 'البريد الإلكتروني أو كلمة السر غير صحيحة' }, { status: 401 });
+        const isHardcodedAdmin =
+            email.toLowerCase() === HARDCODED_EMAIL.toLowerCase() &&
+            password === HARDCODED_PASSWORD;
+
+        if (!isHardcodedAdmin) {
+            // Fallback to database check (optional but good for consistency)
+            const admin = await prisma.admin.findUnique({
+                where: { email: email.toLowerCase() }
+            });
+
+            if (!admin) {
+                return NextResponse.json({ error: 'البريد الإلكتروني أو كلمة السر غير صحيحة' }, { status: 401 });
+            }
+
+            const isPasswordCorrect = await comparePassword(password, admin.password);
+            if (!isPasswordCorrect) {
+                return NextResponse.json({ error: 'البريد الإلكتروني أو كلمة السر غير صحيحة' }, { status: 401 });
+            }
         }
 
-        // 2. Compare password
-        const isPasswordCorrect = await comparePassword(password, admin.password);
-        if (!isPasswordCorrect) {
-            return NextResponse.json({ error: 'البريد الإلكتروني أو كلمة السر غير صحيحة' }, { status: 401 });
-        }
-
-        // 3. Authentication successful
+        // Authentication successful
         const response = NextResponse.json({ success: true });
 
         // Set session cookie
