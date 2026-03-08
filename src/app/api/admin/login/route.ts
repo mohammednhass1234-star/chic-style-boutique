@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+// import { prisma } from '@/lib/prisma';
 import { comparePassword, hashPassword } from "@/lib/auth";
 
 export async function POST(request: Request) {
@@ -14,24 +14,23 @@ export async function POST(request: Request) {
             email.toLowerCase() === HARDCODED_EMAIL.toLowerCase() &&
             password === HARDCODED_PASSWORD;
 
-        if (!isHardcodedAdmin) {
-            // Fallback to database check (optional but good for consistency)
-            const admin = await prisma.admin.findUnique({
-                where: { email: email.toLowerCase() }
+        if (isHardcodedAdmin) {
+            // Authentication successful
+            const response = NextResponse.json({ success: true });
+
+            // Set session cookie
+            response.cookies.set('admin_session', 'true', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 60 * 60 * 24 * 7, // 1 week
+                path: '/',
             });
 
-            if (!admin) {
-                return NextResponse.json({ error: 'البريد الإلكتروني أو كلمة السر غير صحيحة' }, { status: 401 });
-            }
-
-            const isPasswordCorrect = await comparePassword(password, admin.password);
-            if (!isPasswordCorrect) {
-                return NextResponse.json({ error: 'البريد الإلكتروني أو كلمة السر غير صحيحة' }, { status: 401 });
-            }
+            return response;
         }
 
-        // Authentication successful
-        const response = NextResponse.json({ success: true });
+        return NextResponse.json({ error: 'البريد الإلكتروني أو كلمة السر غير صحيحة' }, { status: 401 });
 
         // Set session cookie
         response.cookies.set('admin_session', 'true', {
