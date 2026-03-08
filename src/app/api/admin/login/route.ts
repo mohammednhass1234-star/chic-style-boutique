@@ -34,34 +34,8 @@ export async function POST(request: Request) {
         });
 
         return response;
-    } catch (error: any) {
-        let debugInfo = {};
-        try {
-            const fs = require('fs');
-            const path = require('path');
-            const dbPath = path.join(process.cwd(), 'prisma', 'dev.db');
-            debugInfo = {
-                cwd: process.cwd(),
-                dbExists: fs.existsSync(dbPath),
-                dbPath: dbPath,
-                envDbUrl: process.env.DATABASE_URL,
-                filesInPrisma: fs.readdirSync(path.join(process.cwd(), 'prisma')).filter((f: string) => !f.startsWith('.'))
-            };
-        } catch (e: any) {
-            debugInfo = { diagError: e.message };
-        }
-
-        console.error('Login error detail:', {
-            message: error.message,
-            stack: error.stack,
-            code: error.code,
-            debug: debugInfo
-        });
-
-        return NextResponse.json({
-            error: 'Internal Server Error',
-            details: error.message,
-            debug: debugInfo
-        }, { status: 500 });
+    } catch (error) {
+        console.error('Login error:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
