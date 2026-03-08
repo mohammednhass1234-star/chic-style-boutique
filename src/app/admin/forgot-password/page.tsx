@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+export const dynamic = 'force-dynamic';
 import { useRouter } from 'next/navigation';
 import styles from "../../page.module.css";
 
