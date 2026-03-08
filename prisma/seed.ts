@@ -2,18 +2,6 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-    // Create Categories
-    const women = await prisma.category.upsert({
-        where: { name: 'النساء' },
-        update: {},
-        create: { name: 'النساء' },
-    })
-
-    const children = await prisma.category.upsert({
-        where: { name: 'الأطفال' },
-        update: {},
-        create: { name: 'الأطفال' },
-    })
 
     // Sample Products for Women
     const womenProducts = [
