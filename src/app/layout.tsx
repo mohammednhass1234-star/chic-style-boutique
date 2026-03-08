@@ -26,6 +26,9 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={inter.className}>
+        <div style={{ background: '#000', color: '#fff', textAlign: 'center', padding: '5px', fontSize: '10px' }}>
+          System Update: 2026-03-08-19-15 | Status: Active
+        </div>
         <LanguageProvider>
           <CartProvider>
             <Navbar />
