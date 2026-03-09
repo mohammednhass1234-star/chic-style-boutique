@@ -14,30 +14,7 @@ export async function POST(request: Request) {
         const HARDCODED_EMAIL = 'mohammednhass1234@gmail.com';
         const HARDCODED_PASSWORD = 'Mohammed12341234';
 
-        // Check if any admin exists in the database
-        let admin = await prisma.admin.findFirst();
-
-        // If no admin exists, and the credentials match the initial defaults, create the first admin
-        if (!admin) {
-            if (email.trim().toLowerCase() === HARDCODED_EMAIL && password.trim() === HARDCODED_PASSWORD) {
-                const hashedPassword = await hashPassword(HARDCODED_PASSWORD);
-                admin = await prisma.admin.create({
-                    data: {
-                        email: HARDCODED_EMAIL,
-                        password: hashedPassword
-                    }
-                });
-            } else {
-                return NextResponse.json({ error: 'البريد الإلكتروني أو كلمة السر غير صحيحة' }, { status: 401 });
-            }
-        }
-
-        // Verify credentials against the database
-        const isEmailMatch = email.trim().toLowerCase() === admin.email.toLowerCase();
-        const isPasswordMatch = await comparePassword(password.trim(), admin.password);
-
-        if (isEmailMatch && isPasswordMatch) {
-            const response = NextResponse.json({ success: true });
+        const setSessionAndRedirect = (response: NextResponse) => {
             response.cookies.set('admin_session', 'true', {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
@@ -46,6 +23,39 @@ export async function POST(request: Request) {
                 path: '/',
             });
             return response;
+        };
+
+        // 1. Try hardcoded check first (Guaranteed to work if DB is down)
+        if (email.trim().toLowerCase() === HARDCODED_EMAIL && password.trim() === HARDCODED_PASSWORD) {
+            // Try to sync to DB in the background if it works, but don't block
+            try {
+                const adminCount = await prisma.admin.count();
+                if (adminCount === 0) {
+                    const hashedPassword = await hashPassword(HARDCODED_PASSWORD);
+                    await prisma.admin.create({
+                        data: { email: HARDCODED_EMAIL, password: hashedPassword }
+                    });
+                }
+            } catch (e) {
+                console.error('DB Sync failed (continuing with hardcoded):', e);
+            }
+            return setSessionAndRedirect(NextResponse.json({ success: true }));
+        }
+
+        // 2. Try database lookup for other credentials
+        try {
+            const admin = await prisma.admin.findUnique({
+                where: { email: email.trim().toLowerCase() }
+            });
+
+            if (admin) {
+                const isPasswordMatch = await comparePassword(password.trim(), admin.password);
+                if (isPasswordMatch) {
+                    return setSessionAndRedirect(NextResponse.json({ success: true }));
+                }
+            }
+        } catch (dbError) {
+            console.error('Database connection error:', dbError);
         }
 
         return NextResponse.json({ error: 'البريد الإلكتروني أو كلمة السر غير صحيحة' }, { status: 401 });
