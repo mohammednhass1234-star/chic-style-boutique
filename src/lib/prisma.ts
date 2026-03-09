@@ -4,14 +4,19 @@ declare global {
     var prisma: PrismaClient | undefined;
 }
 
-if (!process.env.DATABASE_URL) {
-    process.env.DATABASE_URL = "file:./prisma/dev.db";
-}
+const getDatabaseUrl = () => {
+    if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
+
+    // In Vercel/Production, the path might be different. Absolute path usually works better.
+    const path = require('path');
+    const dbPath = path.join(process.cwd(), 'prisma', 'dev.db');
+    return `file:${dbPath}`;
+};
 
 export const prisma = global.prisma || new PrismaClient({
     datasources: {
         db: {
-            url: process.env.DATABASE_URL
+            url: getDatabaseUrl()
         }
     }
 });
