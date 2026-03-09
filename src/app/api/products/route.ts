@@ -17,18 +17,21 @@ export async function GET(request: Request) {
 
         const now = new Date();
 
-        // Fetch all to handle auto-expiration in memory or via update
-        // Better: Update expired offers in DB
-        await prisma.product.updateMany({
-            where: {
-                isOfferActive: true,
-                offerExpiry: { lt: now }
-            },
-            data: {
-                isOfferActive: false,
-                offerExpiry: null
-            }
-        });
+        // Gracefully attempt to update expired offers
+        try {
+            await prisma.product.updateMany({
+                where: {
+                    isOfferActive: true,
+                    offerExpiry: { lt: now }
+                },
+                data: {
+                    isOfferActive: false,
+                    offerExpiry: null
+                }
+            });
+        } catch (updateError) {
+            console.warn('Background offer update failed (likely read-only DB):', updateError);
+        }
 
         const products = await prisma.product.findMany({
             where,
