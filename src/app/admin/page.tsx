@@ -114,7 +114,7 @@ export default function AdminDashboard() {
                 <Link href="/admin/orders" style={{ flex: 1, minWidth: '220px', padding: '1.5rem', background: 'var(--text-dark)', color: 'white', borderRadius: '12px', textAlign: 'center', textDecoration: 'none', fontWeight: 'bold', boxShadow: 'var(--shadow-sm)' }}>
                     إدارة الطلبات
                 </Link>
-                <Link href="/admin/settings" style={{ flex: 1, minWidth: '220px', padding: '1.5rem', background: '#607d8b', color: 'white', borderRadius: '12px', textAlign: 'center', textDecoration: 'none', fontWeight: 'bold', boxShadow: 'var(--shadow-sm)' }}>
+                <Link href="/admin/settings" style={{ flex: 1, minWidth: '220px', padding: '1.5rem', background: 'var(--text-dark)', color: 'white', borderRadius: '12px', textAlign: 'center', textDecoration: 'none', fontWeight: 'bold', boxShadow: 'var(--shadow-sm)' }}>
                     الإعدادات
                 </Link>
                 {/* Remove Category management link as requested */}
