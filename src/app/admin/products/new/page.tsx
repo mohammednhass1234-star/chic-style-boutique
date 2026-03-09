@@ -20,10 +20,21 @@ export default function NewProductPage() {
         videoUrl: '',
         originalPrice: '',
         isOfferActive: false,
-        offerExpiry: ''
+        offerExpiry: '',
+        categoryId: ''
     });
+    const [categories, setCategories] = useState<any[]>([]);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+
+    React.useEffect(() => {
+        fetch('/api/categories')
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) setCategories(data);
+            })
+            .catch(err => console.error('Error fetching categories:', err));
+    }, []);
 
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,6 +150,20 @@ export default function NewProductPage() {
                                     style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }}
                                 />
                             </div>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label>القسم:</label>
+                            <select
+                                name="categoryId"
+                                value={formData.categoryId}
+                                onChange={handleChange}
+                                style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', background: 'white' }}
+                            >
+                                <option value="">بدون قسم</option>
+                                {categories.map(cat => (
+                                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                ))}
+                            </select>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <label>المخزون:</label>

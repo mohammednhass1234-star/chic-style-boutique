@@ -5,6 +5,7 @@ export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         const query = searchParams.get('q')?.toLowerCase();
+        const categoryId = searchParams.get('categoryId');
 
         let where: any = {};
 
@@ -13,6 +14,10 @@ export async function GET(request: Request) {
                 { name: { contains: query, mode: 'insensitive' } },
                 { description: { contains: query, mode: 'insensitive' } },
             ];
+        }
+
+        if (categoryId) {
+            where.categoryId = parseInt(categoryId);
         }
 
         const now = new Date();
@@ -60,7 +65,8 @@ export async function POST(request: Request) {
             instagramUrl,
             originalPrice,
             isOfferActive,
-            offerExpiry
+            offerExpiry,
+            categoryId
         } = body;
 
         // Validation
@@ -77,6 +83,7 @@ export async function POST(request: Request) {
         }
 
         const parsedStock = parseInt(stock || '0');
+        const parsedCategoryId = categoryId ? parseInt(categoryId) : null;
 
         const newProduct = await prisma.product.create({
             data: {
@@ -92,6 +99,7 @@ export async function POST(request: Request) {
                 colors: colors || '',
                 videoUrl: videoUrl || '',
                 instagramUrl: instagramUrl || '',
+                categoryId: parsedCategoryId,
             }
         });
 
