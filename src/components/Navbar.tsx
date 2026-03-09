@@ -1,78 +1,82 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { ShoppingBag, Search, User, Menu, X, ShieldCheck } from 'lucide-react';
 import styles from './Navbar.module.css';
-import { Menu, User, Search, Settings } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
-const Navbar = () => {
-  const { t } = useLanguage();
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [showSearch, setShowSearch] = React.useState(false);
-  const router = useRouter();
+export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { t, dir, isRTL } = useLanguage();
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      setShowSearch(false);
-      setSearchQuery('');
-    }
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <nav className={styles.navbar}>
-      <div className={styles.navToggle}>
-        <button className={styles.iconBtn} aria-label="Menu">
-          <Menu size={24} />
-        </button>
-      </div>
-
-      <Link href="/" className={styles.logo}>
-        Chic Jeune - <span>شيك جون</span>
-      </Link>
-
-      <div className={styles.navLinks}>
-        <Link href="/" className={styles.navLink}>{t('accueil')}</Link>
-        <Link href="/women" className={styles.navLink}>{t('femmes')}</Link>
-        <Link href="/offers" className={styles.navLink}>{t('offres')}</Link>
-        <Link href="/about" className={styles.navLink}>{t('a_propos')}</Link>
-      </div>
-
-      <div className={styles.actions}>
-        <div className={styles.searchContainer} style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-          {showSearch ? (
-            <form onSubmit={handleSearch} style={{ display: 'flex', position: 'absolute', left: '0', background: 'white', border: '1px solid #ddd', borderRadius: '20px', padding: '2px 10px', boxShadow: 'var(--shadow-sm)', zIndex: 100 }}>
-              <input
-                type="text"
-                autoFocus
-                placeholder="ابحثي عن منتج..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ border: 'none', outline: 'none', padding: '5px', borderRadius: '20px', width: '150px' }}
-              />
-              <button type="submit" style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--accent-rose)' }}>
-                <Search size={18} />
-              </button>
-              <button type="button" onClick={() => setShowSearch(false)} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '1.2rem', padding: '0 5px' }}>&times;</button>
-            </form>
-          ) : (
-            <button className={styles.iconBtn} onClick={() => setShowSearch(true)} aria-label="Search">
-              <Search size={22} />
-            </button>
-          )}
-        </div>
-        <Link href="/admin" className={styles.iconBtn} aria-label="Admin Dashboard">
-          <Settings size={22} />
+    <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`} dir={dir}>
+      <div className={styles.navContainer}>
+        {/* Logo */}
+        <Link href="/" className={styles.logo}>
+          <span className={styles.logoEn}>CHIC <span className={styles.logoAccent}>JEUNE</span></span>
+          <span className={styles.logoAr}>شيك <span className={styles.logoAccent}>جون</span></span>
         </Link>
-        <button className={styles.iconBtn} aria-label="Profile">
-          <User size={22} />
-        </button>
+
+        {/* Desktop Links */}
+        <div className={styles.navLinks}>
+          <Link href="/">{t('accueil')}</Link>
+          <Link href="/women">{t('femmes')}</Link>
+          <Link href="/products">{t('tous_les_produits')}</Link>
+          <Link href="/offers" className={styles.highlightLink}>{t('offres')}</Link>
+          <Link href="/about">{t('a_propos')}</Link>
+        </div>
+
+        {/* Icons Area */}
+        <div className={styles.navIcons}>
+          <button className={styles.iconBtn} aria-label={t('recherche')}>
+            <Search strokeWidth={1.5} size={22} />
+          </button>
+
+          <Link href="/admin/login" className={styles.iconBtn} aria-label="Admin Panel">
+            <ShieldCheck strokeWidth={1.5} size={22} />
+          </Link>
+
+          <Link href="/cart" className={styles.iconBtn} aria-label={t('panier')}>
+            <ShoppingBag strokeWidth={1.5} size={22} />
+            <span className={styles.cartBadge}>0</span>
+          </Link>
+
+          <button className={styles.mobileMenuBtn} onClick={toggleMenu} aria-label="Toggle menu">
+            {isMenuOpen ? <X strokeWidth={1.5} size={24} /> : <Menu strokeWidth={1.5} size={24} />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className={styles.mobileMenu}>
+          <Link href="/" onClick={toggleMenu}>{t('accueil')}</Link>
+          <Link href="/women" onClick={toggleMenu}>{t('femmes')}</Link>
+          <Link href="/products" onClick={toggleMenu}>{t('tous_les_produits')}</Link>
+          <Link href="/offers" onClick={toggleMenu} className={styles.highlightLinkMobile}>{t('offres')}</Link>
+          <Link href="/about" onClick={toggleMenu}>{t('a_propos')}</Link>
+
+          <div className={styles.mobileActions}>
+            <Link href="/admin/login" onClick={toggleMenu} className={styles.mobileActionBtn}>
+              <ShieldCheck strokeWidth={1.5} size={18} /> لوحة التحكم
+            </Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
-};
-
-export default Navbar;
+}

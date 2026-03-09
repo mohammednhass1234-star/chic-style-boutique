@@ -13,7 +13,6 @@ export default function WomenPage() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                // Fetch products (all products are for women now)
                 const response = await fetch('/api/products');
                 if (response.ok) {
                     const data = await response.json();
@@ -30,44 +29,46 @@ export default function WomenPage() {
 
     return (
         <div className="container" dir="rtl">
-            <header className={styles.sectionHeader} style={{ marginTop: '3rem' }}>
-                <h1 className="elegant-text">ملابس النساء - CHIC JEUNE</h1>
-                <p>اكتشفي الأناقة والرقي في تشكيلتنا المخصصة لكِ</p>
+            <header className={styles.sectionHeader} style={{ marginTop: '8rem', marginBottom: '6rem' }}>
+                <h1 className="elegant-text" style={{ fontSize: '4rem', color: 'var(--dark-charcoal)' }}>أزياء النساء</h1>
+                <div className="line-separator" style={{ margin: '2rem auto' }}></div>
+                <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>تصاميم صممت خصيصاً لإبراز أنوثتك وجمالك</p>
             </header>
 
             {isLoading ? (
-                <div style={{ textAlign: 'center', padding: '5rem' }}>جاري تحميل المنتجات...</div>
+                <div style={{ textAlign: 'center', padding: '10rem', fontSize: '1.2rem', color: 'var(--text-muted)', letterSpacing: '2px', textTransform: 'uppercase' }}>جاري التحميل...</div>
             ) : (
-                <div className={styles.productGrid} style={{ marginTop: '2rem' }}>
+                <div className={styles.productGrid} style={{ marginBottom: '8rem' }}>
                     {products.length > 0 ? (
                         products.map(product => {
                             const discount = product.originalPrice && product.isOfferActive ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
                             return (
-                                <Link key={product.id} href={`/product/${product.id}`} className={styles.placeholderCard} style={{ position: 'relative' }}>
-                                    {product.isOfferActive && <div className={styles.saleBadge}>تخفيض {discount > 0 && `${discount}%`}</div>}
+                                <Link key={product.id} href={`/product/${product.id}`} className={styles.placeholderCard}>
+                                    {product.isOfferActive && <div className={styles.saleBadge}>حصري {discount > 0 && `${discount}%`}</div>}
                                     <div
                                         className={styles.imageBox}
-                                        style={{ backgroundImage: `url("${product.image || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&q=80'}")`, backgroundSize: 'cover' }}
+                                        style={{ backgroundImage: `url("${product.image || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80'}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                                     >
-                                        {product.offerExpiry && <div style={{ position: 'absolute', bottom: '10px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                                        {product.offerExpiry && <div style={{ position: 'absolute', bottom: '20px', width: '100%', display: 'flex', justifyContent: 'center' }}>
                                             <CountdownTimer expiryDate={product.offerExpiry} />
                                         </div>}
                                     </div>
-                                    <h3>{product.name}</h3>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-                                        <p style={{ margin: 0 }}>{product.price.toFixed(2)} درهم</p>
+                                    <h3 className="elegant-text">{product.name}</h3>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginTop: '0.5rem' }}>
+                                        <p style={{ margin: 0, color: 'var(--text-dark)', fontWeight: '500', fontSize: '1.2rem' }}>{product.price.toFixed(2)} درهم</p>
                                         {product.originalPrice && product.isOfferActive && (
-                                            <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.9rem' }}>
+                                            <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '1rem' }}>
                                                 {product.originalPrice.toFixed(2)}
                                             </span>
                                         )}
                                     </div>
+                                    <span className="btn-primary" style={{ marginTop: '1rem', width: '80%' }}>شراء الآن</span>
                                 </Link>
                             );
                         })
                     ) : (
-                        <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '5rem' }}>
-                            لا توجد منتجات متوفرة حالياً في هذا القسم.
+                        <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '10rem', fontSize: '1.2rem', color: 'var(--text-muted)' }}>
+                            لا توجد منتجات متوفرة حالياً في هذا القسم. ترقبوا تشكيلتنا الجديدة.
                         </div>
                     )}
                 </div>

@@ -15,23 +15,23 @@ export default function OffersPage() {
 
     return (
         <div className="container" dir={dir}>
-            <header className={styles.sectionHeader} style={{ marginTop: '2rem' }}>
-                <h1 className="elegant-text">{t('offres_titre')}</h1>
-                <p>{t('offres_desc')}</p>
+            <header className={styles.sectionHeader} style={{ marginTop: '5rem', marginBottom: '4rem' }}>
+                <h1 className="elegant-text" style={{ fontSize: '3rem', color: 'var(--dark-charcoal)' }}>{t('offres_titre')}</h1>
+                <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>{t('offres_desc')}</p>
             </header>
 
-            <div className={styles.productGrid}>
+            <div className={styles.productGrid} style={{ marginBottom: '6rem' }}>
                 {products.map((product) => (
-                    <Link href={`/product/${product.id}`} key={product.id} className={styles.placeholderCard}>
-                        <div className={styles.imageBox} style={{ backgroundColor: 'var(--primary-pink)', backgroundImage: product.id === 101 ? 'url("https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&q=80")' : product.id === 102 ? 'url("https://images.unsplash.com/photo-1512436030959-26920f26fdc3?w=500&q=80")' : 'url("https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&q=80")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                            <span style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'var(--accent-rose)', color: 'white', padding: '5px 10px', borderRadius: '4px', fontSize: '0.8rem' }}>{t('promo')}</span>
+                    <Link href={`/product/${product.id}`} key={product.id} className={styles.placeholderCard} style={{ position: 'relative' }}>
+                        <div className={styles.imageBox} style={{ backgroundColor: 'var(--soft-cream)', backgroundImage: product.id === 101 ? 'url("https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&q=80")' : product.id === 102 ? 'url("https://images.unsplash.com/photo-1512436030959-26920f26fdc3?w=500&q=80")' : 'url("https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&q=80")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                            <span style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'var(--dark-charcoal)', color: 'var(--accent-gold)', padding: '5px 12px', borderRadius: '2px', fontSize: '0.8rem', fontWeight: '500' }}>{t('promo')}</span>
                         </div>
-                        <h3>{t(product.nameKey)}</h3>
-                        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center' }}>
-                            <p style={{ color: 'var(--accent-rose)', fontWeight: 'bold' }}>{product.price.toFixed(2)} درهم</p>
-                            <p style={{ color: 'var(--text-muted)', textDecoration: 'line-through', fontSize: '0.9rem' }}>{product.oldPrice.toFixed(2)} درهم</p>
+                        <h3 style={{ marginTop: '0.5rem' }}>{t(product.nameKey)}</h3>
+                        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', alignItems: 'center', margin: '0.5rem 0' }}>
+                            <p style={{ color: 'var(--accent-gold)', fontWeight: '600', fontSize: '1.2rem' }}>{product.price.toFixed(2)} درهم</p>
+                            <p style={{ color: 'var(--text-muted)', textDecoration: 'line-through', fontSize: '1rem' }}>{product.oldPrice.toFixed(2)} درهم</p>
                         </div>
-                        <button className="btn-primary" style={{ marginTop: '0.5rem', width: '100%' }}>عرض التفاصيل</button>
+                        <span className="btn-primary" style={{ display: 'inline-block', marginTop: '1rem', width: '90%' }}>عرض التفاصيل</span>
                     </Link>
                 ))}
             </div>

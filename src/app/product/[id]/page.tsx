@@ -86,73 +86,86 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
         }
     };
 
-    if (isLoading) return <div className="container" style={{ padding: '5rem', textAlign: 'center' }}>{t('chargement')}</div>;
-    if (!product) return <div className="container" style={{ padding: '5rem', textAlign: 'center' }}>{t('produit_non_trouve')}</div>;
+    if (isLoading) return <div className="container" style={{ padding: '20vh 0', textAlign: 'center', letterSpacing: '3px', textTransform: 'uppercase' }}>جاري التحميل...</div>;
+    if (!product) return <div className="container" style={{ padding: '20vh 0', textAlign: 'center' }}>المنتج غير موجود</div>;
 
     const colorsArray = product.colors ? product.colors.split(',').map((c: string) => c.trim()) : ["واحد"];
     const sizesArray = product.sizes ? product.sizes.split(',').map((c: string) => c.trim()) : ["واحد"];
 
     return (
-        <div className="container" dir={dir}>
-            <div style={{ marginTop: '2rem' }}>
-                <Link href="/" style={{ color: 'var(--accent-rose)', display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
-                    العودة للرئيسية <ArrowRight size={18} style={{ transform: 'rotate(180deg)' }} />
+        <div style={{ backgroundColor: 'var(--soft-cream)', minHeight: '100vh', paddingBottom: '4rem' }} dir={dir}>
+
+            <div className="container" style={{ paddingTop: '8rem', paddingBottom: '2rem' }}>
+                <Link href="/" style={{ color: 'var(--dark-charcoal)', display: 'inline-flex', alignItems: 'center', gap: '0.8rem', textDecoration: 'none', fontWeight: 500, letterSpacing: '1px', fontSize: '0.9rem', textTransform: 'uppercase' }}>
+                    <ArrowRight strokeWidth={1.5} size={18} /> العودة للرئيسية
                 </Link>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem', marginTop: '2rem', marginBottom: '4rem' }}>
-                <div
-                    className={styles.imageBox}
-                    style={{
-                        height: '550px',
-                        backgroundImage: `url("${product.image || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80'}")`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        borderRadius: '15px',
-                        boxShadow: 'var(--shadow-lg)',
-                        position: 'relative'
-                    }}
-                >
-                    {product.isOfferActive && product.offerExpiry && (
-                        <div style={{ position: 'absolute', top: '20px', left: '20px', right: '20px' }}>
-                            <CountdownTimer expiryDate={product.offerExpiry} />
-                        </div>
-                    )}
-                </div>
+            {/* Split Screen Layout */}
+            <div className="container" style={{ display: 'flex', flexWrap: 'wrap', gap: '6rem', alignItems: 'flex-start' }}>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <h1 className="elegant-text" style={{ fontSize: '2.5rem', borderBottom: '2px solid var(--primary-pink)', paddingBottom: '1rem' }}>{product.name}</h1>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '1rem' }}>
-                        <p style={{ fontSize: '2.5rem', color: 'var(--accent-rose)', fontWeight: 'bold', margin: 0 }}>{product.price.toFixed(2)} درهم</p>
-                        {product.isOfferActive && product.originalPrice && (
-                            <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '1.5rem' }}>
-                                {product.originalPrice.toFixed(2)}
-                            </span>
-                        )}
-                        {product.isOfferActive && (
-                            <span style={{ background: '#ffebee', color: '#c62828', padding: '0.3rem 0.8rem', borderRadius: '20px', fontSize: '0.9rem', fontWeight: 'bold' }}>
-                                تخفيض {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
-                            </span>
+                {/* Left Side: Immersive Imagery */}
+                <div style={{ flex: '1.5', minWidth: '350px' }}>
+                    <div
+                        style={{
+                            height: '80vh',
+                            minHeight: '600px',
+                            width: '100%',
+                            backgroundImage: `url("${product.image || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80'}")`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            position: 'relative',
+                            boxShadow: 'var(--shadow-md)'
+                        }}
+                    >
+                        {product.isOfferActive && product.offerExpiry && (
+                            <div style={{ position: 'absolute', top: '2rem', left: '2rem' }}>
+                                <CountdownTimer expiryDate={product.offerExpiry} />
+                            </div>
                         )}
                     </div>
+                </div>
 
-                    <p style={{ color: 'var(--text-muted)', lineHeight: '1.8', fontSize: '1.1rem' }}>{product.description}</p>
+                {/* Right Side: Sticky Details */}
+                <div style={{ flex: '1', minWidth: '320px', position: 'sticky', top: '8rem', display: 'flex', flexDirection: 'column', gap: '2.5rem', paddingRight: dir === 'rtl' ? 0 : '2rem', paddingLeft: dir === 'rtl' ? '2rem' : 0 }}>
 
                     <div>
-                        <h3 style={{ marginBottom: '1rem' }}>المقاسات المتوفرة:</h3>
-                        <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
+                        <h1 className="elegant-text" style={{ fontSize: '3.5rem', lineHeight: '1.1', marginBottom: '1.5rem', color: 'var(--dark-charcoal)' }}>{product.name}</h1>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                            <p style={{ fontSize: '1.8rem', color: 'var(--text-dark)', fontWeight: '600', margin: 0, letterSpacing: '1px' }}>{product.price.toFixed(2)} درهم</p>
+                            {product.isOfferActive && product.originalPrice && (
+                                <span style={{ textDecoration: 'line-through', color: 'var(--text-muted)', fontSize: '1.2rem' }}>
+                                    {product.originalPrice.toFixed(2)}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+
+                    <div style={{ height: '1px', width: '40px', background: 'var(--accent-gold)' }}></div>
+
+                    <p style={{ color: 'var(--text-muted)', lineHeight: '2', fontSize: '1.05rem' }}>{product.description}</p>
+
+                    <div>
+                        <h3 className="elegant-text" style={{ marginBottom: '1.5rem', fontSize: '1.2rem', color: 'var(--dark-charcoal)' }}>المقاس</h3>
+                        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                             {sizesArray.map((size: string) => (
                                 <button
                                     key={size}
                                     onClick={() => setSelectedSize(size)}
                                     style={{
-                                        padding: '0.6rem 1.2rem',
-                                        border: '1px solid var(--border-color)',
-                                        borderRadius: '8px',
-                                        backgroundColor: selectedSize === size ? 'var(--primary-pink)' : 'white',
-                                        color: selectedSize === size ? 'white' : 'inherit',
+                                        width: '50px',
+                                        height: '50px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        border: selectedSize === size ? '2px solid var(--dark-charcoal)' : '1px solid #e0e0e0',
+                                        borderRadius: '50%',
+                                        backgroundColor: selectedSize === size ? 'var(--dark-charcoal)' : 'transparent',
+                                        color: selectedSize === size ? 'white' : 'var(--text-dark)',
                                         cursor: 'pointer',
-                                        transition: 'all 0.2s'
+                                        transition: 'all 0.3s ease',
+                                        fontFamily: 'var(--font-sans)',
+                                        fontWeight: 500
                                     }}
                                 >
                                     {size}
@@ -162,20 +175,21 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                     </div>
 
                     <div>
-                        <h3 style={{ marginBottom: '1rem' }}>الألوان المتوفرة:</h3>
-                        <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
+                        <h3 className="elegant-text" style={{ marginBottom: '1.5rem', fontSize: '1.2rem', color: 'var(--dark-charcoal)' }}>اللون</h3>
+                        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                             {colorsArray.map((color: string) => (
                                 <button
                                     key={color}
                                     onClick={() => setSelectedColor(color)}
                                     style={{
-                                        padding: '0.6rem 1.2rem',
-                                        border: '1px solid var(--border-color)',
-                                        borderRadius: '8px',
-                                        backgroundColor: selectedColor === color ? 'var(--accent-rose)' : 'white',
-                                        color: selectedColor === color ? 'white' : 'inherit',
+                                        padding: '0.8rem 2rem',
+                                        border: selectedColor === color ? '2px solid var(--dark-charcoal)' : '1px solid #e0e0e0',
+                                        borderRadius: '2px',
+                                        backgroundColor: selectedColor === color ? 'var(--soft-cream)' : 'transparent',
+                                        color: 'var(--text-dark)',
                                         cursor: 'pointer',
-                                        transition: 'all 0.2s'
+                                        transition: 'all 0.3s ease',
+                                        fontWeight: 500
                                     }}
                                 >
                                     {color}
@@ -184,140 +198,144 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                         </div>
                     </div>
 
-                    <div style={{ marginTop: '1rem' }}>
+                    <div style={{ marginTop: '2rem' }}>
                         <button
                             onClick={() => setShowOrderModal(true)}
+                            className="btn-primary"
                             style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '1rem',
                                 width: '100%',
-                                padding: '1.3rem',
-                                backgroundColor: 'var(--text-dark)',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '12px',
-                                cursor: 'pointer',
-                                fontSize: '1.4rem',
-                                fontWeight: 'bold',
-                                boxShadow: 'var(--shadow-lg)',
-                                transition: 'all 0.3s'
+                                padding: '1.5rem',
+                                fontSize: '1rem',
+                                letterSpacing: '2px',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'black'}
-                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--text-dark)'}
                         >
-                            <ShoppingBag size={28} />
-                            شراء الآن
+                            <span>إضافة إلى الحقيبة</span>
+                            <span>{product.price.toFixed(2)} درهم</span>
                         </button>
                     </div>
-
-                    {product.instagramUrl && (
-                        <div style={{ marginTop: '2rem', borderRadius: '15px', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
-                            <iframe
-                                src={`${product.instagramUrl.split('?')[0]}${product.instagramUrl.endsWith('/') ? '' : '/'}embed`}
-                                width="100%"
-                                height="480"
-                                frameBorder="0"
-                                scrolling="no"
-                                allowTransparency={true}
-                            ></iframe>
-                        </div>
-                    )}
                 </div>
             </div>
 
-            {/* Internal Order Modal */}
+            {/* Expansive Full-Width Instagram Embed if available */}
+            {product.instagramUrl && (
+                <div className="container" style={{ marginTop: '8rem' }}>
+                    <h3 className="elegant-text" style={{ textAlign: 'center', fontSize: '2rem', marginBottom: '3rem' }}>شاهديه على الطبيعة</h3>
+                    <div style={{ maxWidth: '800px', margin: '0 auto', border: '1px solid var(--glass-border)', background: 'var(--pure-white)', padding: '1rem' }}>
+                        <iframe
+                            src={`${product.instagramUrl.split('?')[0]}${product.instagramUrl.endsWith('/') ? '' : '/'}embed`}
+                            width="100%"
+                            height="600"
+                            frameBorder="0"
+                            scrolling="no"
+                            allowTransparency={true}
+                        ></iframe>
+                    </div>
+                </div>
+            )}
+
+            {/* Premium Minimalist Order Modal */}
             {showOrderModal && (
                 <div style={{
                     position: 'fixed',
                     top: 0,
                     left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0,0,0,0.6)',
+                    width: '100vw',
+                    height: '100vh',
+                    backgroundColor: 'rgba(28,28,28,0.4)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    zIndex: 1000,
-                    padding: '1rem'
+                    zIndex: 2000,
                 }}>
                     <div style={{
-                        backgroundColor: 'white',
-                        padding: '2.5rem',
-                        borderRadius: '20px',
+                        backgroundColor: 'var(--soft-cream)',
                         width: '100%',
                         maxWidth: '500px',
-                        position: 'relative',
-                        boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+                        height: '100vh',
+                        position: 'absolute',
+                        right: dir === 'rtl' ? 0 : 'auto',
+                        left: dir === 'rtl' ? 'auto' : 0,
+                        padding: '4rem 3rem',
+                        boxShadow: 'var(--shadow-lg)',
+                        overflowY: 'auto',
+                        animation: dir === 'rtl' ? 'slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1)' : 'slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
                     }}>
+                        <style>{`
+                            @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+                            @keyframes slideInLeft { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+                        `}</style>
+
                         <button
                             onClick={() => setShowOrderModal(false)}
-                            style={{ position: 'absolute', top: '1.5rem', left: '1.5rem', background: 'none', border: 'none', cursor: 'pointer', color: '#666' }}
+                            style={{ position: 'absolute', top: '2rem', left: dir === 'rtl' ? '2rem' : 'auto', right: dir === 'rtl' ? 'auto' : '2rem', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--dark-charcoal)' }}
                         >
-                            <X size={24} />
+                            <X strokeWidth={1.5} size={30} />
                         </button>
 
-                        <h2 className="elegant-text" style={{ textAlign: 'center', marginBottom: '0.5rem' }}>إتمام الطلب</h2>
-                        <p style={{ textAlign: 'center', color: '#666', marginBottom: '2rem' }}>يرجى إدخال معلوماتك لتوصيل طلبك</p>
+                        <h2 className="elegant-text" style={{ marginBottom: '1rem', fontSize: '2.5rem', color: 'var(--dark-charcoal)' }}>إتمام الطلب</h2>
+                        <p style={{ color: 'var(--text-muted)', marginBottom: '3rem', fontSize: '1.1rem' }}>يرجى إدخال معلومات التوصيل لإتمام عملية الشراء بنجاح.</p>
 
-                        <form onSubmit={handleOrderSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><User size={16} color="var(--accent-rose)" /> الاسم الكامل:</label>
+                        <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '3rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
+                            <div style={{ width: '80px', height: '100px', backgroundImage: `url("${product.image}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+                            <div>
+                                <h4 className="elegant-text" style={{ fontSize: '1.2rem', margin: 0 }}>{product.name}</h4>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0.5rem 0' }}>اللون: {selectedColor} | المقاس: {selectedSize}</p>
+                                <p style={{ color: 'var(--dark-charcoal)', fontWeight: 600, fontSize: '1.2rem', margin: 0 }}>{product.price.toFixed(2)} درهم</p>
+                            </div>
+                        </div>
+
+                        <form onSubmit={handleOrderSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                            <div style={{ position: 'relative' }}>
                                 <input
                                     type="text"
                                     required
                                     value={orderData.name}
                                     onChange={(e) => setOrderData({ ...orderData, name: e.target.value })}
-                                    placeholder="أدخل اسمك الكامل"
-                                    style={{ padding: '0.9rem', borderRadius: '8px', border: '1px solid #ddd' }}
+                                    placeholder="الاسم الكامل"
+                                    style={{ width: '100%', padding: '1rem 0', background: 'transparent', border: 'none', borderBottom: '1px solid var(--dark-charcoal)', outline: 'none', fontSize: '1.1rem', color: 'var(--dark-charcoal)' }}
                                 />
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={16} color="var(--accent-rose)" /> رقم الهاتف:</label>
+                            <div style={{ position: 'relative' }}>
                                 <input
                                     type="tel"
                                     required
                                     value={orderData.phone}
                                     onChange={(e) => setOrderData({ ...orderData, phone: e.target.value })}
-                                    placeholder="أدخل رقم هاتفك"
-                                    style={{ padding: '0.9rem', borderRadius: '8px', border: '1px solid #ddd' }}
+                                    placeholder="رقم الهاتف"
+                                    style={{ width: '100%', padding: '1rem 0', background: 'transparent', border: 'none', borderBottom: '1px solid var(--dark-charcoal)', outline: 'none', fontSize: '1.1rem', color: 'var(--dark-charcoal)' }}
                                 />
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><MapPin size={16} color="var(--accent-rose)" /> العنوان بالتفصيل:</label>
+                            <div style={{ position: 'relative' }}>
                                 <textarea
                                     required
-                                    rows={3}
+                                    rows={2}
                                     value={orderData.address}
                                     onChange={(e) => setOrderData({ ...orderData, address: e.target.value })}
-                                    placeholder="أدخل عنوان التوصيل"
-                                    style={{ padding: '0.9rem', borderRadius: '8px', border: '1px solid #ddd', resize: 'none' }}
+                                    placeholder="العنوان بالتفصيل"
+                                    style={{ width: '100%', padding: '1rem 0', background: 'transparent', border: 'none', borderBottom: '1px solid var(--dark-charcoal)', outline: 'none', fontSize: '1.1rem', color: 'var(--dark-charcoal)', resize: 'none' }}
                                 />
-                            </div>
-
-                            <div style={{ background: '#fff5f7', padding: '1rem', borderRadius: '10px', marginTop: '0.5rem' }}>
-                                <p style={{ margin: 0, fontWeight: 'bold' }}>ملخص الطلب:</p>
-                                <p style={{ margin: '0.5rem 0 0', display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>{product.name}</span>
-                                    <span style={{ color: 'var(--accent-rose)' }}>{product.price.toFixed(2)} درهم</span>
-                                </p>
                             </div>
 
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
                                 className="btn-primary"
-                                style={{ padding: '1.2rem', fontSize: '1.2rem', marginTop: '1rem', opacity: isSubmitting ? 0.7 : 1 }}
+                                style={{ padding: '1.5rem', fontSize: '1.1rem', marginTop: '2rem', width: '100%', letterSpacing: '2px' }}
                             >
-                                {isSubmitting ? 'جاري الإرسال...' : 'تأكيد الطلب الآن'}
+                                {isSubmitting ? 'جاري المعالجة...' : 'تأكيد الطلب'}
                             </button>
                         </form>
                     </div>
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 }

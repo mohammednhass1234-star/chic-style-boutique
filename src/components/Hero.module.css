@@ -1,75 +1,177 @@
-.hero {
+.heroSection {
     position: relative;
-    height: 80vh;
+    height: 100vh;
+    min-height: 800px;
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
     overflow: hidden;
-    background-color: var(--primary-pink);
+    padding: 0;
+    margin: 0;
+    animation: none;
+    /* Override global revealUp for Hero so it loads instantly */
+    opacity: 1;
 }
 
-.heroContent {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    max-width: 800px;
-    padding: 2rem;
-}
-
-.heroTitle {
-    font-size: 4rem;
-    margin-bottom: 1.5rem;
-    color: var(--text-dark);
-    line-height: 1.1;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 1s forwards 0.2s;
-}
-
-.heroSubtitle {
-    font-size: 1.2rem;
-    margin-bottom: 2.5rem;
-    color: var(--text-muted);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 1s forwards 0.4s;
-}
-
-.heroCta {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    opacity: 0;
-    animation: fadeIn 1.5s forwards 0.8s;
-}
-
-.imageOverlay {
+.videoBackground {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.8), transparent);
     z-index: 1;
+    overflow: hidden;
 }
 
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
+.imageOverlay {
+    position: absolute;
+    top: -10%;
+    /* Buffer for parallax */
+    left: 0;
+    width: 100%;
+    height: 120%;
+    /* Buffer for parallax */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* Soft dark gradient overlay for text readability, typical in luxury ecomm */
+    background-image: linear-gradient(to right, rgba(28, 28, 28, 0.8) 0%, rgba(28, 28, 28, 0.3) 50%, rgba(28, 28, 28, 0.1) 100%);
+    will-change: transform;
+}
+
+/* Add a global absolute overlay to map the gradient properly on top of the dynamic image URL */
+.videoBackground::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(28, 28, 28, 0.85) 0%, rgba(28, 28, 28, 0.4) 45%, rgba(28, 28, 28, 0) 100%);
+    z-index: 2;
+}
+
+.heroContent {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 4rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.textContent {
+    max-width: 650px;
+    color: var(--pure-white);
+}
+
+.subtitle {
+    font-size: 1rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 2rem;
+    font-weight: 600;
+    opacity: 0;
+    animation: revealUp 1.2s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.heroContent h1 {
+    font-size: clamp(4rem, 8vw, 7rem);
+    line-height: 1.05;
+    margin-bottom: 2rem;
+    color: var(--pure-white);
+    opacity: 0;
+    animation: revealUp 1.2s 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.description {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 3.5rem;
+    opacity: 0;
+    animation: revealUp 1.2s 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    max-width: 500px;
+}
+
+.actionArea {
+    display: flex;
+    gap: 1.5rem;
+    opacity: 0;
+    animation: revealUp 1.2s 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.scrollIndicator {
+    position: absolute;
+    bottom: 3rem;
+    left: 4rem;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    color: var(--pure-white);
+    transform: rotate(-90deg);
+    transform-origin: left center;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    opacity: 0;
+    animation: revealUp 1.2s 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.line {
+    width: 60px;
+    height: 1px;
+    background: var(--pure-white);
+    position: relative;
+    overflow: hidden;
+}
+
+.line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--accent-gold);
+    transform: translateX(-100%);
+    animation: slideLine 2s infinite ease-in-out;
+}
+
+@keyframes slideLine {
+    0% {
+        transform: translateX(-100%);
     }
-}
 
-@keyframes fadeIn {
-    to {
-        opacity: 1;
+    50% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(100%);
     }
 }
 
 @media (max-width: 768px) {
-    .heroTitle {
-        font-size: 2.5rem;
+    .videoBackground::after {
+        background: linear-gradient(0deg, rgba(28, 28, 28, 0.9) 0%, rgba(28, 28, 28, 0.5) 50%, rgba(28, 28, 28, 0.3) 100%);
+    }
+
+    .heroContent {
+        padding: 0 2rem;
+        align-items: flex-end;
+        padding-bottom: 8rem;
+    }
+
+    .actionArea {
+        flex-direction: column;
+    }
+
+    .scrollIndicator {
+        display: none;
     }
 }

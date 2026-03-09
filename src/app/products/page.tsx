@@ -29,23 +29,24 @@ export default function ProductsPage() {
 
     return (
         <div className="container" dir={dir}>
-            <header className={styles.sectionHeader} style={{ marginTop: '3rem' }}>
-                <h1 className="elegant-text">{t('tous_les_produits')}</h1>
-                <p>{t('decouvrez_elegance')}</p>
+            <header className={styles.sectionHeader} style={{ marginTop: '8rem', marginBottom: '6rem' }}>
+                <h1 className="elegant-text" style={{ fontSize: '4rem', color: 'var(--dark-charcoal)' }}>الكولكشن الكامل</h1>
+                <div className="line-separator" style={{ margin: '2rem auto' }}></div>
+                <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>استكشفي الأناقة والرقي في تشكيلتنا الفاخرة المخصصة لكِ</p>
             </header>
 
             {isLoading ? (
-                <div style={{ textAlign: 'center', padding: '5rem' }}>{t('chargement')}</div>
+                <div style={{ textAlign: 'center', padding: '10rem', fontSize: '1.2rem', color: 'var(--text-muted)', letterSpacing: '2px', textTransform: 'uppercase' }}>جاري التحميل...</div>
             ) : products.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '5rem' }}>{t('aucun_produit') || (language === 'ar' ? 'لا توجد منتجات متوفرة حالياً.' : 'Aucun produit disponible pour le moment.')}</div>
+                <div style={{ textAlign: 'center', padding: '10rem', fontSize: '1.2rem', color: 'var(--text-muted)' }}>لا توجد منتجات متوفرة حالياً.</div>
             ) : (
-                <div className={styles.productGrid}>
+                <div className={styles.productGrid} style={{ marginBottom: '8rem' }}>
                     {products.map((product) => (
                         <Link href={`/product/${product.id}`} key={product.id} className={styles.placeholderCard}>
-                            <div className={styles.imageBox} style={{ backgroundImage: `url(${product.image || 'https://via.placeholder.com/300'})`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
-                            <h3>{product.name}</h3>
-                            <p>{product.price.toFixed(2)} {language === 'ar' ? 'درهم' : 'DH'}</p>
-                            <button className="btn-primary" style={{ marginTop: '0.5rem', width: '100%' }}>{t('voir_details') || (language === 'ar' ? 'عرض التفاصيل' : 'Voir les détails')}</button>
+                            <div className={styles.imageBox} style={{ backgroundImage: `url("${product.image || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80'}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+                            <h3 className="elegant-text">{product.name}</h3>
+                            <p style={{ color: 'var(--text-dark)', fontWeight: '500', fontSize: '1.2rem', margin: '0.5rem 0' }}>{product.price.toFixed(2)} {language === 'ar' ? 'درهم' : 'DH'}</p>
+                            <span className="btn-primary" style={{ marginTop: '1rem', width: '80%' }}>التفاصيل</span>
                         </Link>
                     ))}
                 </div>

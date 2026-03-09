@@ -1,124 +1,164 @@
-'use client';
+import Hero from '@/components/Hero';
+import Link from 'next/link';
+import styles from './page.module.css';
+import { prisma } from '@/lib/prisma';
+import CountdownTimer from '@/components/CountdownTimer';
 
-import React, { useState, useEffect } from 'react';
-import Link from "next/link";
-import Hero from "@/components/Hero";
-import CountdownTimer from "@/components/CountdownTimer";
-import styles from "./page.module.css";
-import { useLanguage } from "@/context/LanguageContext";
-import { Product } from '@/types';
-
-export default function Home() {
-  const { t, dir } = useLanguage();
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    const fetchLatest = async () => {
-      try {
-        const response = await fetch('/api/products');
-        if (response.ok) {
-          const data = await response.json();
-          // Show only top 4 latest for home
-          setProducts(data.slice(0, 4));
-        }
-      } catch (error) {
-        console.error('Error loading home products:', error);
+async function getFeaturedProducts() {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        isOfferActive: true,
+      },
+      take: 2, // We only need two for the new asymmetric grid
+      orderBy: {
+        createdAt: 'desc'
       }
-    };
-    fetchLatest();
-  }, []);
+    });
+    return products;
+  } catch (error) {
+    console.error('Error fetching featured products:', error);
+    return [];
+  }
+}
+
+async function getLatestProducts() {
+  try {
+    const products = await prisma.product.findMany({
+      take: 4,
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+    return products;
+  } catch (error) {
+    console.error('Error fetching latest products:', error);
+    return [];
+  }
+}
+
+
+export default async function Home() {
+  const featuredOfferProducts = await getFeaturedProducts();
+  const latestProducts = await getLatestProducts();
 
   return (
-    <div className={styles.container} dir={dir}>
+    <main dir="rtl" style={{ overflowX: 'hidden' }}>
       <Hero />
 
-      {/* Special Offers Section */}
-      {products.filter(p => p.isOfferActive).length > 0 && (
-        <section className="container" style={{ paddingTop: '0' }}>
-          <div className={styles.sectionHeader} style={{ marginBottom: '2rem' }}>
-            <h2 className="elegant-text" style={{ color: 'var(--accent-rose)' }}>عروض خاصة ✨</h2>
-            <p>اغتنمي الفرصة مع تخفيضاتنا الحصرية لفترة محدودة</p>
+      <div className="container">
+
+        {/* NEW Asymmetric Editorial "Featured Collections" Section */}
+        <section style={{ marginTop: '4rem', padding: '4rem 0' }}>
+          <div className={styles.sectionHeader}>
+            <h2 className="elegant-text">التشكيلات الحصرية</h2>
+            <p>صُممت خصيصاً للمرأة العصرية التي تبحث عن التميز والرقي في كل مناسبة.</p>
           </div>
-          <div className={styles.productGrid}>
-            {products.filter(p => p.isOfferActive).map(product => {
-              const discount = product.originalPrice ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
-              return (
-                <Link key={product.id} href={`/product/${product.id}`} className={styles.placeholderCard} style={{ position: 'relative' }}>
-                  <div className={styles.saleBadge}>تخفيض {discount > 0 && `${discount}%`}</div>
-                  <div
-                    className={styles.imageBox}
-                    style={{
-                      backgroundImage: `url("${product.image || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&q=80'}")`,
-                      backgroundSize: 'cover'
-                    }}
-                  >
-                    {product.offerExpiry && <div style={{ position: 'absolute', bottom: '10px', width: '100%', display: 'flex', justifyContent: 'center' }}>
-                      <CountdownTimer expiryDate={product.offerExpiry} />
-                    </div>}
-                  </div>
-                  <h3>{product.name}</h3>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-                    <p style={{ margin: 0 }}>{product.price.toFixed(2)} درهم</p>
-                    {product.originalPrice && (
-                      <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.9rem' }}>
-                        {product.originalPrice.toFixed(2)}
-                      </span>
-                    )}
-                  </div>
-                </Link>
-              );
-            })}
+
+          <div className={styles.featuredCollectionsGrid}>
+            {/* Large Asymmetric Image */}
+            <Link href="/women" className={styles.featuredCardLarge}>
+              <div className={styles.imageBox} style={{ backgroundImage: 'url("/images/collection-1.png")' }}></div>
+              <div className={styles.glassContent}>
+                <h3 className="elegant-text">أناقة السهرة</h3>
+                <p>أزياء راقية للمناسبات الفاخرة</p>
+                <span className="btn-outline" style={{ display: 'inline-block', marginTop: '1rem', padding: '0.8rem 2rem' }}>تسوقي التشكيلة</span>
+              </div>
+            </Link>
+
+            {/* Stacked Small Asymmetric Images */}
+            <div className={styles.featuredStack}>
+              <Link href="/offers" className={styles.featuredCardSmall}>
+                <div className={styles.imageBox} style={{ backgroundImage: 'url("/images/collection-2.png")' }}></div>
+                <div className={styles.glassContent} style={{ bottom: '1rem', left: '1rem', padding: '1.5rem', transform: 'none', opacity: 1, background: 'rgba(255,255,255,0.7)' }}>
+                  <h4 className="elegant-text" style={{ fontSize: '1.5rem', marginBottom: '0.2rem' }}>عروض الموسم</h4>
+                  <span style={{ color: 'var(--accent-gold)', fontWeight: 'bold' }}>اكتشفي المزيد</span>
+                </div>
+              </Link>
+
+              <Link href="/products" className={styles.featuredCardSmall}>
+                <div className={styles.imageBox} style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80")' }}></div>
+                <div className={styles.glassContent} style={{ bottom: '1rem', left: '1rem', padding: '1.5rem', transform: 'none', opacity: 1, background: 'rgba(255,255,255,0.7)' }}>
+                  <h4 className="elegant-text" style={{ fontSize: '1.5rem', marginBottom: '0.2rem' }}>الوصول الجديد</h4>
+                  <span style={{ color: 'var(--accent-gold)', fontWeight: 'bold' }}>استعرضي الكولكشن</span>
+                </div>
+              </Link>
+            </div>
           </div>
         </section>
-      )}
 
-      <section className="container">
-        <div className={styles.sectionHeader}>
-          <h2 className="elegant-text">أحدث التشكيلات</h2>
-          <p>اكتشفي الأناقة والراحة في مجموعتنا الحصرية</p>
-        </div>
-
-        <div className={styles.productGrid}>
-          {products.length > 0 ? (
-            products.map((product: Product) => {
-              const discount = product.originalPrice && product.isOfferActive ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
-              return (
-                <Link key={product.id} href={`/product/${product.id}`} className={styles.placeholderCard} style={{ position: 'relative' }}>
-                  {product.isOfferActive && <div className={styles.saleBadge}>تخفيض {discount > 0 && `${discount}%`}</div>}
-                  <div
-                    className={styles.imageBox}
-                    style={{
-                      backgroundImage: `url("${product.image || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&q=80'}")`,
-                      backgroundSize: 'cover'
-                    }}
-                  ></div>
-                  <h3>{product.name}</h3>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-                    <p style={{ margin: 0 }}>{product.price.toFixed(2)} درهم</p>
-                    {product.originalPrice && product.isOfferActive && (
-                      <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.9rem' }}>
-                        {product.originalPrice.toFixed(2)}
-                      </span>
-                    )}
-                  </div>
-                </Link>
-              );
-            })
-          ) : (
-            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '3rem' }}>
-              جاري تحميل أحدث المنتجات...
+        {/* Minimalist Special Offers Section */}
+        {featuredOfferProducts && featuredOfferProducts.length > 0 && (
+          <section>
+            <div className={styles.sectionHeader}>
+              <h2 className="elegant-text">عروض لا تفوت</h2>
+              <div className="line-separator" style={{ margin: '2rem auto' }}></div>
             </div>
-          )}
-        </div>
-      </section>
+            <div className={styles.productGrid}>
+              {featuredOfferProducts.map(product => {
+                const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+                return (
+                  <Link key={product.id} href={`/product/${product.id}`} className={styles.placeholderCard}>
+                    <div className={styles.saleBadge}>خصم حصري {discount > 0 && `${discount}%`}</div>
+                    <div className={styles.imageBox} style={{ backgroundImage: `url("${product.image}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                      {product.isOfferActive && product.offerExpiry && (
+                        <div style={{ position: 'absolute', bottom: '20px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                          <CountdownTimer expiryDate={product.offerExpiry} />
+                        </div>
+                      )}
+                    </div>
+                    <h3>{product.name}</h3>
+                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center', marginTop: '0.5rem' }}>
+                      <p style={{ color: 'var(--accent-gold)', fontSize: '1.3rem', margin: 0 }}>{product.price.toFixed(2)} درهم</p>
+                      <p style={{ color: 'var(--text-muted)', textDecoration: 'line-through', fontSize: '1rem', margin: 0 }}>{product.originalPrice.toFixed(2)}</p>
+                    </div>
 
-      <div className={styles.ctaContent} style={{ textAlign: 'center', padding: '4rem 2rem', background: 'var(--soft-cream)', marginTop: '2rem' }}>
-        <h2 className="elegant-text">شيك جون - أناقة تليق بكِ</h2>
-        <p>نحرص على تقديم أرقى التصاميم بأسعار تنافسية وجودة عالية.</p>
-        <Link href="/women" className="btn-primary" style={{ marginTop: '1.5rem', display: 'inline-block', padding: '1rem 3rem' }}>
-          عرض تشكيلة النساء
-        </Link>
+                    {/* Hover Button */}
+                    <span className="btn-primary">شراء الآن</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Minimalist Latest Products */}
+        <section>
+          <div className={styles.sectionHeader}>
+            <h2 className="elegant-text">وصل حديثاً</h2>
+            <div className="line-separator" style={{ margin: '2rem auto' }}></div>
+          </div>
+          <div className={styles.productGrid}>
+            {latestProducts.map(product => (
+              <Link key={product.id} href={`/product/${product.id}`} className={styles.placeholderCard}>
+                <div className={styles.imageBox} style={{ backgroundImage: `url("${product.image || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80'}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+                <h3>{product.name}</h3>
+                <p style={{ color: 'var(--text-dark)', fontSize: '1.2rem', marginTop: '0.5rem', fontWeight: 500 }}>{product.price.toFixed(2)} درهم</p>
+
+                {/* Hover Button */}
+                <span className="btn-primary">التفاصيل</span>
+              </Link>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '4rem' }}>
+            <Link href="/products" className="btn-outline">
+              عرض جميع الكولكشن
+            </Link>
+          </div>
+        </section>
+
       </div>
-    </div>
+
+      {/* Extreme Luxury CTA */}
+      <section className={styles.ctaSection}>
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundImage: 'url("/images/collection-1.png")', backgroundSize: 'cover', backgroundAttachment: 'fixed', opacity: 0.15 }}></div>
+        <h2 className="elegant-text">انضمي إلى عالم الأناقة</h2>
+        <p>كوني أول من يكتشف أحدث صيحات الموضة والعروض الحصرية المصممة لتبرز جمالك.</p>
+        <Link href="/women" className="btn-primary" style={{ padding: '1.5rem 4rem', fontSize: '1.1rem' }}>
+          تسوقي التشكيلة الفاخرة
+        </Link>
+      </section>
+    </main>
   );
 }

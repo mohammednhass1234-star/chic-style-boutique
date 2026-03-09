@@ -1,33 +1,98 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
 :root {
-  /* Brand Colors */
-  --primary-pink: #f8e1e7;
-  --accent-rose: #d63384;
-  --warm-beige: #fefae0;
-  --soft-cream: #fff9f0;
+  /* Ultra-Premium Brand Colors */
+  --primary-rose: #d6b4b4;
+  /* Elegant dusty rose */
+  --accent-gold: #bfa054;
+  /* Rich, deep luxury gold */
+  --dark-charcoal: #1c1c1c;
+  /* Ultra-deep, off-black for high contrast */
+  --soft-cream: #faf7f2;
+  /* Warm, high-end paper texture feel */
+  --pure-white: #ffffff;
 
   /* Text Colors */
-  --text-dark: #1a1a1a;
-  --text-muted: #6c757d;
+  --text-dark: #1c1c1c;
+  --text-muted: #808080;
   --text-light: #ffffff;
 
-  /* Neutrals */
-  --bg-white: #ffffff;
-  --bg-soft: #f8f9fa;
-  --border-color: #e9ecef;
+  /* Advanced Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --glass-dark-bg: rgba(28, 28, 28, 0.7);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+  --glass-blur: blur(20px);
 
   /* Fonts */
   --font-serif: 'Playfair Display', serif;
   --font-sans: 'Inter', sans-serif;
 
-  /* Shadows */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+  /* Shadows (Editorial Depth) */
+  --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 15px 40px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 30px 60px rgba(0, 0, 0, 0.12);
+  --shadow-hover: 0 20px 40px rgba(191, 160, 84, 0.15);
 
   /* Transitions */
-  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-smooth: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Custom Scrollbar for Luxury Vibe */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--soft-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #dcdcdc;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-gold);
+}
+
+/* High-End Cinematic Animations */
+@keyframes revealUp {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+    filter: blur(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes fadeScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes drawLine {
+  0% {
+    width: 0;
+  }
+
+  100% {
+    width: 100%;
+  }
 }
 
 * {
@@ -43,21 +108,53 @@ body {
   overflow-x: hidden;
   font-family: var(--font-sans);
   color: var(--text-dark);
-  background: var(--bg-white);
-  line-height: 1.6;
+  background: var(--soft-cream);
+  line-height: 1.7;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Fluid Typography */
 h1,
 h2,
 h3,
 h4,
 .elegant-text {
   font-family: var(--font-serif);
+  font-weight: 500;
+  color: var(--dark-charcoal);
+  letter-spacing: -0.02em;
+  /* Tighter tracking for modern editorial look */
+}
+
+h1 {
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+}
+
+p {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  color: var(--text-muted);
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+a:hover {
+  color: var(--accent-gold);
 }
 
 button {
@@ -71,27 +168,101 @@ ul {
   list-style: none;
 }
 
-/* Base Styles */
+/* Expanded Whitespace for Luxury Feel */
 section {
-  padding: 4rem 2rem;
+  padding: 8rem 2rem;
+  opacity: 0;
+  animation: revealUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
+/* Ultra-Premium Buttons */
 .btn-primary {
-  background: var(--accent-rose);
-  color: white;
-  padding: 0.8rem 1.5rem;
-  border-radius: 4px;
+  background: var(--dark-charcoal);
+  color: var(--pure-white);
+  padding: 1.2rem 3rem;
+  border-radius: 0;
+  /* Sharp edges for editorial look */
   transition: var(--transition-smooth);
   font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  border: 1px solid var(--dark-charcoal);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background: var(--accent-gold);
+  transition: var(--transition-smooth);
+  z-index: -1;
+}
+
+.btn-primary:hover::before {
+  width: 100%;
 }
 
 .btn-primary:hover {
-  background: #e91e63;
+  border-color: var(--accent-gold);
+  color: var(--pure-white) !important;
+  box-shadow: var(--shadow-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(240, 98, 146, 0.3);
+}
+
+/* Minimalist Outline Button */
+.btn-outline {
+  background: transparent;
+  color: var(--dark-charcoal);
+  padding: 1rem 2.5rem;
+  border: 1px solid var(--dark-charcoal);
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: var(--transition-fast);
+}
+
+.btn-outline:hover {
+  background: var(--dark-charcoal);
+  color: var(--pure-white);
+}
+
+/* Advanced Glass Card Helper */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+  border-radius: 2px;
+  transition: var(--transition-smooth);
+}
+
+.glass-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-5px);
+}
+
+/* Utilities */
+.line-separator {
+  height: 1px;
+  background: var(--dark-charcoal);
+  opacity: 0.1;
+  margin: 4rem auto;
+  width: 100%;
+  max-width: 200px;
 }

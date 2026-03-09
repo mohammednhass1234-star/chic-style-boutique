@@ -3,56 +3,70 @@
 import React from 'react';
 import Link from 'next/link';
 import styles from './Footer.module.css';
-import { Instagram, Facebook, Phone, MapPin } from 'lucide-react';
-import { useLanguage } from "@/context/LanguageContext";
+import { Instagram, MapPin } from 'lucide-react';
 
 export default function Footer() {
-    const { t } = useLanguage();
-
     return (
-        <footer className={styles.footer}>
-            <div className={styles.footerGrid}>
-                <div className={styles.column}>
-                    <h3 className="elegant-text">Chic Jeune - شيك جون</h3>
-                    <p>أناقة تليق بكِ وبأطفالكِ</p>
-                    <div className={styles.contactButtons} style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                        <a href="https://wa.me/212667519240" target="_blank" rel="noopener noreferrer" className={styles.contactBtn + ' ' + styles.whatsapp}>
-                            <Phone size={18} /> تواصل عبر واتساب
-                        </a>
-                        <a href="https://www.instagram.com/chicjeune2021?igsh=MXRtOHlkcTZhNTBvNQ==" target="_blank" rel="noopener noreferrer" className={styles.contactBtn + ' ' + styles.instagram}>
-                            <Instagram size={18} /> تابعونا على إنستغرام
-                        </a>
-                        <a href="https://www.google.com/maps?q=34.026568,-5.004766" target="_blank" rel="noopener noreferrer" className={styles.contactBtn + ' ' + styles.maps}>
-                            <MapPin size={18} /> موقعنا في فاس (حي زواغة)
-                        </a>
+        <footer className={styles.footer} dir="rtl">
+            <div className={styles.footerContainer}>
+
+                {/* Brand Column */}
+                <div className={styles.brandColumn}>
+                    <h2 className="elegant-text" style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>شيك جون</h2>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: '300px', lineHeight: '1.8' }}>
+                        أيقونة الأناقة والرقي في عالم أزياء النساء والمناسبات الفاخرة.
+                    </p>
+                </div>
+
+                {/* Directory Columns */}
+                <div className={styles.directoryGrid}>
+                    <div className={styles.navCol}>
+                        <h4 className="elegant-text">استكشفي</h4>
+                        <ul>
+                            <li><Link href="/women">أزياء النساء</Link></li>
+                            <li><Link href="/products">التشكيلة الكاملة</Link></li>
+                            <li><Link href="/offers">عروض حصرية</Link></li>
+                        </ul>
+                    </div>
+
+                    <div className={styles.navCol}>
+                        <h4 className="elegant-text">الدار</h4>
+                        <ul>
+                            <li><Link href="/about">قصتنا</Link></li>
+                            <li><Link href="#">سياسة الخصوصية</Link></li>
+                            <li><Link href="#">الشروط والأحكام</Link></li>
+                        </ul>
+                    </div>
+
+                    <div className={styles.navCol}>
+                        <h4 className="elegant-text">التواصل</h4>
+                        <ul>
+                            <li>
+                                <a href="https://wa.me/212667519240" target="_blank" rel="noopener noreferrer">
+                                    واتساب: 0667519240
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.google.com/maps?q=34.026568,-5.004766" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    حي زواغة، فاس <MapPin size={14} />
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
-                <div className={styles.column}>
-                    <h3>{t('liens_rapides')}</h3>
-                    <ul>
-                        <li><Link href="/">{t('accueil')}</Link></li>
-                        <li><Link href="/women">{t('femmes')}</Link></li>
-                        <li><Link href="/offers">{t('offres')}</Link></li>
-                        <li><Link href="/about">{t('a_propos')}</Link></li>
-                    </ul>
-                </div>
-
-                <div className={styles.column}>
-                    <h3>{t('contactez_nous')}</h3>
-                    <ul>
-                        <li><MapPin size={16} /> حي زواغة، فاس</li>
-                        <li><Phone size={16} /> 0667519240</li>
-                    </ul>
-                    <div className={styles.socials} style={{ marginTop: '1rem' }}>
-                        <a href="https://www.instagram.com/chicjeune2021?igsh=MXRtOHlkcTZhNTBvNQ==" target="_blank" rel="noopener noreferrer" className={styles.socialIcon}><Instagram size={18} /></a>
-                        <a href="#" className={styles.socialIcon}><Facebook size={18} /></a>
-                    </div>
-                </div>
             </div>
 
-            <div className={styles.bottom}>
-                <p>&copy; 2026 Chic Jeune - جميع الحقوق محفوظة</p>
+            <div className={styles.footerBottom}>
+                <div className={styles.legal}>
+                    <p>&copy; {new Date().getFullYear()} CHIC JEUNE. جميع الحقوق محفوظة.</p>
+                </div>
+                <div className={styles.social}>
+                    <a href="https://www.instagram.com/chicjeune2021" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
+                        <Instagram strokeWidth={1.5} size={20} />
+                        <span>chicjeune2021</span>
+                    </a>
+                </div>
             </div>
         </footer>
     );
