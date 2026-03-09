@@ -1,32 +1,29 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./prisma/dev.db"
+  url      = "file:./dev.db"
 }
 
 model Product {
-  id          Int         @id @default(autoincrement())
-  name        String
-  description String
-  price       Float
-  image       String?
-  stock       Int         @default(0)
-  sizes       String?     // Comma separated sizes
-  colors      String?     // Comma separated colors
-  videoUrl    String?     // YouTube video link
-  instagramUrl String?     // Instagram Reel link
+  id            Int         @id @default(autoincrement())
+  name          String
+  description   String
+  price         Float
+  image         String?
+  stock         Int         @default(0)
+  sizes         String?
+  colors        String?
+  videoUrl      String?
+  instagramUrl  String?
   originalPrice Float?
   isOfferActive Boolean     @default(false)
   offerExpiry   DateTime?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  OrderItems  OrderItem[]
+  OrderItems    OrderItem[]
 }
 
 model Order {
@@ -36,8 +33,8 @@ model Order {
   customerAddress String
   customerCity    String
   total           Float
-  status          String      @default("pending") // pending, processing, shipped, completed
-  paymentMethod   String      @default("COD")     // COD, CreditCard
+  status          String      @default("pending")
+  paymentMethod   String      @default("COD")
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   items           OrderItem[]
@@ -46,21 +43,21 @@ model Order {
 model OrderItem {
   id        Int     @id @default(autoincrement())
   orderId   Int
-  order     Order   @relation(fields: [orderId], references: [id])
   productId Int
-  product   Product @relation(fields: [productId], references: [id])
   quantity  Int
-  price     Float   // Price at the time of order
+  price     Float
+  product   Product @relation(fields: [productId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id])
 }
 
 model Admin {
-  id                Int       @id @default(autoincrement())
-  email             String    @unique
-  password          String    // Hashed password
-  resetToken        String?   @unique
-  resetTokenExpiry  DateTime?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  id               Int       @id @default(autoincrement())
+  email            String    @unique
+  password         String
+  resetToken       String?   @unique
+  resetTokenExpiry DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
 
 model Setting {
