@@ -106,6 +106,50 @@
     transform: translateY(-2px);
 }
 
+.whatsappLink,
+.mapLink,
+.instagramLink {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.whatsappLink {
+    color: #25D366 !important;
+}
+
+.mapLink {
+    color: #EA4335 !important;
+}
+
+.instagramLink {
+    color: #E4405F !important;
+}
+
+.whatsappLink:hover,
+.mapLink:hover,
+.instagramLink:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.whatsappLink svg,
+.mapLink svg,
+.instagramLink svg {
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.whatsappLink:hover svg,
+.mapLink:hover svg,
+.instagramLink:hover svg {
+    transform: scale(1.1);
+}
+
 @media (max-width: 900px) {
     .footerContainer {
         flex-direction: column;

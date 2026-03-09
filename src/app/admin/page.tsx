@@ -108,11 +108,14 @@ export default function AdminDashboard() {
                 <Link href="/admin/products" style={{ flex: 1, minWidth: '220px', padding: '1.5rem', background: 'var(--text-dark)', color: 'white', borderRadius: '12px', textAlign: 'center', textDecoration: 'none', fontWeight: 'bold', boxShadow: 'var(--shadow-sm)' }}>
                     إدارة المنتجات
                 </Link>
-                <Link href="/admin/offers" style={{ flex: 1, minWidth: '220px', padding: '1.5rem', background: 'var(--accent-rose)', color: 'white', borderRadius: '12px', textAlign: 'center', textDecoration: 'none', fontWeight: 'bold', boxShadow: 'var(--shadow-sm)' }}>
+                <Link href="/admin/offers" style={{ flex: 1, minWidth: '220px', padding: '1.5rem', background: 'var(--dark-charcoal)', color: 'white', borderRadius: '12px', textAlign: 'center', textDecoration: 'none', fontWeight: 'bold', boxShadow: 'var(--shadow-sm)' }}>
                     إدارة العروض
                 </Link>
                 <Link href="/admin/orders" style={{ flex: 1, minWidth: '220px', padding: '1.5rem', background: 'var(--text-dark)', color: 'white', borderRadius: '12px', textAlign: 'center', textDecoration: 'none', fontWeight: 'bold', boxShadow: 'var(--shadow-sm)' }}>
                     إدارة الطلبات
+                </Link>
+                <Link href="/admin/settings" style={{ flex: 1, minWidth: '220px', padding: '1.5rem', background: '#607d8b', color: 'white', borderRadius: '12px', textAlign: 'center', textDecoration: 'none', fontWeight: 'bold', boxShadow: 'var(--shadow-sm)' }}>
+                    الإعدادات
                 </Link>
                 {/* Remove Category management link as requested */}
             </div>

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import styles from './Footer.module.css';
-import { Instagram, MapPin } from 'lucide-react';
+import { Instagram, MapPin, MessageCircle } from 'lucide-react';
 
 export default function Footer() {
     return (
@@ -42,13 +42,15 @@ export default function Footer() {
                         <h4 className="elegant-text">التواصل</h4>
                         <ul>
                             <li>
-                                <a href="https://wa.me/212667519240" target="_blank" rel="noopener noreferrer">
+                                <a href="https://wa.me/212667519240" target="_blank" rel="noopener noreferrer" className={styles.whatsappLink}>
+                                    <MessageCircle size={18} />
                                     واتساب: 0667519240
                                 </a>
                             </li>
                             <li>
-                                <a href="https://www.google.com/maps?q=34.026568,-5.004766" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                    حي زواغة، فاس <MapPin size={14} />
+                                <a href="https://www.google.com/maps?q=34.026568,-5.004766" target="_blank" rel="noopener noreferrer" className={styles.mapLink}>
+                                    <MapPin size={18} />
+                                    حي زواغة، فاس
                                 </a>
                             </li>
                         </ul>
@@ -62,8 +64,8 @@ export default function Footer() {
                     <p>&copy; {new Date().getFullYear()} CHIC JEUNE. جميع الحقوق محفوظة.</p>
                 </div>
                 <div className={styles.social}>
-                    <a href="https://www.instagram.com/chicjeune2021" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>
-                        <Instagram strokeWidth={1.5} size={20} />
+                    <a href="https://www.instagram.com/chicjeune2021" target="_blank" rel="noopener noreferrer" className={`${styles.socialLink} ${styles.instagramLink}`}>
+                        <Instagram strokeWidth={1.5} size={24} />
                         <span>chicjeune2021</span>
                     </a>
                 </div>
