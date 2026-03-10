@@ -220,19 +220,46 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                 </div>
             </div>
 
-            {/* Expansive Full-Width Instagram Embed if available */}
+            {/* Instagram Video Link */}
             {product.instagramUrl && (
-                <div className="container" style={{ marginTop: '8rem' }}>
-                    <h3 className="elegant-text" style={{ textAlign: 'center', fontSize: '2rem', marginBottom: '3rem' }}>شاهديه على الطبيعة</h3>
-                    <div style={{ maxWidth: '800px', margin: '0 auto', border: '1px solid var(--glass-border)', background: 'var(--pure-white)', padding: '1rem' }}>
-                        <iframe
-                            src={`${product.instagramUrl.split('?')[0]}${product.instagramUrl.endsWith('/') ? '' : '/'}embed`}
-                            width="100%"
-                            height="600"
-                            frameBorder="0"
-                            scrolling="no"
-                            allowTransparency={true}
-                        ></iframe>
+                <div className="container" style={{ marginTop: '6rem', marginBottom: '4rem', textAlign: 'center' }}>
+                    <div style={{
+                        maxWidth: '600px',
+                        margin: '0 auto',
+                        background: 'linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+                        borderRadius: '16px',
+                        padding: '3rem 2rem',
+                        color: 'white',
+                        position: 'relative',
+                        overflow: 'hidden'
+                    }}>
+                        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.1)' }}></div>
+                        <div style={{ position: 'relative', zIndex: 1 }}>
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="white" style={{ marginBottom: '1rem' }}>
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                            <h3 className="elegant-text" style={{ fontSize: '1.8rem', marginBottom: '0.8rem', color: 'white' }}>شاهدي الفيديو على إنستغرام</h3>
+                            <p style={{ marginBottom: '2rem', opacity: 0.9, fontSize: '1rem' }}>شوفي المنتج بالتفصيل في فيديو حقيقي 🎬</p>
+                            <a
+                                href={product.instagramUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    display: 'inline-block',
+                                    background: 'white',
+                                    color: '#dc2743',
+                                    padding: '1rem 3rem',
+                                    borderRadius: '30px',
+                                    fontWeight: 'bold',
+                                    fontSize: '1.1rem',
+                                    textDecoration: 'none',
+                                    transition: 'transform 0.3s ease',
+                                    letterSpacing: '1px'
+                                }}
+                            >
+                                ▶ افتحي الفيديو
+                            </a>
+                        </div>
                     </div>
                 </div>
             )}
