@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type Language = 'ar' | 'fr';
+export type Language = 'ar';
 
 export const translationsAr: Record<string, string> = {
     accueil: 'الرئيسية',
@@ -90,95 +90,8 @@ export const translationsAr: Record<string, string> = {
     en_cours_envoi: 'جاري تسجيل الطلب...',
 };
 
-export const translationsFr: Record<string, string> = {
-    accueil: 'Accueil',
-    femmes: 'Femmes',
-    enfants: 'Enfants',
-    panier: 'Panier',
-    a_propos: 'À propos',
-    offres: 'Offres',
-    nouveautes: 'Nouveautés',
-    decouvrez_collection: 'Découvrez notre nouvelle collection pour cette saison',
-    acheter_maintenant: 'Acheter maintenant',
-    ajouter_au_panier: 'Ajouter au panier',
-    tailles_disponibles: 'Tailles',
-    couleurs_disponibles: 'Couleurs disponibles',
-    en_stock: 'En stock',
-    rupture_stock: 'Rupture de stock',
-    commander_wa: 'Commander via WhatsApp',
-    chargement: 'Chargement...',
-    produit_non_trouve: 'Produit introuvable',
-    tous_les_produits: 'Tous les produits',
-    decouvrez_elegance: 'Découvrez l\'élégance et le confort dans toute notre collection',
-    mode_femmes: 'Mode Femmes',
-    selection_exclusive: 'Une sélection exclusive pour briller à chaque occasion',
-    l_elegance_sublime: 'Chic Jeune - L\'élégance qui vous convient',
-    voir_details: 'Voir les détails',
-    aucun_produit: 'Aucun produit disponible pour le moment.',
-    retour_produits: 'Retour aux produits',
-    liens_rapides: 'Liens rapides',
-    contactez_nous: 'Contactez-nous',
-    tous_droits: 'Tous droits réservés',
-    a_propos_desc: 'Chic Jeune est votre première destination pour une mode moderne alliant qualité et confort.',
-    notre_vision: 'Notre Vision',
-    notre_vision_desc: 'Nous aspirons à être le premier choix pour chaque femme recherchant l\'unicité et l\'élégance.',
-    nos_valeurs: 'Nos Valeurs',
-    valeur_qualite: 'Qualité : Les meilleurs tissus et designs.',
-    valeur_elegance: 'Élégance : Des designs modernes qui conviennent à vos goûts.',
-    valeur_confiance: 'Confiance : La satisfaction de nos clients est notre objectif.',
-    pourquoi_chic: 'Pourquoi Chic Jeune ?',
-    livraison_rapide: 'Livraison Rapide',
-    livraison_rapide_desc: 'Nous vous livrons partout dans les plus brefs délais.',
-    prix_competitifs: 'Prix Compétitifs',
-    prix_competitifs_desc: 'La meilleure qualité au meilleur prix.',
-    support_continu: 'Support Continu',
-    support_continu_desc: 'Nous sommes toujours là pour vous servir.',
-    offres_titre: 'Dernières Offres et Réductions',
-    offres_desc: 'Saisissez l\'opportunité de magasiner à des prix imbattables',
-    promo: 'Offre Spéciale',
-    festan_eid: 'Robe de Fête المميز',
-    taqm_waladi: 'Tenue Décontractée',
-    haqiba_fakhira: 'Sac à Main de Luxe',
-    panier_vide: 'Votre panier est actuellement vide',
-    commencer_achat: 'Vous n\'avez encore ajouté aucun produit, commencez vos achats maintenant.',
-    panier_titre: 'Votre Panier',
-    articles_dans_panier: 'Articles dans le panier',
-    taille_label: 'Taille',
-    couleur_label: 'Couleur',
-    supprimer_article: 'Supprimer',
-    vider_panier: 'Vider le panier',
-    resume_commande: 'Résumé de la commande',
-    sous_total: 'Sous-total',
-    livraison: 'Livraison',
-    gratuit: 'Gratuit',
-    total: 'Total',
-    passer_commande: 'Passer à la caisse',
-    details_commande_wa: 'Détails de paiement',
-    nom_complet: 'Nom Complet',
-    telephone: 'Numéro de Téléphone',
-    adresse: 'Adresse Détaillée',
-    ville: 'Ville',
-    تم_الارسال: 'Commande envoyée avec succès',
-    خطأ_في_الارسال: 'Une erreur s\'est produite',
-    recherche: 'Recherche...',
-    checkout_titre: 'Finaliser la commande',
-    checkout_desc: 'Veuillez remplir les informations pour confirmer votre commande.',
-    prenom_nom: 'Prénom et Nom',
-    num_tel: 'Numéro (WhatsApp)',
-    adresse_complete: 'Adresse Complète',
-    adresse_placeholder: 'Ex: Numéro de maison, rue...',
-    confirmation_commande: 'Confirmer la commande',
-    nb_produits: 'Nombre de produits :',
-    paiement_livraison: '* Le paiement se fait à la livraison. Nous vous contacterons pour confirmer...',
-    succes_commande: 'Commande enregistrée avec succès !',
-    erreur_commande: 'Une erreur s\'est produite. Veuillez réessayer.',
-    echec_connexion: 'Échec de connexion au serveur.',
-    en_cours_envoi: 'Enregistrement en cours...',
-};
-
-const dictionaries = {
-    ar: translationsAr,
-    fr: translationsFr
+const dictionaries: Record<string, Record<string, string>> = {
+    ar: translationsAr
 };
 
 interface LanguageContextType {
@@ -194,29 +107,21 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     const [language, setLanguageState] = useState<Language>('ar');
 
     useEffect(() => {
-        const savedLang = localStorage.getItem('site_lang') as Language;
-        if (savedLang && (savedLang === 'ar' || savedLang === 'fr')) {
-            setLanguageState(savedLang);
-            document.documentElement.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
-            document.documentElement.lang = savedLang;
-        } else {
-            document.documentElement.dir = 'rtl';
-            document.documentElement.lang = 'ar';
-        }
+        document.documentElement.dir = 'rtl';
+        document.documentElement.lang = 'ar';
     }, []);
 
     const setLanguage = (lang: Language) => {
-        setLanguageState(lang);
-        localStorage.setItem('site_lang', lang);
-        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-        document.documentElement.lang = lang;
+        setLanguageState('ar');
+        localStorage.setItem('site_lang', 'ar');
+        document.documentElement.dir = 'rtl';
+        document.documentElement.lang = 'ar';
     };
 
     const t = (key: string) => {
-        const dict = dictionaries[language];
-        return dict[key] || translationsAr[key] || key;
+        return translationsAr[key] || key;
     };
-    const dir = language === 'ar' ? 'rtl' : 'ltr';
+    const dir = 'rtl';
 
     return (
         <LanguageContext.Provider value={{ language, setLanguage, t, dir }}>

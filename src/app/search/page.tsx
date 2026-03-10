@@ -12,7 +12,7 @@ function SearchContent() {
     const query = searchParams.get('q');
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const { t, dir, language } = useLanguage();
+    const { t, dir } = useLanguage();
 
     useEffect(() => {
         const fetchResults = async () => {
@@ -39,7 +39,7 @@ function SearchContent() {
     return (
         <div className="container" dir={dir}>
             <header className={styles.sectionHeader} style={{ marginTop: '3rem' }}>
-                <h1 className="elegant-text">{language === 'ar' ? 'نتائج البحث عن:' : 'Résultats pour:'} "{query}"</h1>
+                <h1 className="elegant-text">نتائج البحث عن: "{query}"</h1>
             </header>
 
             {isLoading ? (
@@ -50,14 +50,14 @@ function SearchContent() {
                         const discount = product.originalPrice && product.isOfferActive ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
                         return (
                             <Link key={product.id} href={`/product/${product.id}`} className={styles.placeholderCard} style={{ position: 'relative' }}>
-                                {product.isOfferActive && <div className={styles.saleBadge}>{language === 'ar' ? 'تخفيض' : 'Promo'} {discount > 0 && `${discount}%`}</div>}
+                                {product.isOfferActive && <div className={styles.saleBadge}>تخفيض {discount > 0 && `${discount}%`}</div>}
                                 <div
                                     className={styles.imageBox}
                                     style={{ backgroundImage: `url("${product.image || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500&q=80'}")`, backgroundSize: 'cover' }}
                                 />
-                                <h3>{(language === 'fr' && (product as any).nameFr) ? (product as any).nameFr : product.name}</h3>
+                                <h3>{product.name}</h3>
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-                                    <p style={{ margin: 0 }}>{product.price.toFixed(2)} {language === 'ar' ? 'درهم' : 'DH'}</p>
+                                    <p style={{ margin: 0 }}>{product.price.toFixed(2)} درهم</p>
                                     {product.originalPrice && product.isOfferActive && (
                                         <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.9rem' }}>
                                             {product.originalPrice.toFixed(2)}
@@ -70,8 +70,8 @@ function SearchContent() {
                 </div>
             ) : (
                 <div style={{ textAlign: 'center', padding: '5rem', background: '#f9f9f9', borderRadius: '15px' }}>
-                    <h3 style={{ color: '#666' }}>{language === 'ar' ? 'عذراً، لم يتم العثور على منتجات تطابق بحثك' : 'Désolé, aucun produit ne correspond à votre recherche.'}</h3>
-                    <p>{language === 'ar' ? 'جربي البحث بكلمات أخرى أو تصفحي أحدث المجموعات.' : 'Essayez d\'autres mots-clés ou parcourez nos collections.'}</p>
+                    <h3 style={{ color: '#666' }}>عذراً، لم يتم العثور على منتجات تطابق بحثك</h3>
+                    <p>جربي البحث بكلمات أخرى أو تصفحي أحدث المجموعات.</p>
                     <Link href="/" className="btn-primary" style={{ display: 'inline-block', marginTop: '1.5rem' }}>{t('accueil')}</Link>
                 </div>
             )}

@@ -10,9 +10,7 @@ export default function NewProductPage() {
 
     const [formData, setFormData] = useState({
         name: '',
-        nameFr: '',
         description: '',
-        descriptionFr: '',
         price: '',
         stock: '100',
         image: '',
@@ -97,9 +95,9 @@ export default function NewProductPage() {
 
             <form onSubmit={handleSubmit} style={{ background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 25px rgba(0,0,0,0.1)', maxWidth: '800px' }}>
                 <div style={{ display: 'grid', gap: '1.5rem' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <label>اسم المنتج (بالعربية):</label>
+                            <label>اسم المنتج:</label>
                             <input
                                 type="text"
                                 name="name"
@@ -109,37 +107,17 @@ export default function NewProductPage() {
                                 style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }}
                             />
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <label>Nom du produit (en Français):</label>
-                            <input
-                                type="text"
-                                name="nameFr"
-                                value={formData.nameFr}
-                                onChange={handleChange}
-                                style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', textAlign: 'left', direction: 'ltr' }}
-                            />
-                        </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <label>الوصف (بالعربية):</label>
+                            <label>الوصف:</label>
                             <textarea
                                 name="description"
                                 value={formData.description}
                                 onChange={handleChange}
                                 rows={4}
                                 style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }}
-                            />
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <label>Description (en Français):</label>
-                            <textarea
-                                name="descriptionFr"
-                                value={formData.descriptionFr}
-                                onChange={handleChange}
-                                rows={4}
-                                style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', textAlign: 'left', direction: 'ltr' }}
                             />
                         </div>
                     </div>

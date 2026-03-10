@@ -9,7 +9,7 @@ import { ShoppingBag, ArrowRight, User, Phone, MapPin, X } from 'lucide-react';
 import Link from "next/link";
 
 export default function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
-    const { t, dir, language } = useLanguage();
+    const { t, dir } = useLanguage();
 
     const [product, setProduct] = useState<any>(null);
     const [selectedSize, setSelectedSize] = useState<string>("M");
@@ -91,7 +91,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
 
     const colorsArray = product.colors ? product.colors.split(',').map((c: string) => c.trim()) : ["واحد"];
     const sizesArray = product.sizes ? product.sizes.split(',').map((c: string) => c.trim()) : ["واحد"];
-    const displayPriceCurrency = language === 'ar' ? 'درهم' : 'DH';
+    const displayPriceCurrency = 'درهم';
 
     return (
         <div style={{ backgroundColor: 'var(--soft-cream)', minHeight: '100vh', paddingBottom: '4rem' }} dir={dir}>
@@ -131,7 +131,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                 <div style={{ flex: '1', minWidth: '320px', position: 'sticky', top: '8rem', display: 'flex', flexDirection: 'column', gap: '2.5rem', paddingRight: dir === 'rtl' ? 0 : '2rem', paddingLeft: dir === 'rtl' ? '2rem' : 0 }}>
 
                     <div>
-                        <h1 className="elegant-text" style={{ fontSize: '3.5rem', lineHeight: '1.1', marginBottom: '1.5rem', color: 'var(--dark-charcoal)' }}>{language === 'fr' && product.nameFr ? product.nameFr : product.name}</h1>
+                        <h1 className="elegant-text" style={{ fontSize: '3.5rem', lineHeight: '1.1', marginBottom: '1.5rem', color: 'var(--dark-charcoal)' }}>{product.name}</h1>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
                             <p style={{ fontSize: '1.8rem', color: 'var(--text-dark)', fontWeight: '600', margin: 0, letterSpacing: '1px' }}>{product.price.toFixed(2)} {displayPriceCurrency}</p>
                             {product.isOfferActive && product.originalPrice && (
@@ -144,7 +144,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
 
                     <div style={{ height: '1px', width: '40px', background: 'var(--accent-gold)' }}></div>
 
-                    <p style={{ color: 'var(--text-muted)', lineHeight: '2', fontSize: '1.05rem' }}>{language === 'fr' && product.descriptionFr ? product.descriptionFr : product.description}</p>
+                    <p style={{ color: 'var(--text-muted)', lineHeight: '2', fontSize: '1.05rem' }}>{product.description}</p>
 
                     <div>
                         <h3 className="elegant-text" style={{ marginBottom: '1.5rem', fontSize: '1.2rem', color: 'var(--dark-charcoal)' }}>{t('taille_label')}</h3>

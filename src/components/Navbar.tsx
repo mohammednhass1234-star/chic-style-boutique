@@ -9,12 +9,9 @@ import { useLanguage } from '@/context/LanguageContext';
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { t, dir, language, setLanguage } = useLanguage();
+  const { t, dir, language } = useLanguage();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const toggleLanguage = () => {
-    setLanguage(language === 'ar' ? 'fr' : 'ar');
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,10 +43,6 @@ export default function Navbar() {
 
         {/* Icons Area */}
         <div className={styles.navIcons}>
-          <button className={styles.iconBtn} onClick={toggleLanguage} aria-label="Toggle Language" style={{ fontWeight: 600, fontSize: '0.9rem' }}>
-            {language === 'ar' ? 'FR' : 'AR'}
-          </button>
-          
           <button className={styles.iconBtn} aria-label={t('recherche')}>
             <Search strokeWidth={1.5} size={22} />
           </button>
@@ -80,9 +73,6 @@ export default function Navbar() {
           <Link href="/about" onClick={toggleMenu}>{t('a_propos')}</Link>
 
           <div className={styles.mobileActions}>
-            <button onClick={toggleLanguage} className={styles.mobileActionBtn} style={{ background: 'transparent', border: '1px solid currentColor', width: 'auto', padding: '0.5rem 1rem' }}>
-              <Globe strokeWidth={1.5} size={18} /> {language === 'ar' ? 'Français' : 'العربية'}
-            </button>
             <Link href="/admin/login" onClick={toggleMenu} className={styles.mobileActionBtn}>
               <ShieldCheck strokeWidth={1.5} size={18} /> لوحة التحكم
             </Link>

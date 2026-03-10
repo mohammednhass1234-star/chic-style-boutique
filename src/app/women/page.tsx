@@ -55,9 +55,9 @@ export default function WomenPage() {
                                             <CountdownTimer expiryDate={product.offerExpiry} />
                                         </div>}
                                     </div>
-                                    <h3 className="elegant-text">{(language === 'fr' && (product as any).nameFr) ? (product as any).nameFr : product.name}</h3>
+                                    <h3 className="elegant-text">{product.name}</h3>
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginTop: '0.5rem' }}>
-                                        <p style={{ margin: 0, color: 'var(--text-dark)', fontWeight: '500', fontSize: '1.2rem' }}>{product.price.toFixed(2)} {language === 'ar' ? 'درهم' : 'DH'}</p>
+                                        <p style={{ margin: 0, color: 'var(--text-dark)', fontWeight: '500', fontSize: '1.2rem' }}>{product.price.toFixed(2)} درهم</p>
                                         {product.originalPrice && product.isOfferActive && (
                                             <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '1rem' }}>
                                                 {product.originalPrice.toFixed(2)}

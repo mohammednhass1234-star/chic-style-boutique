@@ -89,7 +89,7 @@ export default function ProductsPage() {
                         className={selectedCategory === null ? 'btn-primary' : 'btn-outline'}
                         style={{ padding: '0.6rem 2rem', borderRadius: '30px' }}
                     >
-                        {language === 'ar' ? 'الكل' : 'Tous'}
+                        الكل
                     </button>
                     {categories.map(cat => (
                         <button
@@ -108,15 +108,15 @@ export default function ProductsPage() {
                 <div style={{ textAlign: 'center', padding: '10rem', fontSize: '1.2rem', color: 'var(--text-muted)', letterSpacing: '2px', textTransform: 'uppercase' }}>{t('chargement')}</div>
             ) : products.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '10rem', fontSize: '1.2rem', color: 'var(--text-muted)' }}>
-                    {searchQuery ? (language === 'ar' ? 'لا توجد نتائج مطابقة لبحثك.' : 'Aucun résultat trouvé pour votre recherche.') : t('aucun_produit')}
+                    {searchQuery ? 'لا توجد نتائج مطابقة لبحثك.' : t('aucun_produit')}
                 </div>
             ) : (
                 <div className={styles.productGrid} style={{ marginBottom: '8rem' }}>
                     {products.map((product) => (
                         <Link href={`/product/${product.id}`} key={product.id} className={styles.placeholderCard}>
                             <div className={styles.imageBox} style={{ backgroundImage: `url("${product.image || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80'}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
-                            <h3 className="elegant-text">{language === 'fr' && product.nameFr ? product.nameFr : product.name}</h3>
-                            <p style={{ color: 'var(--text-dark)', fontWeight: '500', fontSize: '1.2rem', margin: '0.5rem 0' }}>{product.price.toFixed(2)} {language === 'ar' ? 'درهم' : 'DH'}</p>
+                            <h3 className="elegant-text">{product.name}</h3>
+                            <p style={{ color: 'var(--text-dark)', fontWeight: '500', fontSize: '1.2rem', margin: '0.5rem 0' }}>{product.price.toFixed(2)} درهم</p>
                             <span className="btn-primary" style={{ marginTop: '1rem', width: '80%' }}>{t('voir_details')}</span>
                         </Link>
                     ))}
