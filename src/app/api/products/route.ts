@@ -93,7 +93,9 @@ export async function POST(request: Request) {
         const newProduct = await prisma.product.create({
             data: {
                 name,
+                nameFr: body.nameFr || null,
                 description: description || '',
+                descriptionFr: body.descriptionFr || null,
                 price: parsedPrice,
                 originalPrice: originalPrice ? parseFloat(originalPrice) : null,
                 isOfferActive: !!isOfferActive,

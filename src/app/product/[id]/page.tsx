@@ -9,7 +9,7 @@ import { ShoppingBag, ArrowRight, User, Phone, MapPin, X } from 'lucide-react';
 import Link from "next/link";
 
 export default function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
-    const { t, dir } = useLanguage();
+    const { t, dir, language } = useLanguage();
 
     const [product, setProduct] = useState<any>(null);
     const [selectedSize, setSelectedSize] = useState<string>("M");
@@ -86,18 +86,19 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
         }
     };
 
-    if (isLoading) return <div className="container" style={{ padding: '20vh 0', textAlign: 'center', letterSpacing: '3px', textTransform: 'uppercase' }}>جاري التحميل...</div>;
-    if (!product) return <div className="container" style={{ padding: '20vh 0', textAlign: 'center' }}>المنتج غير موجود</div>;
+    if (isLoading) return <div className="container" style={{ padding: '20vh 0', textAlign: 'center', letterSpacing: '3px', textTransform: 'uppercase' }}>{t('chargement')}</div>;
+    if (!product) return <div className="container" style={{ padding: '20vh 0', textAlign: 'center' }}>{t('produit_non_trouve')}</div>;
 
     const colorsArray = product.colors ? product.colors.split(',').map((c: string) => c.trim()) : ["واحد"];
     const sizesArray = product.sizes ? product.sizes.split(',').map((c: string) => c.trim()) : ["واحد"];
+    const displayPriceCurrency = language === 'ar' ? 'درهم' : 'DH';
 
     return (
         <div style={{ backgroundColor: 'var(--soft-cream)', minHeight: '100vh', paddingBottom: '4rem' }} dir={dir}>
 
             <div className="container" style={{ paddingTop: '8rem', paddingBottom: '2rem' }}>
                 <Link href="/" style={{ color: 'var(--dark-charcoal)', display: 'inline-flex', alignItems: 'center', gap: '0.8rem', textDecoration: 'none', fontWeight: 500, letterSpacing: '1px', fontSize: '0.9rem', textTransform: 'uppercase' }}>
-                    <ArrowRight strokeWidth={1.5} size={18} /> العودة للرئيسية
+                    <ArrowRight strokeWidth={1.5} size={18} style={{ transform: dir === 'rtl' ? 'rotate(180deg)' : 'none' }} /> {t('accueil')}
                 </Link>
             </div>
 
@@ -130,9 +131,9 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                 <div style={{ flex: '1', minWidth: '320px', position: 'sticky', top: '8rem', display: 'flex', flexDirection: 'column', gap: '2.5rem', paddingRight: dir === 'rtl' ? 0 : '2rem', paddingLeft: dir === 'rtl' ? '2rem' : 0 }}>
 
                     <div>
-                        <h1 className="elegant-text" style={{ fontSize: '3.5rem', lineHeight: '1.1', marginBottom: '1.5rem', color: 'var(--dark-charcoal)' }}>{product.name}</h1>
+                        <h1 className="elegant-text" style={{ fontSize: '3.5rem', lineHeight: '1.1', marginBottom: '1.5rem', color: 'var(--dark-charcoal)' }}>{language === 'fr' && product.nameFr ? product.nameFr : product.name}</h1>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                            <p style={{ fontSize: '1.8rem', color: 'var(--text-dark)', fontWeight: '600', margin: 0, letterSpacing: '1px' }}>{product.price.toFixed(2)} درهم</p>
+                            <p style={{ fontSize: '1.8rem', color: 'var(--text-dark)', fontWeight: '600', margin: 0, letterSpacing: '1px' }}>{product.price.toFixed(2)} {displayPriceCurrency}</p>
                             {product.isOfferActive && product.originalPrice && (
                                 <span style={{ textDecoration: 'line-through', color: 'var(--text-muted)', fontSize: '1.2rem' }}>
                                     {product.originalPrice.toFixed(2)}
@@ -143,10 +144,10 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
 
                     <div style={{ height: '1px', width: '40px', background: 'var(--accent-gold)' }}></div>
 
-                    <p style={{ color: 'var(--text-muted)', lineHeight: '2', fontSize: '1.05rem' }}>{product.description}</p>
+                    <p style={{ color: 'var(--text-muted)', lineHeight: '2', fontSize: '1.05rem' }}>{language === 'fr' && product.descriptionFr ? product.descriptionFr : product.description}</p>
 
                     <div>
-                        <h3 className="elegant-text" style={{ marginBottom: '1.5rem', fontSize: '1.2rem', color: 'var(--dark-charcoal)' }}>المقاس</h3>
+                        <h3 className="elegant-text" style={{ marginBottom: '1.5rem', fontSize: '1.2rem', color: 'var(--dark-charcoal)' }}>{t('taille_label')}</h3>
                         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                             {sizesArray.map((size: string) => (
                                 <button
@@ -175,7 +176,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                     </div>
 
                     <div>
-                        <h3 className="elegant-text" style={{ marginBottom: '1.5rem', fontSize: '1.2rem', color: 'var(--dark-charcoal)' }}>اللون</h3>
+                        <h3 className="elegant-text" style={{ marginBottom: '1.5rem', fontSize: '1.2rem', color: 'var(--dark-charcoal)' }}>{t('couleur_label')}</h3>
                         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                             {colorsArray.map((color: string) => (
                                 <button
@@ -212,8 +213,8 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                                 alignItems: 'center'
                             }}
                         >
-                            <span>إضافة إلى الحقيبة</span>
-                            <span>{product.price.toFixed(2)} درهم</span>
+                            <span>{t('ajouter_au_panier')}</span>
+                            <span>{product.price.toFixed(2)} {displayPriceCurrency}</span>
                         </button>
                     </div>
                 </div>
