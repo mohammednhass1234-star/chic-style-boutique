@@ -91,7 +91,7 @@ export default function AdminOrders() {
                                     <td style={{ padding: '1rem' }}>
                                         {order.items?.map((item: any, idx: number) => (
                                             <div key={idx} style={{ fontSize: '0.85rem', marginBottom: '0.3rem', background: '#fef2f2', padding: '0.3rem', borderRadius: '5px' }}>
-                                                {item.name} <span style={{ color: 'var(--accent-rose)' }}>({item.size} / {item.color})</span>
+                                                {item.name || item.product?.name} <span style={{ color: 'var(--accent-rose)' }}>({item.size || '-'} / {item.color || '-'})</span>
                                             </div>
                                         ))}
                                     </td>

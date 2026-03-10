@@ -40,7 +40,10 @@ export async function POST(request: Request) {
                         return {
                             productId: parseInt(item.productId || item.id),
                             quantity: parseInt(item.quantity || 1),
-                            price: cleanPrice
+                            price: cleanPrice,
+                            name: item.name || "",
+                            size: item.size || "",
+                            color: item.color || ""
                         };
                     })
                 }
