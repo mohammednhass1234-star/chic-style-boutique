@@ -25,7 +25,13 @@ export async function GET(request: Request) {
         }
 
         if (categorySlug) {
-            where.category = { slug: categorySlug };
+            if (categorySlug === 'kids') {
+                where.category = { 
+                    slug: { in: ['kids', 'kids-junior', 'kids-teen'] } 
+                };
+            } else {
+                where.category = { slug: categorySlug };
+            }
         }
 
         if (gender && gender !== 'all') {
