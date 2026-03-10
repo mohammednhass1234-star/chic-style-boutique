@@ -9,7 +9,7 @@ import { useLanguage } from "@/context/LanguageContext";
 export default function CheckoutPage() {
     const router = useRouter();
     const { cart, cartCount, clearCart } = useCart();
-    const { t, dir, language } = useLanguage();
+    const { t, dir } = useLanguage();
     const [isLoading, setIsLoading] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -24,7 +24,7 @@ export default function CheckoutPage() {
         return total + (price * item.quantity);
     }, 0);
 
-    const currency = language === 'ar' ? 'درهم' : 'DH';
+    const currency = 'درهم';
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
