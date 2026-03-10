@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import HomeClient from './HomeClient';
 
+export const dynamic = 'force-dynamic';
+
 async function getFeaturedProducts() {
   try {
     const products = await prisma.product.findMany({
