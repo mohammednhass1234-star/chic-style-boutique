@@ -8,6 +8,12 @@ import { CartProvider } from "@/context/CartContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export const metadata: Metadata = {
   title: "Chic Jeune - شيك جون",
   description: "أناقة تليق بكِ - متجر الملابس العصرية في فاس",

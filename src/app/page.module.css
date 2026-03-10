@@ -233,3 +233,39 @@
 .ctaSection .btn-primary:before {
   background: var(--accent-gold);
 }
+
+/* Mobile Optimizations */
+@media (max-width: 600px) {
+  .productGrid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.5rem !important;
+    padding: 1rem !important;
+  }
+
+  .placeholderCard .imageBox {
+    height: 250px !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .placeholderCard h3 {
+    font-size: 1.1rem !important;
+  }
+
+  .placeholderCard p {
+    font-size: 1rem !important;
+  }
+
+  .placeholderCard .btn-primary {
+    display: none !important;
+    /* Hide hover button on mobile, users click the card */
+  }
+
+  .sectionHeader {
+    margin-top: 5rem !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .sectionHeader h1 {
+    font-size: 2.2rem !important;
+  }
+}
