@@ -14,7 +14,7 @@ export default function NewProductPage() {
         price: '',
         stock: '100',
         image: '',
-        sizes: 'S,M,L,XL',
+        sizes: 'S,M,L,XL,XXL',
         colors: 'أبيض,أسود,أزرق',
         instagramUrl: '',
         videoUrl: '',
@@ -23,11 +23,15 @@ export default function NewProductPage() {
         offerExpiry: '',
         categoryId: '',
         gender: 'unisex',
-        subCategory: 'clothing'
+        subCategory: 'clothing',
+        ageGroup: 'junior'
     });
     const [categories, setCategories] = useState<any[]>([]);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+
+    const isKidsCategory = categories.find(c => c.id.toString() === formData.categoryId)?.slug === 'kids' ||
+                           categories.find(c => c.id.toString() === formData.categoryId)?.name === 'الأطفال';
 
     React.useEffect(() => {
         fetch('/api/categories')
@@ -68,7 +72,7 @@ export default function NewProductPage() {
 
             if (response.ok) {
                 alert('تم حفظ المنتج بنجاح!');
-                router.push('/admin/products');
+                router.push(isKidsCategory ? '/admin/kids-products' : '/admin/products');
             } else {
                 alert(`حدث خطأ: ${result.error || 'فشل في حفظ المنتج'}`);
             }
@@ -83,7 +87,21 @@ export default function NewProductPage() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target as HTMLInputElement;
         const val = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
-        setFormData(prev => ({ ...prev, [name]: val }));
+        
+        setFormData(prev => {
+            const newData = { ...prev, [name]: val };
+            
+            // Logic for dynamic sizes based on category
+            if (name === 'categoryId') {
+                const selectedCat = categories.find(c => c.id.toString() === val);
+                if (selectedCat?.slug === 'kids' || selectedCat?.name === 'الأطفال') {
+                    newData.sizes = '4A, 6A, 8A, 10A, 12A, 14A';
+                } else {
+                    newData.sizes = 'S, M, L, XL, XXL';
+                }
+            }
+            return newData;
+        });
     };
 
     return (
@@ -238,33 +256,47 @@ export default function NewProductPage() {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <label style={{ fontWeight: 'bold', color: '#475569' }}>الجنس (خاص بقسم الأطفال):</label>
-                            <select
-                                name="gender"
-                                value={formData.gender}
-                                onChange={handleChange}
-                                style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', background: 'white' }}
-                            >
-                                <option value="unisex">للجنسين (Both)</option>
-                                <option value="boy">ولادي (Boy)</option>
-                                <option value="girl">بناتي (Girl)</option>
-                            </select>
+                    {isKidsCategory && (
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <label style={{ fontWeight: 'bold', color: '#475569' }}>الجنس:</label>
+                                <select
+                                    name="gender"
+                                    value={formData.gender}
+                                    onChange={handleChange}
+                                    style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', background: 'white' }}
+                                >
+                                    <option value="unisex">للجنسين (Both)</option>
+                                    <option value="boy">ولادي (Boy)</option>
+                                    <option value="girl">بناتي (Girl)</option>
+                                </select>
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <label style={{ fontWeight: 'bold', color: '#475569' }}>نوع المنتج:</label>
+                                <select
+                                    name="subCategory"
+                                    value={formData.subCategory}
+                                    onChange={handleChange}
+                                    style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', background: 'white' }}
+                                >
+                                    <option value="clothing">ملابس (Clothing)</option>
+                                    <option value="shoes">أحذية (Shoes)</option>
+                                </select>
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <label style={{ fontWeight: 'bold', color: '#475569' }}>الفئة العمرية:</label>
+                                <select
+                                    name="ageGroup"
+                                    value={formData.ageGroup}
+                                    onChange={handleChange}
+                                    style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', background: 'white' }}
+                                >
+                                    <option value="junior">صغار (Junior)</option>
+                                    <option value="teen">كبار (Teen)</option>
+                                </select>
+                            </div>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <label style={{ fontWeight: 'bold', color: '#475569' }}>نوع المنتج:</label>
-                            <select
-                                name="subCategory"
-                                value={formData.subCategory}
-                                onChange={handleChange}
-                                style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', background: 'white' }}
-                            >
-                                <option value="clothing">ملابس (Clothing)</option>
-                                <option value="shoes">أحذية (Shoes)</option>
-                            </select>
-                        </div>
-                    </div>
+                    )}
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem', background: '#fff9fa', borderRadius: '8px', border: '1px dashed var(--accent-rose)' }}>
                         <input
@@ -304,6 +336,7 @@ export default function NewProductPage() {
                                 name="sizes"
                                 value={formData.sizes}
                                 onChange={handleChange}
+                                placeholder={isKidsCategory ? "مثال: 4A, 6A, 8A..." : "مثال: S, M, L, XL..."}
                                 style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }}
                             />
                         </div>
@@ -320,11 +353,11 @@ export default function NewProductPage() {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <label>رابط Instagram Reel:</label>
+                        <label>رابط Instagram Product:</label>
                         <input
                             type="url"
                             name="instagramUrl"
-                            placeholder="https://www.instagram.com/chicjeune2021?igsh=..."
+                            placeholder="https://www.instagram.com/..."
                             value={formData.instagramUrl}
                             onChange={handleChange}
                             style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }}

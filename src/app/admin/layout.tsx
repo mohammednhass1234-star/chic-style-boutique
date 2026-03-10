@@ -14,9 +14,10 @@ export default function AdminLayout({
                         لوحة التحكم
                     </Link>
                     <div style={{ display: 'flex', gap: '1.5rem' }}>
-                        <Link href="/admin/products" style={{ color: 'white', textDecoration: 'none' }}>المنتجات</Link>
-                        <Link href="/admin/orders" style={{ color: 'white', textDecoration: 'none' }}>الطلبات</Link>
-                        <Link href="/" style={{ color: 'var(--primary-pink)', textDecoration: 'none' }}>عرض الموقع</Link>
+                        <Link href="/admin/products" style={{ color: 'white', textDecoration: 'none', fontWeight: '500' }}>👗 النساء</Link>
+                        <Link href="/admin/kids-products" style={{ color: 'white', textDecoration: 'none', fontWeight: '500' }}>🧸 الأطفال</Link>
+                        <Link href="/admin/orders" style={{ color: 'white', textDecoration: 'none', fontWeight: '500' }}>📋 الطلبات</Link>
+                        <Link href="/" style={{ color: 'var(--primary-pink)', textDecoration: 'none', fontWeight: 'bold' }}>👁️ عرض الموقع</Link>
                     </div>
                 </div>
             </nav>

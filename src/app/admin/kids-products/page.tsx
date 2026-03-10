@@ -6,21 +6,21 @@ import styles from "../../page.module.css";
 import { Trash2, Edit } from 'lucide-react';
 import { Product } from '@/types';
 
-export default function AdminProducts() {
+export default function AdminKidsProducts() {
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch('/api/products');
+                // Fetch specifically for Kids category
+                const response = await fetch('/api/products?categorySlug=kids');
                 if (response.ok) {
-                    const data: Product[] = await response.json();
-                    // Filter out Kids products (categoryId 1)
-                    setProducts(data.filter((p: any) => p.categoryId !== 1));
+                    const data = await response.json();
+                    setProducts(data);
                 }
             } catch (error) {
-                console.error('Error fetching products:', error);
+                console.error('Error fetching kids products:', error);
             } finally {
                 setIsLoading(false);
             }
@@ -48,14 +48,14 @@ export default function AdminProducts() {
     return (
         <div className="container" dir="rtl">
             <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <h1 className="elegant-text">إدارة منتجات النساء 👗</h1>
+                <h1 className="elegant-text">إدارة منتجات الأطفال 🧸</h1>
                 <Link href="/admin/products/new" className="btn-primary" style={{ textDecoration: 'none' }}>
-                    إضافة منتج جديد +
+                    إضافة منتج أطفال جديد +
                 </Link>
             </header>
 
             {isLoading ? (
-                <div style={{ textAlign: 'center', padding: '3rem' }}>جاري تحميل المنتجات...</div>
+                <div style={{ textAlign: 'center', padding: '3rem' }}>جاري تحميل منتجات الأطفال...</div>
             ) : (
                 <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-md)', overflowX: 'auto' }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -63,13 +63,13 @@ export default function AdminProducts() {
                             <tr style={{ textAlign: 'right', borderBottom: '2px solid var(--primary-pink)' }}>
                                 <th style={{ padding: '1rem' }}>الصورة</th>
                                 <th style={{ padding: '1rem' }}>الاسم</th>
+                                <th style={{ padding: '1rem' }}>الجنس/العمر</th>
                                 <th style={{ padding: '1rem' }}>السعر</th>
-                                <th style={{ padding: '1rem' }}>المخزن</th>
                                 <th style={{ padding: '1rem' }}>الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {products.length > 0 ? products.map((product) => (
+                            {products.length > 0 ? products.map((product: any) => (
                                 <tr key={product.id} style={{ borderBottom: '1px solid #eee' }}>
                                     <td style={{ padding: '1rem' }}>
                                         <div
@@ -84,8 +84,13 @@ export default function AdminProducts() {
                                         />
                                     </td>
                                     <td style={{ padding: '1rem', fontWeight: 'bold' }}>{product.name}</td>
+                                    <td style={{ padding: '1rem' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', fontSize: '0.9rem' }}>
+                                            <span>{product.gender === 'boy' ? 'ولد 👦' : product.gender === 'girl' ? 'بنت 👧' : 'للجنسين 🚻'}</span>
+                                            <span style={{ color: '#666' }}>{product.ageGroup === 'teen' ? 'كبار (Teens)' : 'صغار (Junior)'}</span>
+                                        </div>
+                                    </td>
                                     <td style={{ padding: '1rem' }}>{product.price.toFixed(2)} درهم</td>
-                                    <td style={{ padding: '1rem' }}>{product.stock}</td>
                                     <td style={{ padding: '1rem' }}>
                                         <div style={{ display: 'flex', gap: '1rem' }}>
                                             <button
@@ -99,7 +104,7 @@ export default function AdminProducts() {
                                 </tr>
                             )) : (
                                 <tr>
-                                    <td colSpan={5} style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>لا توجد منتجات حالياً.</td>
+                                    <td colSpan={5} style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>لا توجد منتجات أطفال حالياً.</td>
                                 </tr>
                             )}
                         </tbody>

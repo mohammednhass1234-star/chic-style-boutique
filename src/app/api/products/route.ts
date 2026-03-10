@@ -9,6 +9,7 @@ export async function GET(request: Request) {
         const categorySlug = searchParams.get('categorySlug');
         const gender = searchParams.get('gender');
         const subCategory = searchParams.get('subCategory');
+        const ageGroup = searchParams.get('ageGroup');
 
         let where: any = {};
 
@@ -33,6 +34,10 @@ export async function GET(request: Request) {
 
         if (subCategory && subCategory !== 'all') {
             where.subCategory = subCategory;
+        }
+
+        if (ageGroup && ageGroup !== 'all') {
+            where.ageGroup = ageGroup;
         }
 
         const now = new Date();
@@ -83,7 +88,8 @@ export async function POST(request: Request) {
             offerExpiry,
             categoryId,
             gender,
-            subCategory
+            subCategory,
+            ageGroup
         } = body;
 
         // Validation
@@ -119,6 +125,7 @@ export async function POST(request: Request) {
                 categoryId: parsedCategoryId,
                 gender: gender || 'unisex',
                 subCategory: subCategory || 'clothing',
+                ageGroup: ageGroup || 'junior',
             }
         });
 
