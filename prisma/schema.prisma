@@ -21,6 +21,8 @@ model Product {
   originalPrice Float?
   isOfferActive Boolean     @default(false)
   offerExpiry   DateTime?
+  gender        String?     // 'boy', 'girl', 'unisex'
+  subCategory   String?     // 'clothing', 'shoes'
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   categoryId    Int?

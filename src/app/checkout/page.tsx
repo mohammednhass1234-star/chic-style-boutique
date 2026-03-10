@@ -31,12 +31,16 @@ export default function CheckoutPage() {
         setFormData(prev => ({ ...prev, [id]: value }));
     };
 
+    const [orderStep, setOrderStep] = useState(1); // 1: Form, 2: Payment Instructions
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (cart.length === 0) return;
+        setOrderStep(2); // Move to payment step
+    };
 
+    const handleConfirmPayment = async () => {
         setIsLoading(true);
-
         try {
             const response = await fetch('/api/orders', {
                 method: 'POST',
@@ -47,12 +51,13 @@ export default function CheckoutPage() {
                     customerCity: formData.city,
                     customerAddress: formData.address,
                     total: totalPrice,
-                    items: cart
+                    items: cart,
+                    status: 'بانتظار التحقق من الدفع'
                 }),
             });
 
             if (response.ok) {
-                alert(t('succes_commande'));
+                alert('تم إرسال طلبك بنجاح! يرجى إرسال وصل الدفع عبر الواتساب لتأكيد طلبك.');
                 clearCart();
                 router.push('/');
             } else {
@@ -84,31 +89,71 @@ export default function CheckoutPage() {
             </header>
 
             <div style={{ maxWidth: '1000px', margin: '3rem auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', background: 'white', padding: '2rem', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <label htmlFor="name">{t('nom_complet')}</label>
-                        <input type="text" id="name" value={formData.name} onChange={handleChange} placeholder={t('prenom_nom')} style={{ padding: '0.8rem', border: '1px solid var(--border-color)', borderRadius: '4px' }} required />
-                    </div>
+                {orderStep === 1 ? (
+                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', background: 'white', padding: '2rem', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label htmlFor="name">{t('nom_complet')}</label>
+                            <input type="text" id="name" value={formData.name} onChange={handleChange} placeholder={t('prenom_nom')} style={{ padding: '0.8rem', border: '1px solid var(--border-color)', borderRadius: '4px' }} required />
+                        </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <label htmlFor="phone">{t('num_tel')}</label>
-                        <input type="tel" id="phone" value={formData.phone} onChange={handleChange} placeholder="06XXXXXXXX" style={{ padding: '0.8rem', border: '1px solid var(--border-color)', borderRadius: '4px' }} required />
-                    </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label htmlFor="phone">{t('num_tel')}</label>
+                            <input type="tel" id="phone" value={formData.phone} onChange={handleChange} placeholder="06XXXXXXXX" style={{ padding: '0.8rem', border: '1px solid var(--border-color)', borderRadius: '4px' }} required />
+                        </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <label htmlFor="city">{t('ville')}</label>
-                        <input type="text" id="city" value={formData.city} onChange={handleChange} placeholder={t('ville')} style={{ padding: '0.8rem', border: '1px solid var(--border-color)', borderRadius: '4px' }} required />
-                    </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label htmlFor="city">{t('ville')}</label>
+                            <input type="text" id="city" value={formData.city} onChange={handleChange} placeholder={t('ville')} style={{ padding: '0.8rem', border: '1px solid var(--border-color)', borderRadius: '4px' }} required />
+                        </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <label htmlFor="address">{t('adresse_complete')}</label>
-                        <textarea id="address" value={formData.address} onChange={handleChange} placeholder={t('adresse_placeholder')} rows={3} style={{ padding: '0.8rem', border: '1px solid var(--border-color)', borderRadius: '4px' }} required></textarea>
-                    </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label htmlFor="address">{t('adresse_complete')}</label>
+                            <textarea id="address" value={formData.address} onChange={handleChange} placeholder={t('adresse_placeholder')} rows={3} style={{ padding: '0.8rem', border: '1px solid var(--border-color)', borderRadius: '4px' }} required></textarea>
+                        </div>
 
-                    <button type="submit" disabled={isLoading} className="btn-primary" style={{ padding: '1.2rem', fontSize: '1.1rem', marginTop: '1rem', opacity: isLoading ? 0.7 : 1 }}>
-                        {isLoading ? t('en_cours_envoi') : t('confirmation_commande')}
-                    </button>
-                </form>
+                        <button type="submit" className="btn-primary" style={{ padding: '1.2rem', fontSize: '1.1rem', marginTop: '1rem' }}>
+                            {t('confirmation_commande')}
+                        </button>
+                    </form>
+                ) : (
+                    <div style={{ background: 'white', padding: '2.5rem', borderRadius: '15px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', border: '2px solid var(--primary-pink)', position: 'relative' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                            <h2 style={{ color: 'var(--accent-rose)', marginBottom: '1rem' }}>خطوة الدفع النهائية</h2>
+                            <p style={{ fontSize: '1.1rem' }}>يرجى إتمام عملية التحويل البنكي لتأكيد طلبك</p>
+                        </div>
+
+                        <div style={{ background: '#f9f9f9', padding: '1.5rem', borderRadius: '10px', marginBottom: '2rem', border: '1px dashed #ddd' }}>
+                            <h3 style={{ fontSize: '1rem', marginBottom: '1rem', color: '#666' }}>معلومات الحساب البنكي:</h3>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <span style={{ color: '#888' }}>البنك:</span>
+                                    <span style={{ fontWeight: 'bold' }}>مصرف المغرب / BMCE (افتراضي)</span>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <span style={{ color: '#888' }}>الاسم:</span>
+                                    <span style={{ fontWeight: 'bold' }}>CHIC STYLE BOUTIQUE</span>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span style={{ color: '#888' }}>رقم الحساب (RIB):</span>
+                                    <span style={{ fontWeight: 'bold', fontSize: '1.1rem', letterSpacing: '1px' }}>0000 0000 0000 0000 0000 0000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{ background: '#fffbeb', border: '1px solid #fbd38d', padding: '1rem', borderRadius: '8px', marginBottom: '2rem', fontSize: '0.9rem', color: '#975a16' }}>
+                            <strong>ملاحظة:</strong> بعد إتمام التحويل، يرجى الضغط على الزر أدناه والاحتفاظ بوصل الدفع لمشاركته معنا عبر الواتساب.
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '1rem' }}>
+                            <button onClick={() => setOrderStep(1)} disabled={isLoading} style={{ flex: 1, padding: '1rem', borderRadius: '8px', border: '1px solid #ddd', background: 'none', cursor: 'pointer' }}>
+                                تراجع
+                            </button>
+                            <button onClick={handleConfirmPayment} disabled={isLoading} className="btn-primary" style={{ flex: 2, padding: '1rem', borderRadius: '8px', fontSize: '1.1rem', opacity: isLoading ? 0.7 : 1 }}>
+                                {isLoading ? 'جاري التأكيد...' : 'لقد قمت بالدفع، أكمل الطلب'}
+                            </button>
+                        </div>
+                    </div>
+                )}
 
                 <div style={{ padding: '1.5rem', background: 'var(--soft-cream)', borderRadius: '8px', height: 'fit-content' }}>
                     <h3 style={{ marginBottom: '1.5rem', borderBottom: '1px solid #ddd', paddingBottom: '0.5rem' }}>{t('resume_commande')}</h3>

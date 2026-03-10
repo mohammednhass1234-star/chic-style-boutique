@@ -17,7 +17,7 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { customerName, customerPhone, customerAddress, items, total } = body;
+        const { customerName, customerPhone, customerAddress, items, total, status } = body;
 
         const newOrder = await prisma.order.create({
             data: {
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
                 customerAddress,
                 customerCity: "Fes", // Default
                 total: parseFloat(total),
-                status: 'قيد المراجعة',
+                status: status || 'بانتظار التحقق من الدفع',
                 items: {
                     create: items.map((item: any) => {
                         // Robust price parsing (handle strings with "درهم" or "DH")

@@ -7,6 +7,8 @@ export async function GET(request: Request) {
         const query = searchParams.get('q')?.toLowerCase();
         const categoryId = searchParams.get('categoryId');
         const categorySlug = searchParams.get('categorySlug');
+        const gender = searchParams.get('gender');
+        const subCategory = searchParams.get('subCategory');
 
         let where: any = {};
 
@@ -23,6 +25,14 @@ export async function GET(request: Request) {
 
         if (categorySlug) {
             where.category = { slug: categorySlug };
+        }
+
+        if (gender && gender !== 'all') {
+            where.gender = gender;
+        }
+
+        if (subCategory && subCategory !== 'all') {
+            where.subCategory = subCategory;
         }
 
         const now = new Date();
@@ -71,7 +81,9 @@ export async function POST(request: Request) {
             originalPrice,
             isOfferActive,
             offerExpiry,
-            categoryId
+            categoryId,
+            gender,
+            subCategory
         } = body;
 
         // Validation
@@ -105,6 +117,8 @@ export async function POST(request: Request) {
                 videoUrl: videoUrl || '',
                 instagramUrl: instagramUrl || '',
                 categoryId: parsedCategoryId,
+                gender: gender || 'unisex',
+                subCategory: subCategory || 'clothing',
             }
         });
 

@@ -21,7 +21,9 @@ export default function NewProductPage() {
         originalPrice: '',
         isOfferActive: false,
         offerExpiry: '',
-        categoryId: ''
+        categoryId: '',
+        gender: 'unisex',
+        subCategory: 'clothing'
     });
     const [categories, setCategories] = useState<any[]>([]);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -92,6 +94,60 @@ export default function NewProductPage() {
                 </Link>
                 <h1 className="elegant-text" style={{ marginTop: '1rem' }}>إضافة منتج جديد - قسم النساء</h1>
             </header>
+
+            {/* Instagram Import Section */}
+            <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '12px', marginBottom: '2rem', border: '2px solid #e2e8f0', maxWidth: '800px' }}>
+                <h3 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span>📸</span> استيراد تفاصيل المنتج من Instagram
+                </h3>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input
+                        type="url"
+                        placeholder="ضع رابط المنشور أو الريل هنا..."
+                        id="ig-url"
+                        style={{ flex: 1, padding: '0.8rem', border: '1px solid #cbd5e1', borderRadius: '8px' }}
+                    />
+                    <button
+                        onClick={async () => {
+                            const url = (document.getElementById('ig-url') as HTMLInputElement).value;
+                            if (!url) return alert('يرجى وضع الرابط أولاً');
+                            
+                            setIsLoading(true);
+                            try {
+                                const res = await fetch('/api/instagram/fetch', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ url })
+                                });
+                                const data = await res.json();
+                                if (data.success) {
+                                    setFormData(prev => ({
+                                        ...prev,
+                                        description: data.description,
+                                        price: data.price || prev.price,
+                                        image: data.image || prev.image,
+                                        instagramUrl: url
+                                    }));
+                                    if (data.image) setImagePreview(data.image);
+                                    alert('تم جلب البيانات بنجاح! يرجى مراجعة التفاصيل قبل الحفظ.');
+                                } else {
+                                    alert(data.error || 'فشل الجلب');
+                                }
+                            } catch (e) {
+                                alert('خطأ في الاتصال');
+                            } finally {
+                                setIsLoading(false);
+                            }
+                        }}
+                        style={{ padding: '0.8rem 1.5rem', background: 'var(--dark-charcoal)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                    >
+                        جلب التفاصيل
+                    </button>
+                </div>
+                <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.5rem' }}>
+                    * سيتم سحب الصورة والوصف والثمن (إذا وجد) تلقائياً لتوفير الوقت.
+                </p>
+            </div>
 
             <form onSubmit={handleSubmit} style={{ background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 25px rgba(0,0,0,0.1)', maxWidth: '800px' }}>
                 <div style={{ display: 'grid', gap: '1.5rem' }}>
@@ -179,6 +235,34 @@ export default function NewProductPage() {
                                 required
                                 style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }}
                             />
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label style={{ fontWeight: 'bold', color: '#475569' }}>الجنس (خاص بقسم الأطفال):</label>
+                            <select
+                                name="gender"
+                                value={formData.gender}
+                                onChange={handleChange}
+                                style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', background: 'white' }}
+                            >
+                                <option value="unisex">للجنسين (Both)</option>
+                                <option value="boy">ولادي (Boy)</option>
+                                <option value="girl">بناتي (Girl)</option>
+                            </select>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label style={{ fontWeight: 'bold', color: '#475569' }}>نوع المنتج:</label>
+                            <select
+                                name="subCategory"
+                                value={formData.subCategory}
+                                onChange={handleChange}
+                                style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', background: 'white' }}
+                            >
+                                <option value="clothing">ملابس (Clothing)</option>
+                                <option value="shoes">أحذية (Shoes)</option>
+                            </select>
                         </div>
                     </div>
 

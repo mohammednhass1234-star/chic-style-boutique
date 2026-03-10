@@ -7,21 +7,23 @@ import { Trash2, AlertCircle, CheckCircle, Truck, Clock, CreditCard } from 'luci
 import { Order } from '@/types';
 
 const STATUS_OPTIONS = [
-    { value: 'قيد المراجعة', label: 'قيد المراجعة', color: '#f59e0b', bg: '#fef3c7', icon: Clock },
-    { value: 'تم الدفع', label: 'تم الدفع ✅', color: '#10b981', bg: '#d1fae5', icon: CreditCard },
-    { value: 'جاري التوصيل', label: 'جاري التوصيل 🚚', color: '#3b82f6', bg: '#dbeafe', icon: Truck },
-    { value: 'تم التسليم', label: 'تم التسليم ✅', color: '#059669', bg: '#a7f3d0', icon: CheckCircle },
-    { value: 'ملغي', label: 'ملغي ❌', color: '#ef4444', bg: '#fee2e2', icon: AlertCircle },
+    { value: 'بانتظار التحقق من الدفع', label: 'بانتظار الدفع ⏳', color: '#6366f1', border: '#a5b4fc', icon: Clock },
+    { value: 'طلب جديد', label: 'طلب جديد 🆕', color: '#f59e0b', border: '#fcd34b', icon: Clock },
+    { value: 'تم الدفع', label: 'تم الدفع 💰', color: '#10b981', border: '#6ee7b7', icon: CreditCard },
+    { value: 'قيد الإرسال', label: 'قيد الإرسال 🚚', color: '#3b82f6', border: '#93c5fd', icon: Truck },
+    { value: 'تم التسليم', label: 'تم التسليم ✅', color: '#059669', border: '#6ee7b7', icon: CheckCircle },
+    { value: 'ملغي', label: 'ملغي ❌', color: '#ef4444', border: '#fca5a5', icon: AlertCircle },
 ];
 
 function getStatusStyle(status: string) {
     const found = STATUS_OPTIONS.find(s => s.value === status);
-    return found || { color: '#888', bg: '#f3f4f6', label: status };
+    return found || { color: '#888', border: '#eee', label: status };
 }
 
 export default function AdminOrders() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [filter, setFilter] = useState<'all' | 'paid' | 'pending'>('all');
 
     const fetchOrders = async () => {
         try {
@@ -82,11 +84,17 @@ export default function AdminOrders() {
         }
     };
 
+    const filteredOrders = orders.filter(o => {
+        if (filter === 'paid') return o.status === 'تم الدفع';
+        if (filter === 'pending') return o.status === 'بانتظار التحقق من الدفع';
+        return true;
+    });
+
     // Stats
-    const pendingCount = orders.filter(o => o.status === 'قيد المراجعة').length;
+    const pendingCount = orders.filter(o => o.status === 'بانتظار التحقق من الدفع' || o.status === 'طلب جديد').length;
     const paidCount = orders.filter(o => o.status === 'تم الدفع').length;
     const deliveredCount = orders.filter(o => o.status === 'تم التسليم').length;
-    const deliveringCount = orders.filter(o => o.status === 'جاري التوصيل').length;
+    const deliveringCount = orders.filter(o => o.status === 'قيد الإرسال').length;
 
     return (
         <div className="container" dir="rtl">
@@ -102,11 +110,17 @@ export default function AdminOrders() {
                 </Link>
             </header>
 
+            {/* Filters */}
+            <div style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', background: '#f8fafc', padding: '1rem', borderRadius: '12px' }}>
+                <button onClick={() => setFilter('all')} style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: 'none', background: filter === 'all' ? 'var(--dark-charcoal)' : 'white', color: filter === 'all' ? 'white' : '#64748b', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}> الكل </button>
+                <button onClick={() => setFilter('paid')} style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: 'none', background: filter === 'paid' ? '#10b981' : 'white', color: filter === 'paid' ? 'white' : '#64748b', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}> المدفوعة فقط 💰 </button>
+                <button onClick={() => setFilter('pending')} style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: 'none', background: filter === 'pending' ? '#6366f1' : 'white', color: filter === 'pending' ? 'white' : '#64748b', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}> بانتظار الدفع ⏳ </button>
+            </div>
             {/* Stats Cards */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
                 <div style={{ background: '#fef3c7', padding: '1rem', borderRadius: '12px', textAlign: 'center', border: '1px solid #f59e0b22' }}>
                     <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f59e0b' }}>{pendingCount}</div>
-                    <div style={{ fontSize: '0.85rem', color: '#92400e' }}>قيد المراجعة</div>
+                    <div style={{ fontSize: '0.85rem', color: '#92400e' }}>طلب جديد</div>
                 </div>
                 <div style={{ background: '#d1fae5', padding: '1rem', borderRadius: '12px', textAlign: 'center', border: '1px solid #10b98122' }}>
                     <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#10b981' }}>{paidCount}</div>
@@ -114,7 +128,7 @@ export default function AdminOrders() {
                 </div>
                 <div style={{ background: '#dbeafe', padding: '1rem', borderRadius: '12px', textAlign: 'center', border: '1px solid #3b82f622' }}>
                     <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3b82f6' }}>{deliveringCount}</div>
-                    <div style={{ fontSize: '0.85rem', color: '#1e40af' }}>جاري التوصيل</div>
+                    <div style={{ fontSize: '0.85rem', color: '#1e40af' }}>قيد الإرسال</div>
                 </div>
                 <div style={{ background: '#a7f3d0', padding: '1rem', borderRadius: '12px', textAlign: 'center', border: '1px solid #05966922' }}>
                     <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#059669' }}>{deliveredCount}</div>
@@ -135,13 +149,14 @@ export default function AdminOrders() {
                                 <th style={{ padding: '1.2rem' }}>العنوان</th>
                                 <th style={{ padding: '1.2rem' }}>المنتج</th>
                                 <th style={{ padding: '1.2rem' }}>المجموع</th>
+                                <th style={{ padding: '1.2rem' }}>طريقة الدفع</th>
                                 <th style={{ padding: '1.2rem' }}>الحالة</th>
                                 <th style={{ padding: '1.2rem' }}>التاريخ</th>
                                 <th style={{ padding: '1.2rem' }}>إجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.length > 0 ? orders.map((order) => {
+                            {filteredOrders.length > 0 ? filteredOrders.map((order) => {
                                 const statusStyle = getStatusStyle(order.status);
                                 return (
                                     <tr key={order.id} style={{ borderBottom: '1px solid #eee', transition: 'background 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9f9f9'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
@@ -166,17 +181,22 @@ export default function AdminOrders() {
                                             {order.total?.toFixed(2)} درهم
                                         </td>
                                         <td style={{ padding: '1rem' }}>
+                                            <span style={{ fontSize: '0.85rem', background: '#f0f0f0', padding: '0.3rem 0.6rem', borderRadius: '4px' }}>
+                                                {order.paymentMethod === 'COD' ? 'الدفع عند الاستلام' : order.paymentMethod}
+                                            </span>
+                                        </td>
+                                        <td style={{ padding: '1rem' }}>
                                             <select
                                                 value={order.status}
                                                 onChange={(e) => handleStatusChange(order.id, e.target.value)}
                                                 style={{
                                                     padding: '0.5rem 0.8rem',
-                                                    borderRadius: '20px',
-                                                    border: `2px solid ${statusStyle.color}`,
-                                                    background: statusStyle.bg,
+                                                    borderRadius: '8px',
+                                                    border: `1px solid ${statusStyle.color}`,
+                                                    background: 'white',
                                                     color: statusStyle.color,
                                                     fontWeight: 'bold',
-                                                    fontSize: '0.8rem',
+                                                    fontSize: '0.85rem',
                                                     cursor: 'pointer',
                                                     outline: 'none',
                                                     minWidth: '130px'
