@@ -7,7 +7,8 @@ async function main() {
     const categories = [
         { name: "حقائب", slug: "bags" },
         { name: "أحذية", slug: "shoes" },
-        { name: "ألبسة", slug: "clothing" }
+        { name: "ألبسة", slug: "clothing" },
+        { name: "أطفال", slug: "kids" }
     ];
 
     console.log("Seeding categories...");

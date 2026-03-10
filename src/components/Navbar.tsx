@@ -9,7 +9,7 @@ import { useLanguage } from '@/context/LanguageContext';
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { t, dir, isRTL } = useLanguage();
+  const { t, dir } = useLanguage();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -35,6 +35,7 @@ export default function Navbar() {
         <div className={styles.navLinks}>
           <Link href="/">{t('accueil')}</Link>
           <Link href="/women">{t('femmes')}</Link>
+          <Link href="/kids">{t('enfants')}</Link>
           <Link href="/products">{t('tous_les_produits')}</Link>
           <Link href="/offers" className={styles.highlightLink}>{t('offres')}</Link>
           <Link href="/about">{t('a_propos')}</Link>
@@ -66,6 +67,7 @@ export default function Navbar() {
         <div className={styles.mobileMenu}>
           <Link href="/" onClick={toggleMenu}>{t('accueil')}</Link>
           <Link href="/women" onClick={toggleMenu}>{t('femmes')}</Link>
+          <Link href="/kids" onClick={toggleMenu}>{t('enfants')}</Link>
           <Link href="/products" onClick={toggleMenu}>{t('tous_les_produits')}</Link>
           <Link href="/offers" onClick={toggleMenu} className={styles.highlightLinkMobile}>{t('offres')}</Link>
           <Link href="/about" onClick={toggleMenu}>{t('a_propos')}</Link>

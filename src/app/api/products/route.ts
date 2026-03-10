@@ -6,6 +6,7 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url);
         const query = searchParams.get('q')?.toLowerCase();
         const categoryId = searchParams.get('categoryId');
+        const categorySlug = searchParams.get('categorySlug');
 
         let where: any = {};
 
@@ -18,6 +19,10 @@ export async function GET(request: Request) {
 
         if (categoryId) {
             where.categoryId = parseInt(categoryId);
+        }
+
+        if (categorySlug) {
+            where.category = { slug: categorySlug };
         }
 
         const now = new Date();
