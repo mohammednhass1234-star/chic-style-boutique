@@ -80,7 +80,6 @@ export default function BulkImportAssistant() {
         setProducts(initialProducts);
         setIsProcessing(true);
 
-        // Process in chunks or parallel
         for (let i = 0; i < initialProducts.length; i++) {
             setProducts(prev => {
                 const next = [...prev];
@@ -98,11 +97,23 @@ export default function BulkImportAssistant() {
 
                 if (data.success) {
                     const { section, categoryId } = autoCategorize(data.description || '');
+                    
+                    // Automatic Frame Capture for Reels
+                    let capturedImage = data.image;
+                    if (data.videoUrl && (!data.image || data.image.includes('placeholder'))) {
+                        try {
+                            capturedImage = await silentCapture(data.videoUrl) || data.image;
+                        } catch (e) {
+                            console.error('Auto-capture failed:', e);
+                        }
+                    }
+
                     setProducts(prev => {
                         const next = [...prev];
                         next[i] = {
                             ...next[i],
                             ...data,
+                            image: capturedImage,
                             section,
                             categoryId: categoryId || next[i].categoryId,
                             status: 'success'
@@ -127,6 +138,35 @@ export default function BulkImportAssistant() {
             }
         }
         setIsProcessing(false);
+    };
+
+    const silentCapture = (videoUrl: string): Promise<string | null> => {
+        return new Promise((resolve) => {
+            const video = document.createElement('video');
+            video.crossOrigin = "anonymous";
+            video.src = videoUrl;
+            video.muted = true;
+            video.currentTime = 1.5; // Capture at 1.5s
+            
+            video.onloadeddata = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const ctx = canvas.getContext('2d');
+                if (ctx) {
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    try {
+                        resolve(canvas.toDataURL('image/jpeg'));
+                    } catch (e) {
+                        resolve(null);
+                    }
+                } else resolve(null);
+            };
+            video.onerror = () => resolve(null);
+            
+            // Timeout to prevent hanging
+            setTimeout(() => resolve(null), 5000);
+        });
     };
 
     const handleUpdateProduct = (index: number, field: keyof FetchedProduct, value: string) => {
@@ -199,6 +239,28 @@ export default function BulkImportAssistant() {
                     .price-section-row input {
                         width: 100% !important;
                     }
+                .ai-scanner {
+                    position: relative;
+                    overflow: hidden;
+                }
+                .ai-scanner.loading::after {
+                    content: "";
+                    position: absolute;
+                    top: -50%;
+                    left: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: linear-gradient(
+                        45deg,
+                        transparent 25%,
+                        rgba(255, 107, 129, 0.1) 50%,
+                        transparent 75%
+                    );
+                    animation: scan 2s linear infinite;
+                }
+                @keyframes scan {
+                    from { transform: translate(-30%, -30%) rotate(0deg); }
+                    to { transform: translate(30%, 30%) rotate(360deg); }
                 }
             `}</style>
 
@@ -243,8 +305,13 @@ export default function BulkImportAssistant() {
 
                     <div className="product-grid">
                         {products.map((p, idx) => (
-                            <div key={idx} style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', border: '1px solid #eee', opacity: p.status === 'error' ? 0.6 : 1 }}>
-                                {p.status === 'loading' && <div style={{ textAlign: 'center', padding: '2rem' }}>جاري الجلب...</div>}
+                            <div key={idx} className={`ai-scanner ${p.status === 'loading' ? 'loading' : ''}`} style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', border: '1px solid #eee', opacity: p.status === 'error' ? 0.6 : 1 }}>
+                                {p.status === 'loading' && (
+                                    <div style={{ textAlign: 'center', padding: '2rem' }}>
+                                        <div className="elegant-text" style={{ fontSize: '1.5rem' }}>🤖</div>
+                                        <div>جاري القراءة...</div>
+                                    </div>
+                                )}
                                 {p.status === 'error' && <div style={{ color: 'red', fontSize: '0.9rem' }}>خطأ: {p.error}</div>}
                                 {p.status === 'success' && (
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
