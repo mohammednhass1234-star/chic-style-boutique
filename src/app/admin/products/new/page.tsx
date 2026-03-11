@@ -309,7 +309,7 @@ export default function NewProductPage() {
                                 {formData.videoUrl && (
                                     <button 
                                         type="button" 
-                                        onClick={captureThumbnail} 
+                                        onClick={() => captureThumbnail(false)} 
                                         style={{ padding: '0 1rem', background: 'var(--accent-rose)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem' }}
                                     >
                                         📷 التقاط صورة
