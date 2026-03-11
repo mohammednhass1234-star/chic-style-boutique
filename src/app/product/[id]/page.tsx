@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import styles from "../../page.module.css";
 import CountdownTimer from "@/components/CountdownTimer";
-import { ShoppingBag, ArrowRight, User, Phone, MapPin, X } from 'lucide-react';
+import { ShoppingBag, ArrowRight, User, Phone, MapPin, X, CheckCircle } from 'lucide-react';
 import Link from "next/link";
 
 export default function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -16,6 +16,8 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
     const [selectedColor, setSelectedColor] = useState<string>("");
     const [isLoading, setIsLoading] = useState(true);
     const [showOrderModal, setShowOrderModal] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [orderId, setOrderId] = useState<string | null>(null);
 
     // Order form state
     const [orderData, setOrderData] = useState({
@@ -77,12 +79,14 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
 
             if (response.ok) {
                 const orderDataResp = await response.json();
-                const orderId = orderDataResp.id;
+                const newOrderId = orderDataResp.id;
+                setOrderId(newOrderId);
+                setIsSuccess(true);
 
                 // Construct WhatsApp Message
                 const whatsappNumber = '212667519240';
                 const message = `*طلب جديد (طلب سريع)* 🛍️\n\n` +
-                    `*رقم الطلب:* #ORD-${orderId}\n` +
+                    `*رقم الطلب:* #ORD-${newOrderId}\n` +
                     `*الاسم:* ${orderData.name}\n` +
                     `*الهاتف:* ${orderData.phone}\n` +
                     `*العنوان:* ${orderData.address}\n\n` +
@@ -94,10 +98,10 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
 
                 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
-                // Reset and redirect
-                setShowOrderModal(false);
-                setOrderData({ name: '', phone: '', address: '' });
-                window.location.href = whatsappUrl;
+                // Attempt auto-redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = whatsappUrl;
+                }, 1000);
             } else {
                 alert(t('erreur_commande'));
             }
@@ -326,71 +330,105 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                         `}</style>
 
                         <button
-                            onClick={() => setShowOrderModal(false)}
-                            style={{ position: 'absolute', top: '2rem', left: dir === 'rtl' ? '2rem' : 'auto', right: dir === 'rtl' ? 'auto' : '2rem', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--dark-charcoal)' }}
+                            onClick={() => {
+                                setShowOrderModal(false);
+                                if (isSuccess) {
+                                    setIsSuccess(false);
+                                    setOrderId(null);
+                                    setOrderData({ name: '', phone: '', address: '' });
+                                }
+                            }}
+                            style={{ position: 'absolute', top: '2rem', left: dir === 'rtl' ? '2rem' : 'auto', right: dir === 'rtl' ? 'auto' : '2rem', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--dark-charcoal)', zIndex: 10 }}
                         >
                             <X strokeWidth={1.5} size={30} />
                         </button>
 
-                        <h2 className="elegant-text" style={{ marginBottom: '1rem', fontSize: '2.5rem', color: 'var(--dark-charcoal)' }}>إتمام الطلب</h2>
-                        <p style={{ color: 'var(--text-muted)', marginBottom: '3rem', fontSize: '1.1rem' }}>يرجى إدخال معلومات التوصيل لإتمام عملية الشراء بنجاح.</p>
+                        {isSuccess ? (
+                            <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', paddingTop: '2rem' }}>
+                                <div style={{ width: '80px', height: '80px', background: '#d1fae5', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981' }}>
+                                    <CheckCircle size={48} />
+                                </div>
+                                <h2 className="elegant-text" style={{ fontSize: '2.2rem', color: 'var(--dark-charcoal)' }}>تم تسجيل طلبكِ!</h2>
+                                <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                                    رقم طلبكِ هو: <strong>#ORD-{orderId}</strong><br />
+                                    يرجى الضغط على الزر أسفله لإرسال تفاصيل الطلب عبر الواتساب وتأكيد عملية الدفع والشحن.
+                                </p>
+                                
+                                <a 
+                                    href={`https://wa.me/212667519240?text=${encodeURIComponent(`*طلب جديد (طلب سريع)* 🛍️\n\n*رقم الطلب:* #ORD-${orderId}\n*الاسم:* ${orderData.name}\n*الهاتف:* ${orderData.phone}\n*العنوان:* ${orderData.address}\n\n*المنتج:* ${product.name}\n*المقاس:* ${selectedSize}\n*اللون:* ${selectedColor}\n\n*المجموع الإجمالي:* ${product.price.toFixed(2)} درهم\n\nيرجى إرسال صورة وصل الأداء هنا لتأكيد طلبي. شكراً! 🙏`)}`}
+                                    className="btn-primary"
+                                    style={{ width: '100%', padding: '1.5rem', fontSize: '1.1rem', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.8rem' }}
+                                >
+                                    <Phone size={20} /> إرسال عبر الواتساب الآن
+                                </a>
 
-                        <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '3rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
-                            <div style={{ width: '80px', height: '100px', backgroundImage: `url("${product.image}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
-                            <div>
-                                <h4 className="elegant-text" style={{ fontSize: '1.2rem', margin: 0 }}>{product.name}</h4>
-                                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0.5rem 0' }}>اللون: {selectedColor} | المقاس: {selectedSize}</p>
-                                <p style={{ color: 'var(--dark-charcoal)', fontWeight: 600, fontSize: '1.2rem', margin: 0 }}>{product.price.toFixed(2)} درهم</p>
+                                <p style={{ fontSize: '0.85rem', color: '#666' }}>
+                                    سيتم توجيهكِ تلقائياً خلال لحظات...
+                                </p>
                             </div>
-                        </div>
+                        ) : (
+                            <>
+                                <h2 className="elegant-text" style={{ marginBottom: '1rem', fontSize: '2.5rem', color: 'var(--dark-charcoal)' }}>إتمام الطلب</h2>
+                                <p style={{ color: 'var(--text-muted)', marginBottom: '3rem', fontSize: '1.1rem' }}>يرجى إدخال معلومات التوصيل لإتمام عملية الشراء بنجاح.</p>
 
-                        <div style={{ background: '#fffbeb', border: '1px solid #fbd38d', padding: '1rem', borderRadius: '8px', marginBottom: '2rem', fontSize: '0.9rem', color: '#975a16' }}>
-                            {t('paiement_livraison')}
-                        </div>
+                                <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '3rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
+                                    <div style={{ width: '80px', height: '100px', backgroundImage: `url("${product.image}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+                                    <div>
+                                        <h4 className="elegant-text" style={{ fontSize: '1.2rem', margin: 0 }}>{product.name}</h4>
+                                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0.5rem 0' }}>اللون: {selectedColor} | المقاس: {selectedSize}</p>
+                                        <p style={{ color: 'var(--dark-charcoal)', fontWeight: 600, fontSize: '1.2rem', margin: 0 }}>{product.price.toFixed(2)} درهم</p>
+                                    </div>
+                                </div>
 
-                        <form onSubmit={handleOrderSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                            <div style={{ position: 'relative' }}>
-                                <input
-                                    type="text"
-                                    required
-                                    value={orderData.name}
-                                    onChange={(e) => setOrderData({ ...orderData, name: e.target.value })}
-                                    placeholder="الاسم الكامل"
-                                    style={{ width: '100%', padding: '1rem 0', background: 'transparent', border: 'none', borderBottom: '1px solid var(--dark-charcoal)', outline: 'none', fontSize: '1.1rem', color: 'var(--dark-charcoal)' }}
-                                />
-                            </div>
+                                <div style={{ background: '#fffbeb', border: '1px solid #fbd38d', padding: '1rem', borderRadius: '8px', marginBottom: '2rem', fontSize: '0.9rem', color: '#975a16' }}>
+                                    {t('paiement_livraison')}
+                                </div>
 
-                            <div style={{ position: 'relative' }}>
-                                <input
-                                    type="tel"
-                                    required
-                                    value={orderData.phone}
-                                    onChange={(e) => setOrderData({ ...orderData, phone: e.target.value })}
-                                    placeholder="رقم الهاتف"
-                                    style={{ width: '100%', padding: '1rem 0', background: 'transparent', border: 'none', borderBottom: '1px solid var(--dark-charcoal)', outline: 'none', fontSize: '1.1rem', color: 'var(--dark-charcoal)' }}
-                                />
-                            </div>
+                                <form onSubmit={handleOrderSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                                    <div style={{ position: 'relative' }}>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={orderData.name}
+                                            onChange={(e) => setOrderData({ ...orderData, name: e.target.value })}
+                                            placeholder="الاسم الكامل"
+                                            style={{ width: '100%', padding: '1rem 0', background: 'transparent', border: 'none', borderBottom: '1px solid var(--dark-charcoal)', outline: 'none', fontSize: '1.1rem', color: 'var(--dark-charcoal)' }}
+                                        />
+                                    </div>
 
-                            <div style={{ position: 'relative' }}>
-                                <textarea
-                                    required
-                                    rows={2}
-                                    value={orderData.address}
-                                    onChange={(e) => setOrderData({ ...orderData, address: e.target.value })}
-                                    placeholder="العنوان بالتفصيل"
-                                    style={{ width: '100%', padding: '1rem 0', background: 'transparent', border: 'none', borderBottom: '1px solid var(--dark-charcoal)', outline: 'none', fontSize: '1.1rem', color: 'var(--dark-charcoal)', resize: 'none' }}
-                                />
-                            </div>
+                                    <div style={{ position: 'relative' }}>
+                                        <input
+                                            type="tel"
+                                            required
+                                            value={orderData.phone}
+                                            onChange={(e) => setOrderData({ ...orderData, phone: e.target.value })}
+                                            placeholder="رقم الهاتف"
+                                            style={{ width: '100%', padding: '1rem 0', background: 'transparent', border: 'none', borderBottom: '1px solid var(--dark-charcoal)', outline: 'none', fontSize: '1.1rem', color: 'var(--dark-charcoal)' }}
+                                        />
+                                    </div>
 
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="btn-primary"
-                                style={{ padding: '1.5rem', fontSize: '1.1rem', marginTop: '2rem', width: '100%', letterSpacing: '2px' }}
-                            >
-                                {isSubmitting ? 'جاري المعالجة...' : 'تأكيد الطلب'}
-                            </button>
-                        </form>
+                                    <div style={{ position: 'relative' }}>
+                                        <textarea
+                                            required
+                                            rows={2}
+                                            value={orderData.address}
+                                            onChange={(e) => setOrderData({ ...orderData, address: e.target.value })}
+                                            placeholder="العنوان بالتفصيل"
+                                            style={{ width: '100%', padding: '1rem 0', background: 'transparent', border: 'none', borderBottom: '1px solid var(--dark-charcoal)', outline: 'none', fontSize: '1.1rem', color: 'var(--dark-charcoal)', resize: 'none' }}
+                                        />
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="btn-primary"
+                                        style={{ padding: '1.5rem', fontSize: '1.1rem', marginTop: '2rem', width: '100%', letterSpacing: '2px' }}
+                                    >
+                                        {isSubmitting ? 'جاري المعالجة...' : 'تأكيد الطلب'}
+                                    </button>
+                                </form>
+                            </>
+                        )}
                     </div>
                 </div>
             )

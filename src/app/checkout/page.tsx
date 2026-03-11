@@ -5,12 +5,16 @@ import { useRouter } from 'next/navigation';
 import styles from "../page.module.css";
 import { useCart } from "@/context/CartContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { CheckCircle, Phone, X } from 'lucide-react';
+import Link from 'next/link';
 
 export default function CheckoutPage() {
     const router = useRouter();
     const { cart, cartCount, clearCart } = useCart();
     const { t, dir } = useLanguage();
     const [isLoading, setIsLoading] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [orderId, setOrderId] = useState<string | null>(null);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -52,13 +56,15 @@ export default function CheckoutPage() {
             });
 
             if (response.ok) {
-                const orderData = await response.json();
-                const orderId = orderData.id;
+                const orderDataResp = await response.json();
+                const newOrderId = orderDataResp.id;
+                setOrderId(newOrderId);
+                setIsSuccess(true);
                 
                 // Construct WhatsApp Message
                 const whatsappNumber = '212667519240';
                 const message = `*طلب جديد من المتجر* 🛍️\n\n` +
-                    `*رقم الطلب:* #ORD-${orderId}\n` +
+                    `*رقم الطلب:* #ORD-${newOrderId}\n` +
                     `*الاسم:* ${formData.name}\n` +
                     `*الهاتف:* ${formData.phone}\n` +
                     `*المدينة:* ${formData.city}\n` +
@@ -70,9 +76,13 @@ export default function CheckoutPage() {
 
                 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
                 
-                // Clear cart and redirect
+                // Clear cart
                 clearCart();
-                window.location.href = whatsappUrl;
+
+                // Attempt auto-redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = whatsappUrl;
+                }, 1000);
             } else {
                 alert(t('erreur_commande'));
                 setIsLoading(false);
@@ -90,6 +100,38 @@ export default function CheckoutPage() {
                 <h1 className="elegant-text">{t('panier_vide')}</h1>
                 <p style={{ marginTop: '1rem' }}>{t('commencer_achat')}</p>
                 <button onClick={() => router.push('/products')} className="btn-primary" style={{ marginTop: '2rem' }}>{t('acheter_maintenant')}</button>
+            </div>
+        );
+    }
+
+    if (isSuccess) {
+        return (
+            <div className="container" style={{ padding: '5rem 0', textAlign: 'center', maxWidth: '600px' }} dir={dir}>
+                <div style={{ width: '100px', height: '100px', background: '#d1fae5', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981', margin: '0 auto 2rem' }}>
+                    <CheckCircle size={60} />
+                </div>
+                <h1 className="elegant-text" style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>تم تسجيل طلبكِ بنجاح!</h1>
+                <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', lineHeight: '1.8', marginBottom: '3rem' }}>
+                    شكراً لكِ على تسوقكِ من Chic Style Boutique. رقم طلبكِ هو: <strong style={{ color: 'var(--dark-charcoal)' }}>#ORD-{orderId}</strong>
+                    <br />
+                    الخطوة الأخيرة هي إرسال تفاصيل الطلب عبر الواتساب لتأكيد الدفع وبدء عملية الشحن.
+                </p>
+
+                <a 
+                    href={`https://wa.me/212667519240?text=${encodeURIComponent(`*طلب جديد من المتجر* 🛍️\n\n*رقم الطلب:* #ORD-${orderId}\n*الاسم:* ${formData.name}\n*الهاتف:* ${formData.phone}\n*المدينة:* ${formData.city}\n*العنوان:* ${formData.address}\n\n*المجموع الإجمالي:* ${totalPrice.toFixed(2)} درهم\n\nيرجى إرسال صورة وصل الأداء هنا لتأكيد طلبي. شكراً! 🙏`)}`}
+                    className="btn-primary"
+                    style={{ padding: '1.5rem 3rem', fontSize: '1.2rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.8rem', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}
+                >
+                    <Phone size={24} /> إرسال عبر الواتساب الآن
+                </a>
+
+                <p style={{ marginTop: '2rem', fontSize: '0.9rem', color: '#666' }}>
+                    سيتم توجيهكِ تلقائياً إلى تطبيق الواتساب خلال لحظات...
+                </p>
+                
+                <div style={{ marginTop: '4rem' }}>
+                    <Link href="/" style={{ color: 'var(--accent-rose)', fontWeight: 'bold' }}>&larr; العودة للرئيسية</Link>
+                </div>
             </div>
         );
     }
