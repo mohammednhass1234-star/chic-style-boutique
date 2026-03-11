@@ -388,7 +388,29 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                                 <p style={{ color: 'var(--text-muted)', marginBottom: '3rem', fontSize: '1.1rem' }}>يرجى إدخال معلومات التوصيل لإتمام عملية الشراء بنجاح.</p>
 
                                 <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '3rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
-                                    <div style={{ width: '80px', height: '100px', backgroundImage: `url("${product.image}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+                                    <div style={{ 
+                                        width: '80px', 
+                                        height: '100px', 
+                                        backgroundImage: product.image ? `url("${product.image}")` : 'none', 
+                                        backgroundColor: !product.image ? '#f0f0f0' : 'transparent',
+                                        backgroundSize: 'cover', 
+                                        backgroundPosition: 'center',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: 'var(--accent-rose)',
+                                        fontSize: '0.8rem',
+                                        fontWeight: 'bold',
+                                        borderRadius: '4px',
+                                        border: '1px solid #eee'
+                                    }}>
+                                        {!product.image && product.videoUrl && (
+                                            <div style={{ textAlign: 'center' }}>
+                                                <div style={{ width: 0, height: 0, borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderLeft: '10px solid var(--accent-rose)', margin: '0 auto 4px auto' }}></div>
+                                                <span>فيديو</span>
+                                            </div>
+                                        )}
+                                    </div>
                                     <div>
                                         <h4 className="elegant-text" style={{ fontSize: '1.2rem', margin: 0 }}>{product.name}</h4>
                                         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0.5rem 0' }}>اللون: {selectedColor} | المقاس: {selectedSize}</p>

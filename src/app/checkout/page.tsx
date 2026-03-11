@@ -180,6 +180,42 @@ export default function CheckoutPage() {
 
                 <div style={{ padding: '1.5rem', background: 'var(--soft-cream)', borderRadius: '8px', height: 'fit-content' }}>
                     <h3 style={{ marginBottom: '1.5rem', borderBottom: '1px solid #ddd', paddingBottom: '0.5rem' }}>{t('resume_commande')}</h3>
+                    
+                    {/* Items List */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
+                        {cart.map((item, idx) => (
+                            <div key={idx} style={{ display: 'flex', gap: '1rem', alignItems: 'center', background: 'rgba(255,255,255,0.5)', padding: '0.5rem', borderRadius: '6px' }}>
+                                <div style={{ 
+                                    width: '50px', 
+                                    height: '60px', 
+                                    backgroundImage: item.image ? `url("${item.image}")` : 'none',
+                                    backgroundColor: !item.image ? '#f0f0f0' : 'transparent',
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    borderRadius: '4px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: 'var(--accent-rose)',
+                                    fontSize: '0.6rem',
+                                    fontWeight: 'bold',
+                                    flexShrink: 0
+                                }}>
+                                    {!item.image && (
+                                        <div style={{ textAlign: 'center' }}>
+                                            <div style={{ width: 0, height: 0, borderTop: '4px solid transparent', borderBottom: '4px solid transparent', borderLeft: '6px solid var(--accent-rose)', margin: '0 auto 1px auto' }}></div>
+                                            <span>فيديو</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                    <div style={{ fontWeight: 'bold', fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.name}</div>
+                                    <div style={{ color: '#666', fontSize: '0.75rem' }}>{item.size} / {item.color}</div>
+                                </div>
+                                <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>{item.quantity}x</div>
+                            </div>
+                        ))}
+                    </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem' }}>
                         <span>{t('nb_produits')}</span>
                         <span>{cartCount}</span>
