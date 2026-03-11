@@ -45,6 +45,15 @@ export default function NewProductPage() {
             .catch(err => console.error('Error fetching categories:', err));
     }, []);
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (formData.videoUrl && !formData.image) {
+                captureThumbnail(true); // Silent capture for automatic mode
+            }
+        }, 2000);
+        return () => clearTimeout(timer);
+    }, [formData.videoUrl]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target as HTMLInputElement;
         const val = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;

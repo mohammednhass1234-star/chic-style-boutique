@@ -57,7 +57,28 @@ export default function AdminKidsProducts() {
             {isLoading ? (
                 <div style={{ textAlign: 'center', padding: '3rem' }}>جاري تحميل منتجات الأطفال...</div>
             ) : (
-                <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-md)', overflowX: 'auto' }}>
+                <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-md)' }}>
+                    <style jsx>{`
+                        @media (max-width: 768px) {
+                            table { display: none; }
+                            .mobile-cards { display: grid !important; gap: 1rem; }
+                        }
+                    `}</style>
+
+                    <div className="mobile-cards" style={{ display: 'none' }}>
+                        {products.map((product: any) => (
+                            <div key={product.id} style={{ padding: '1rem', border: '1px solid #eee', borderRadius: '12px', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                <div style={{ width: '80px', height: '80px', backgroundImage: `url("${product.image}")`, backgroundSize: 'cover', backgroundPosition: 'center', borderRadius: '8px' }}></div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontWeight: 'bold' }}>{product.name}</div>
+                                    <div style={{ color: 'var(--accent-rose)', fontWeight: 'bold' }}>{product.price.toFixed(2)} درهم</div>
+                                    <div style={{ fontSize: '0.8rem', color: '#666' }}>{product.gender === 'boy' ? 'ولد' : product.gender === 'girl' ? 'بنت' : 'للجنسين'} | {product.ageGroup === 'teen' ? 'كبار' : 'صغار'}</div>
+                                </div>
+                                <button onClick={() => handleDelete(product.id)} style={{ color: '#e74c3c', background: 'none', border: 'none' }}><Trash2 size={20}/></button>
+                            </div>
+                        ))}
+                    </div>
+
                     <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                         <thead>
                             <tr style={{ textAlign: 'right', borderBottom: '2px solid var(--primary-pink)' }}>
