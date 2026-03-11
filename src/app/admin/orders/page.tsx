@@ -144,12 +144,11 @@ export default function AdminOrders() {
                         <thead>
                             <tr style={{ textAlign: 'right', borderBottom: '2px solid var(--primary-pink)', background: '#fafafa' }}>
                                 <th style={{ padding: '1.2rem' }}>رقم الطلب</th>
+                                <th style={{ padding: '1.2rem' }}>المنتج</th>
                                 <th style={{ padding: '1.2rem' }}>العميل</th>
                                 <th style={{ padding: '1.2rem' }}>الهاتف</th>
                                 <th style={{ padding: '1.2rem' }}>العنوان</th>
-                                <th style={{ padding: '1.2rem' }}>المنتج</th>
                                 <th style={{ padding: '1.2rem' }}>المجموع</th>
-                                <th style={{ padding: '1.2rem' }}>طريقة الدفع</th>
                                 <th style={{ padding: '1.2rem' }}>الحالة</th>
                                 <th style={{ padding: '1.2rem' }}>التاريخ</th>
                                 <th style={{ padding: '1.2rem' }}>إجراءات</th>
@@ -161,6 +160,24 @@ export default function AdminOrders() {
                                 return (
                                     <tr key={order.id} style={{ borderBottom: '1px solid #eee', transition: 'background 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9f9f9'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
                                         <td style={{ padding: '1rem', color: '#888' }}>#{order.id.toString().slice(-6)}</td>
+                                        <td style={{ padding: '1rem' }}>
+                                            {order.items?.map((item: any, idx: number) => (
+                                                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.5rem', background: '#fef2f2', padding: '0.4rem', borderRadius: '8px' }}>
+                                                    <div style={{ width: '40px', height: '40px', borderRadius: '4px', overflow: 'hidden', flexShrink: 0, border: '1px solid #eee' }}>
+                                                        <img 
+                                                            src={item.product?.image || item.image || '/placeholder.png'} 
+                                                            alt={item.name} 
+                                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                            onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/40'; }}
+                                                        />
+                                                    </div>
+                                                    <div style={{ fontSize: '0.8rem' }}>
+                                                        <div style={{ fontWeight: 'bold' }}>{item.name || item.product?.name}</div>
+                                                        <div style={{ color: 'var(--accent-rose)' }}>{item.size || '-'} / {item.color || '-'} (x{item.quantity || 1})</div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </td>
                                         <td style={{ padding: '1rem', fontWeight: 'bold' }}>{order.customerName}</td>
                                         <td style={{ padding: '1rem' }}>
                                             <a href={`tel:${order.customerPhone}`} style={{ color: 'var(--dark-charcoal)', textDecoration: 'none' }}>
@@ -170,20 +187,8 @@ export default function AdminOrders() {
                                         <td style={{ padding: '1rem', maxWidth: '200px', lineHeight: '1.5', whiteSpace: 'pre-wrap', fontSize: '0.85rem' }}>
                                             {order.customerAddress}
                                         </td>
-                                        <td style={{ padding: '1rem' }}>
-                                            {order.items?.map((item: any, idx: number) => (
-                                                <div key={idx} style={{ fontSize: '0.85rem', marginBottom: '0.3rem', background: '#fef2f2', padding: '0.4rem 0.6rem', borderRadius: '5px' }}>
-                                                    {item.name || item.product?.name} <span style={{ color: 'var(--accent-rose)' }}>({item.size || '-'} / {item.color || '-'})</span>
-                                                </div>
-                                            ))}
-                                        </td>
                                         <td style={{ padding: '1rem', color: 'var(--accent-rose)', fontWeight: 'bold', fontSize: '1.1rem' }}>
                                             {order.total?.toFixed(2)} درهم
-                                        </td>
-                                        <td style={{ padding: '1rem' }}>
-                                            <span style={{ fontSize: '0.85rem', background: '#f0f0f0', padding: '0.3rem 0.6rem', borderRadius: '4px' }}>
-                                                {order.paymentMethod === 'COD' ? 'الدفع عند الاستلام' : order.paymentMethod}
-                                            </span>
                                         </td>
                                         <td style={{ padding: '1rem' }}>
                                             <select

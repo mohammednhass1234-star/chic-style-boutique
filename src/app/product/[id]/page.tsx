@@ -51,6 +51,7 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
         e.preventDefault();
         setIsSubmitting(true);
         try {
+            const totalPrice = product.price;
             const response = await fetch('/api/orders', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -58,29 +59,51 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                     customerName: orderData.name,
                     customerPhone: orderData.phone,
                     customerAddress: orderData.address,
-                    total: product.price,
+                    customerCity: "Fes", // Default
+                    total: totalPrice,
+                    status: 'بانتظار الدفع عبر الواتساب',
                     items: [
                         {
                             productId: product.id,
                             name: product.name,
                             price: product.price,
                             size: selectedSize,
-                            color: selectedColor
+                            color: selectedColor,
+                            quantity: 1
                         }
                     ]
                 })
             });
 
             if (response.ok) {
-                alert('تم استلام طلبك بنجاح! سنتصل بك قريباً.');
+                const orderDataResp = await response.json();
+                const orderId = orderDataResp.id;
+
+                // Construct WhatsApp Message
+                const whatsappNumber = '212667519240';
+                const message = `*طلب جديد (طلب سريع)* 🛍️\n\n` +
+                    `*رقم الطلب:* #ORD-${orderId}\n` +
+                    `*الاسم:* ${orderData.name}\n` +
+                    `*الهاتف:* ${orderData.phone}\n` +
+                    `*العنوان:* ${orderData.address}\n\n` +
+                    `*المنتج:* ${product.name}\n` +
+                    `*المقاس:* ${selectedSize}\n` +
+                    `*اللون:* ${selectedColor}\n\n` +
+                    `*المجموع الإجمالي:* ${totalPrice.toFixed(2)} درهم\n\n` +
+                    `يرجى إرسال صورة وصل الأداء هنا لتأكيد طلبي. شكراً! 🙏`;
+
+                const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+                // Reset and redirect
                 setShowOrderModal(false);
                 setOrderData({ name: '', phone: '', address: '' });
+                window.location.href = whatsappUrl;
             } else {
-                alert('حدث خطأ أثناء إرسال الطلب. حاول مجدداً.');
+                alert(t('erreur_commande'));
             }
         } catch (error) {
             console.error('Order error:', error);
-            alert('حدث خطأ في الاتصال بالخادم.');
+            alert(t('echec_connexion'));
         } finally {
             setIsSubmitting(false);
         }
