@@ -56,10 +56,27 @@ export default function BulkImportAssistant() {
         setProducts(initialProducts);
         setIsProcessing(true);
 
+        for (let i = 0; i < lines.length; i++) {
+            setProducts(prev => {
+                const next = [...prev];
+                next[i].status = 'loading';
+                return next;
+            });
+
+            try {
+                const res = await fetch('/api/instagram/fetch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: lines[i] })
+                });
+                const data = await res.json();
+
+                if (data.success) {
                     setProducts(prev => {
                         const next = [...prev];
                         next[i] = {
                             ...next[i],
+                            ...data,
                             status: 'success'
                         };
                         return next;
@@ -154,9 +171,6 @@ export default function BulkImportAssistant() {
                     .price-section-row input {
                         width: 100% !important;
                     }
-                .price-section-row input {
-                        width: 100% !important;
-                    }
                 }
             `}</style>
 
@@ -167,7 +181,6 @@ export default function BulkImportAssistant() {
                 <h1 className="elegant-text" style={{ marginTop: '1rem' }}>مساعد الاستيراد السريع</h1>
                 <p style={{ color: '#666' }}>قم بلصق روابط إنستقرام هنا وسيقوم المساعد بتعبئة المعلومات الأساسية بدلاً منك.</p>
             </header>
-
 
             <div style={{ background: 'white', padding: '1.5rem', borderRadius: '15px', boxShadow: '0 5px 20px rgba(0,0,0,0.05)', marginBottom: '2rem' }}>
                 <textarea 
@@ -187,7 +200,7 @@ export default function BulkImportAssistant() {
                         fontSize: '1.2rem'
                     }}
                 >
-                    {isProcessing ? 'جاري معالجة الروابط...' : 'ابدأ المعالجة الذكية'}
+                    {isProcessing ? 'جاري معالجة الروابط...' : 'ابدأ المعالجة'}
                 </button>
             </div>
 

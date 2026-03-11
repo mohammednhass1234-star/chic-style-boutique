@@ -45,15 +45,6 @@ export default function NewProductPage() {
             .catch(err => console.error('Error fetching categories:', err));
     }, []);
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (formData.videoUrl && !formData.image) {
-                captureThumbnail(true); // Silent capture for automatic mode
-            }
-        }, 2000);
-        return () => clearTimeout(timer);
-    }, [formData.videoUrl]);
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target as HTMLInputElement;
         const val = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
@@ -98,12 +89,12 @@ export default function NewProductPage() {
         }
     };
 
-    const captureThumbnail = (isAuto = false) => {
+    const captureThumbnail = () => {
         if (!formData.videoUrl) return;
         
         // Don't try to capture if it's just a webpage or instagram link (needs direct mp4 usually)
         if (formData.videoUrl.includes('instagram.com') && !formData.videoUrl.includes('.mp4')) {
-            if (!isAuto) alert('لا يمكن التقاط صورة من هذا النوع من الروابط تلقائياً. يرجى رفع صورة يدوياً.');
+            alert('لا يمكن التقاط صورة من هذا النوع من الروابط تلقائياً. يرجى رفع صورة يدوياً.');
             return;
         }
 
@@ -124,17 +115,17 @@ export default function NewProductPage() {
                     const dataUrl = canvas.toDataURL('image/jpeg');
                     setFormData(prev => ({ ...prev, image: dataUrl }));
                     setImagePreview(dataUrl);
-                    if (!isAuto) alert('تم التقاط الصورة بنجاح!');
+                    alert('تم التقاط الصورة بنجاح!');
                 } catch (e) {
                     console.error('CORS Error capturing thumbnail:', e);
-                    if (!isAuto) alert('عذراً، لا يمكن التقاط صورة من هذا الرابط بسبب قيود الحماية. يرجى رفع صورة يدوياً.');
+                    alert('عذراً، لا يمكن التقاط صورة من هذا الرابط بسبب قيود الحماية. يرجى رفع صورة يدوياً.');
                 }
             }
             setIsLoading(false);
         };
 
         video.onerror = () => {
-            if (!isAuto) alert('خطأ في تحميل الفيديو');
+            alert('خطأ في تحميل الفيديو');
             setIsLoading(false);
         };
     };
