@@ -109,6 +109,25 @@ export default function ProductsClient() {
                                     position: 'relative'
                                 }}
                             >
+                                {product.videoUrl && (
+                                    <div style={{ 
+                                        position: 'absolute', 
+                                        top: '1rem', 
+                                        right: '1rem', 
+                                        width: '35px', 
+                                        height: '35px', 
+                                        background: 'rgba(255,255,255,0.9)', 
+                                        borderRadius: '50%', 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        justifyContent: 'center',
+                                        color: 'var(--accent-rose)',
+                                        boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                                        zIndex: 5
+                                    }}>
+                                        <div style={{ width: 0, height: 0, borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderLeft: '8px solid currentColor', marginLeft: '3px' }}></div>
+                                    </div>
+                                )}
                                 {!product.image && product.videoUrl && (
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-rose)' }}>
                                         <div style={{ width: '50px', height: '50px', borderRadius: '50%', border: '2px solid var(--accent-rose)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

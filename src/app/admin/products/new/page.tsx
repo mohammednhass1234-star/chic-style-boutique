@@ -89,12 +89,12 @@ export default function NewProductPage() {
         }
     };
 
-    const captureThumbnail = () => {
+    const captureThumbnail = (isAuto = false) => {
         if (!formData.videoUrl) return;
         
         // Don't try to capture if it's just a webpage or instagram link (needs direct mp4 usually)
         if (formData.videoUrl.includes('instagram.com') && !formData.videoUrl.includes('.mp4')) {
-            alert('لا يمكن التقاط صورة من هذا النوع من الروابط تلقائياً. يرجى رفع صورة يدوياً.');
+            if (!isAuto) alert('لا يمكن التقاط صورة من هذا النوع من الروابط تلقائياً. يرجى رفع صورة يدوياً.');
             return;
         }
 
@@ -115,7 +115,7 @@ export default function NewProductPage() {
                     const dataUrl = canvas.toDataURL('image/jpeg');
                     setFormData(prev => ({ ...prev, image: dataUrl }));
                     setImagePreview(dataUrl);
-                    alert('تم التقاط الصورة بنجاح!');
+                    if (!isAuto) alert('تم التقاط الصورة بنجاح!');
                 } catch (e) {
                     console.error('CORS Error capturing thumbnail:', e);
                     alert('عذراً، لا يمكن التقاط صورة من هذا الرابط بسبب قيود الحماية. يرجى رفع صورة يدوياً.');
@@ -125,7 +125,7 @@ export default function NewProductPage() {
         };
 
         video.onerror = () => {
-            alert('خطأ في تحميل الفيديو');
+            if (!isAuto) alert('خطأ في تحميل الفيديو');
             setIsLoading(false);
         };
     };

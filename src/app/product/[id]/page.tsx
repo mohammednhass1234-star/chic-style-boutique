@@ -151,15 +151,51 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                             overflow: 'hidden'
                         }}
                     >
-                        {!product.image && product.videoUrl ? (
-                            <video 
-                                src={product.videoUrl} 
-                                controls 
-                                autoPlay 
-                                muted 
-                                loop 
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            />
+                        {product.videoUrl ? (
+                            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                                <video 
+                                    src={product.videoUrl} 
+                                    controls 
+                                    autoPlay 
+                                    muted 
+                                    loop 
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                />
+                                {product.image && (
+                                    <div style={{
+                                        position: 'absolute',
+                                        bottom: '1.5rem',
+                                        right: '1.5rem',
+                                        width: '120px',
+                                        height: '160px',
+                                        backgroundImage: `url("${product.image}")`,
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center',
+                                        borderRadius: '8px',
+                                        border: '2px solid white',
+                                        boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+                                        zIndex: 10,
+                                        cursor: 'pointer'
+                                    }} title="صورة المنتج (Montage)">
+                                        <div style={{ 
+                                            position: 'absolute', 
+                                            top: '-10px', 
+                                            left: '50%', 
+                                            transform: 'translateX(-50%)',
+                                            background: 'var(--accent-rose)',
+                                            color: 'white',
+                                            fontSize: '0.6rem',
+                                            padding: '2px 8px',
+                                            borderRadius: '10px',
+                                            whiteSpace: 'nowrap',
+                                            fontWeight: 'bold',
+                                            boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+                                        }}>
+                                            صورة المنتج
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         ) : null}
 
                         {product.isOfferActive && product.offerExpiry && (
