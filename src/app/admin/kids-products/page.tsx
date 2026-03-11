@@ -13,8 +13,8 @@ export default function AdminKidsProducts() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                // Fetch specifically for Kids category
-                const response = await fetch('/api/products?categorySlug=kids');
+                // Fetch specifically for Kids section
+                const response = await fetch('/api/products?section=kids');
                 if (response.ok) {
                     const data = await response.json();
                     setProducts(data);

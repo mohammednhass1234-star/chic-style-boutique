@@ -4,14 +4,22 @@ import React, { useEffect, useState } from 'react';
 import Link from "next/link";
 import styles from "../page.module.css";
 import { useLanguage } from "@/context/LanguageContext";
+import { useSearchParams } from 'next/navigation';
 
 export default function ProductsPage() {
+    const searchParams = useSearchParams();
+    const initialQuery = searchParams.get('q') || '';
+    
     const [products, setProducts] = useState<any[]>([]);
     const [categories, setCategories] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState(initialQuery);
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
     const { t, dir, language } = useLanguage();
+
+    useEffect(() => {
+        setSearchQuery(searchParams.get('q') || '');
+    }, [searchParams]);
 
     useEffect(() => {
         // Fetch categories
@@ -57,51 +65,25 @@ export default function ProductsPage() {
                 <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>{t('decouvrez_elegance')}</p>
             </header>
 
-            {/* Search & Filter Controls */}
-            <div style={{ maxWidth: '800px', margin: '0 auto 4rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                {/* Search Bar */}
-                <div style={{ position: 'relative', width: '100%' }}>
-                    <input
-                        type="text"
-                        placeholder={t('recherche')}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        style={{
-                            width: '100%',
-                            padding: '1.2rem 3rem 1.2rem 1.2rem',
-                            borderRadius: '50px',
-                            border: '1px solid #eee',
-                            boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                            fontSize: '1.1rem',
-                            outline: 'none',
-                            transition: 'all 0.3s ease'
-                        }}
-                    />
-                    <span style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--accent-gold)' }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    </span>
-                </div>
-
-                {/* Category Tabs */}
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            {/* Category Tabs */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '4rem' }}>
+                <button
+                    onClick={() => setSelectedCategory(null)}
+                    className={selectedCategory === null ? 'btn-primary' : 'btn-outline'}
+                    style={{ padding: '0.6rem 2rem', borderRadius: '30px' }}
+                >
+                    الكل
+                </button>
+                {categories.map(cat => (
                     <button
-                        onClick={() => setSelectedCategory(null)}
-                        className={selectedCategory === null ? 'btn-primary' : 'btn-outline'}
+                        key={cat.id}
+                        onClick={() => setSelectedCategory(cat.id)}
+                        className={selectedCategory === cat.id ? 'btn-primary' : 'btn-outline'}
                         style={{ padding: '0.6rem 2rem', borderRadius: '30px' }}
                     >
-                        الكل
+                        {cat.name}
                     </button>
-                    {categories.map(cat => (
-                        <button
-                            key={cat.id}
-                            onClick={() => setSelectedCategory(cat.id)}
-                            className={selectedCategory === cat.id ? 'btn-primary' : 'btn-outline'}
-                            style={{ padding: '0.6rem 2rem', borderRadius: '30px' }}
-                        >
-                            {cat.name}
-                        </button>
-                    ))}
-                </div>
+                ))}
             </div>
 
             {isLoading ? (

@@ -13,11 +13,10 @@ export default function AdminProducts() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch('/api/products');
+                const response = await fetch('/api/products?section=women');
                 if (response.ok) {
                     const data: Product[] = await response.json();
-                    // Filter out Kids products (categoryId 1)
-                    setProducts(data.filter((p: any) => p.categoryId !== 1));
+                    setProducts(data);
                 }
             } catch (error) {
                 console.error('Error fetching products:', error);

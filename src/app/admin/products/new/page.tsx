@@ -20,6 +20,7 @@ export default function NewProductPage() {
         originalPrice: '',
         isOfferActive: false,
         offerExpiry: '',
+        section: 'women',
         categoryId: '',
         gender: 'unisex',
         subCategory: 'clothing',
@@ -30,8 +31,10 @@ export default function NewProductPage() {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    const isKidsCategory = categories.find(c => c.id.toString() === formData.categoryId)?.slug?.startsWith('kids') || 
-                           categories.find(c => c.id.toString() === formData.categoryId)?.name?.includes('أطفال');
+    // Filter categories based on selected section
+    const filteredCategories = categories.filter(c => c.section === formData.section);
+
+    const isKidsCategory = formData.section === 'kids';
 
     useEffect(() => {
         fetch('/api/categories')
@@ -49,20 +52,24 @@ export default function NewProductPage() {
         setFormData(prev => {
             const newData = { ...prev, [name]: val };
             
-            if (name === 'categoryId') {
+            if (name === 'section') {
+                newData.categoryId = '';
+                if (val === 'kids') {
+                    newData.sizes = '4A, 6A, 8A, 10A, 12A, 14A';
+                } else {
+                    newData.sizes = 'S, M, L, XL, XXL';
+                }
+            }
+            
+            if (name === 'categoryId' && prev.section === 'kids') {
                 const selectedCat = categories.find(c => c.id.toString() === val);
                 const catName = selectedCat?.name || '';
                 const catSlug = selectedCat?.slug || '';
                 
-                if (catSlug.startsWith('kids') || catName.includes('أطفال')) {
-                    newData.sizes = '4A, 6A, 8A, 10A, 12A, 14A';
-                    if (catName.includes('صغار') || catSlug.includes('junior')) {
-                        newData.ageGroup = 'junior';
-                    } else if (catName.includes('كبار') || catSlug.includes('teen')) {
-                        newData.ageGroup = 'teen';
-                    }
-                } else {
-                    newData.sizes = 'S, M, L, XL, XXL';
+                if (catName.includes('صغار') || catSlug.includes('junior')) {
+                    newData.ageGroup = 'junior';
+                } else if (catName.includes('كبار') || catSlug.includes('teen')) {
+                    newData.ageGroup = 'teen';
                 }
             }
             return newData;
@@ -145,9 +152,18 @@ export default function NewProductPage() {
 
             <form onSubmit={handleSubmit} style={{ background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 25px rgba(0,0,0,0.1)', maxWidth: '800px' }}>
                 <div style={{ display: 'grid', gap: '1.5rem' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <label>اسم المنتج:</label>
-                        <input type="text" name="name" value={formData.name} onChange={handleChange} required style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }} />
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label style={{ fontWeight: 'bold' }}>القسم الرئيسي:</label>
+                            <select name="section" value={formData.section} onChange={handleChange} required style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', background: '#fff9fa', color: 'var(--accent-rose)', fontWeight: 'bold' }}>
+                                <option value="women">قسم النساء 👗</option>
+                                <option value="kids">قسم الأطفال 👶</option>
+                            </select>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label>اسم المنتج:</label>
+                            <input type="text" name="name" value={formData.name} onChange={handleChange} required style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }} />
+                        </div>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -172,10 +188,10 @@ export default function NewProductPage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <label>القسم:</label>
+                            <label>الصنف الصغير:</label>
                             <select name="categoryId" value={formData.categoryId} onChange={handleChange} required style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', background: 'white' }}>
-                                <option value="">اختر القسم</option>
-                                {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+                                <option value="">اختر الصنف</option>
+                                {filteredCategories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                             </select>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>

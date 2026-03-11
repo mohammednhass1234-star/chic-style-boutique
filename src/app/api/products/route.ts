@@ -7,11 +7,20 @@ export async function GET(request: Request) {
         const query = searchParams.get('q')?.toLowerCase();
         const categoryId = searchParams.get('categoryId');
         const categorySlug = searchParams.get('categorySlug');
+        const section = searchParams.get('section');
         const gender = searchParams.get('gender');
         const subCategory = searchParams.get('subCategory');
         const ageGroup = searchParams.get('ageGroup');
 
         let where: any = {};
+
+        if (section) {
+            where.section = section;
+        }
+
+        if (categorySlug === 'kids') {
+            where.section = 'kids';
+        }
 
         if (query) {
             where.OR = [
@@ -95,7 +104,8 @@ export async function POST(request: Request) {
             categoryId,
             gender,
             subCategory,
-            ageGroup
+            ageGroup,
+            section
         } = body;
 
         // Validation
@@ -132,6 +142,7 @@ export async function POST(request: Request) {
                 gender: gender || 'unisex',
                 subCategory: subCategory || 'clothing',
                 ageGroup: ageGroup || 'junior',
+                section: section || 'women'
             }
         });
 

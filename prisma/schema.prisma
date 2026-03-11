@@ -24,6 +24,7 @@ model Product {
   gender        String?     // 'boy', 'girl', 'unisex'
   subCategory   String?     // 'clothing', 'shoes'
   ageGroup      String?     // 'junior', 'teen'
+  section       String?     @default("women") // 'women' or 'kids'
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   categoryId    Int?
@@ -33,8 +34,9 @@ model Product {
 
 model Category {
   id       Int       @id @default(autoincrement())
-  name     String    @unique
+  name     String
   slug     String    @unique
+  section  String?   @default("women") // 'women' or 'kids'
   products Product[]
 }
 

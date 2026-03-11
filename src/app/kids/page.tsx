@@ -19,7 +19,7 @@ export default function KidsPage() {
             setIsLoading(true);
             try {
                 const queryParams = new URLSearchParams({
-                    categorySlug: 'kids',
+                    section: 'kids',
                     gender: genderFilter,
                     subCategory: typeFilter
                 });

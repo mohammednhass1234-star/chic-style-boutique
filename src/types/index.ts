@@ -12,6 +12,11 @@ export interface Product {
     originalPrice?: number | null;
     isOfferActive: boolean;
     offerExpiry?: string | null;
+    gender?: string | null;
+    subCategory?: string | null;
+    ageGroup?: string | null;
+    section?: string | null;
+    categoryId?: number | null;
     createdAt: string;
     updatedAt: string;
 }

@@ -15,7 +15,7 @@ export default function WomenPage() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch('/api/products');
+                const response = await fetch('/api/products?section=women');
                 if (response.ok) {
                     const data = await response.json();
                     setProducts(data);

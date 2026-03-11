@@ -3,15 +3,20 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ShoppingBag, Search, ShieldCheck, Menu, X, Globe } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import styles from './Navbar.module.css';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const { t, dir, language } = useLanguage();
+  const router = useRouter();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +26,14 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/products?q=${encodeURIComponent(searchQuery)}`);
+      setIsSearchOpen(false);
+    }
+  };
 
   return (
     <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`} dir={dir}>
@@ -43,9 +56,21 @@ export default function Navbar() {
 
         {/* Icons Area */}
         <div className={styles.navIcons}>
-          <button className={styles.iconBtn} aria-label={t('recherche')}>
-            <Search strokeWidth={1.5} size={22} />
-          </button>
+          <div className={`${styles.searchWrapper} ${isSearchOpen ? styles.searchOpen : ''}`}>
+            <form onSubmit={handleSearch} className={styles.searchForm}>
+              <input 
+                type="text" 
+                placeholder={t('recherche')} 
+                className={styles.searchInput}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoFocus={isSearchOpen}
+              />
+            </form>
+            <button className={styles.iconBtn} onClick={toggleSearch} aria-label={t('recherche')}>
+              {isSearchOpen ? <X size={20} /> : <Search strokeWidth={1.5} size={22} />}
+            </button>
+          </div>
 
           <Link href="/admin/login" className={styles.iconBtn} aria-label="Admin Panel">
             <ShieldCheck strokeWidth={1.5} size={22} />
