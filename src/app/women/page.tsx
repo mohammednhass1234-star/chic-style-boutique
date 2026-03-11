@@ -9,13 +9,29 @@ import { useLanguage } from '@/context/LanguageContext';
 
 export default function WomenPage() {
     const [products, setProducts] = useState<Product[]>([]);
+    const [categories, setCategories] = useState<any[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const { t, dir, language } = useLanguage();
 
     useEffect(() => {
+        // Fetch categories for women section
+        fetch('/api/categories?section=women')
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) setCategories(data);
+            });
+    }, []);
+
+    useEffect(() => {
         const fetchProducts = async () => {
+            setIsLoading(true);
             try {
-                const response = await fetch('/api/products?section=women');
+                let url = '/api/products?section=women';
+                if (selectedCategory) {
+                    url += `&categoryId=${selectedCategory}`;
+                }
+                const response = await fetch(url);
                 if (response.ok) {
                     const data = await response.json();
                     setProducts(data);
@@ -27,15 +43,36 @@ export default function WomenPage() {
             }
         };
         fetchProducts();
-    }, []);
+    }, [selectedCategory]);
 
     return (
         <div className="container" dir={dir}>
-            <header className={styles.sectionHeader} style={{ marginTop: '8rem', marginBottom: '6rem' }}>
+            <header className={styles.sectionHeader} style={{ marginTop: '8rem', marginBottom: '4rem' }}>
                 <h1 className="elegant-text" style={{ fontSize: '4rem', color: 'var(--dark-charcoal)' }}>{t('mode_femmes')}</h1>
                 <div className="line-separator" style={{ margin: '2rem auto' }}></div>
                 <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>{t('selection_exclusive')}</p>
             </header>
+
+            {/* Category Tabs */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '4rem' }}>
+                <button
+                    onClick={() => setSelectedCategory(null)}
+                    className={selectedCategory === null ? 'btn-primary' : 'btn-outline'}
+                    style={{ padding: '0.6rem 2rem', borderRadius: '30px' }}
+                >
+                    الكل
+                </button>
+                {categories.map(cat => (
+                    <button
+                        key={cat.id}
+                        onClick={() => setSelectedCategory(cat.id)}
+                        className={selectedCategory === cat.id ? 'btn-primary' : 'btn-outline'}
+                        style={{ padding: '0.6rem 2rem', borderRadius: '30px' }}
+                    >
+                        {cat.name}
+                    </button>
+                ))}
+            </div>
 
             {isLoading ? (
                 <div style={{ textAlign: 'center', padding: '10rem', fontSize: '1.2rem', color: 'var(--text-muted)', letterSpacing: '2px', textTransform: 'uppercase' }}>{t('chargement')}</div>

@@ -237,14 +237,14 @@
 /* Mobile Optimizations */
 @media (max-width: 600px) {
   .productGrid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1.5rem !important;
-    padding: 1rem !important;
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem !important;
+    padding: 1.5rem !important;
   }
 
   .placeholderCard .imageBox {
-    height: 250px !important;
-    margin-bottom: 1rem !important;
+    height: 400px !important;
+    margin-bottom: 1.5rem !important;
   }
 
   .placeholderCard h3 {
