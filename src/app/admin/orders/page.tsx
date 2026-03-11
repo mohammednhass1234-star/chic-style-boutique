@@ -64,18 +64,6 @@ export default function AdminOrders() {
         }
     };
 
-    const generateWhatsAppMessage = (order: Order) => {
-        const itemsList = order.items?.map(item => 
-            `- ${item.name || 'منتج'} (القياس: ${item.size || '-'} / اللون: ${item.color || '-'})`
-        ).join('\n') || '';
-
-        const message = `السلام عليكم لالة ${order.customerName} ✨،\n\nمعك متجر Chic Style 👗.\n\nنقوم بتأكيد طلبيتك رقم #${order.id.toString().slice(-5)}:\n${itemsList}\n\n💰 المجموع: ${order.total?.toFixed(2)} درهم.\n\n📍 العنوان: ${order.customerAddress}\n\nهل المعلومات صحيحة لكي نبدأ بتجهيز الطلب؟\n\nشكراً لثقتك بنا! 🌟`;
-        
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/${order.customerPhone.replace(/\s+/g, '')}?text=${encodedMessage}`;
-        window.open(whatsappUrl, '_blank');
-    };
-
     const handleDeleteOrder = async (id: number) => {
         if (confirm('هل أنت متأكد من حذف هذا الطلب نهائياً؟')) {
             try {
@@ -250,27 +238,7 @@ export default function AdminOrders() {
                                                 minute: '2-digit'
                                             })}
                                         </td>
-                                        <td style={{ padding: '1rem', display: 'flex', gap: '0.5rem' }}>
-                                            <button
-                                                onClick={() => generateWhatsAppMessage(order)}
-                                                style={{
-                                                    color: '#25D366',
-                                                    background: '#e8f9ef',
-                                                    border: '1px solid #25D366',
-                                                    padding: '0.5rem 0.8rem',
-                                                    borderRadius: '8px',
-                                                    cursor: 'pointer',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '0.4rem',
-                                                    fontWeight: 'bold',
-                                                    fontSize: '0.8rem'
-                                                }}
-                                                onMouseEnter={(e) => { e.currentTarget.style.background = '#25D366'; e.currentTarget.style.color = 'white'; }}
-                                                onMouseLeave={(e) => { e.currentTarget.style.background = '#e8f9ef'; e.currentTarget.style.color = '#25D366'; }}
-                                            >
-                                                <span>💬</span> تأكيد WhatsApp
-                                            </button>
+                                        <td style={{ padding: '1rem' }}>
                                             <button
                                                 onClick={() => handleDeleteOrder(order.id)}
                                                 style={{
