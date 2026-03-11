@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import Link from "next/link";
 import styles from "../page.module.css";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSearchParams } from 'next/navigation';
 
-export default function ProductsPage() {
+function ProductsContent() {
     const searchParams = useSearchParams();
     const initialQuery = searchParams.get('q') || '';
     
@@ -105,5 +105,13 @@ export default function ProductsPage() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function ProductsPage() {
+    return (
+        <Suspense fallback={<div style={{ textAlign: 'center', padding: '10rem' }}>جاري التحميل...</div>}>
+            <ProductsContent />
+        </Suspense>
     );
 }
