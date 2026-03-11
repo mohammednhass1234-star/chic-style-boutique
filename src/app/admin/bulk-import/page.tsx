@@ -59,6 +59,16 @@ export default function BulkImportAssistant() {
         return { section, categoryId };
     };
 
+    const [isCreativeMode, setIsCreativeMode] = useState(false);
+    const [chatMessages, setChatMessages] = useState<{role: 'ai' | 'user', text: string}[]>([]);
+
+    const toggleCreativeMode = () => {
+        setIsCreativeMode(!isCreativeMode);
+        if (!isCreativeMode) {
+            setChatMessages([{ role: 'ai', text: 'أهلاً بكِ! أنا مساعدكِ الإبداعي. ضعي رابط الفيديو وسأكتب لكِ وصفاً ساحراً للمنتج، وسأترك لكِ فقط تحديد السعر والقياسات.' }]);
+        }
+    };
+
     const processUrls = async () => {
         const lines = urlsInput.split('\n').map(l => l.trim()).filter(l => l.startsWith('http'));
         if (lines.length === 0) return alert('يرجى إدخال روابط صحيحة');
@@ -80,6 +90,10 @@ export default function BulkImportAssistant() {
         setProducts(initialProducts);
         setIsProcessing(true);
 
+        if (isCreativeMode) {
+            setChatMessages(prev => [...prev, { role: 'user', text: `جاري تحليل ${lines.length} روابط...` }]);
+        }
+
         for (let i = 0; i < initialProducts.length; i++) {
             setProducts(prev => {
                 const next = [...prev];
@@ -98,6 +112,15 @@ export default function BulkImportAssistant() {
                 if (data.success) {
                     const { section, categoryId } = autoCategorize(data.description || '');
                     
+                    // Creative Rewrite for Description
+                    let creativeDesc = data.description;
+                    let creativeName = data.name;
+
+                    if (isCreativeMode) {
+                        creativeName = `✨ ${data.name || 'منتج جديد رائع'}`;
+                        creativeDesc = `🌟 قطعة مميزة جداً أضفناها لمجموعتنا!\n\n${data.description}\n\n✨ الجودة والأناقة التي تبحثين عنها في مكان واحد.`;
+                    }
+
                     // Automatic Frame Capture for Reels
                     let capturedImage = data.image;
                     if (data.videoUrl && (!data.image || data.image.includes('placeholder'))) {
@@ -113,6 +136,10 @@ export default function BulkImportAssistant() {
                         next[i] = {
                             ...next[i],
                             ...data,
+                            name: creativeName,
+                            description: creativeDesc,
+                            price: '', // Leave empty in creative mode as requested
+                            sizes: '',  // Leave empty for manual entry
                             image: capturedImage,
                             section,
                             categoryId: categoryId || next[i].categoryId,
@@ -120,6 +147,10 @@ export default function BulkImportAssistant() {
                         };
                         return next;
                     });
+
+                    if (isCreativeMode) {
+                        setChatMessages(prev => [...prev, { role: 'ai', text: `لقد جهزت لكِ المنتج "${creativeName}". تفضلي بتعديل السعر والقياسات بالأسفل.` }]);
+                    }
                 } else {
                     setProducts(prev => {
                         const next = [...prev];
@@ -264,17 +295,59 @@ export default function BulkImportAssistant() {
                 }
             `}</style>
 
-            <header style={{ marginBottom: '2rem' }}>
-                <Link href="/admin/products" style={{ color: 'var(--accent-rose)', textDecoration: 'none' }}>
-                    &rarr; العودة للوحة التحكم
-                </Link>
-                <h1 className="elegant-text" style={{ marginTop: '1rem' }}>مساعد الاستيراد السريع 🤖</h1>
-                <p style={{ color: '#666' }}>قم بلصق روابط إنستقرام هنا وسيقوم المساعد بتعبئة كل شيء بدلاً منك.</p>
+            <header style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+                <div>
+                    <Link href="/admin/products" style={{ color: 'var(--accent-rose)', textDecoration: 'none' }}>
+                        &rarr; العودة للوحة التحكم
+                    </Link>
+                    <h1 className="elegant-text" style={{ marginTop: '1rem' }}>مساعد الاستيراد السريع 🤖</h1>
+                    <p style={{ color: '#666' }}>قم بلصق روابط إنستقرام هنا وسيقوم المساعد بتعبئة كل شيء بدلاً منك.</p>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                    <button 
+                        onClick={toggleCreativeMode}
+                        style={{ 
+                            padding: '0.8rem 1.5rem', 
+                            borderRadius: '30px', 
+                            border: 'none', 
+                            background: isCreativeMode ? 'linear-gradient(45deg, #FF6B81, #FF92A9)' : '#eee',
+                            color: isCreativeMode ? 'white' : '#666',
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            boxShadow: isCreativeMode ? '0 4px 15px rgba(255,107,129,0.3)' : 'none',
+                            transition: 'all 0.3s ease'
+                        }}
+                    >
+                        {isCreativeMode ? '✨ نمط المساعد الإبداعي مفعل' : 'تفعيل المساعد الإبداعي'}
+                    </button>
+                    {isCreativeMode && <span style={{ fontSize: '0.8rem', color: 'var(--accent-rose)', fontWeight: 'bold' }}>🤖 سأكتب لكِ الوصف والعنوان تلقائياً!</span>}
+                </div>
             </header>
+
+            {isCreativeMode && chatMessages.length > 0 && (
+                <div style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    {chatMessages.map((msg, i) => (
+                        <div key={i} style={{ 
+                            alignSelf: msg.role === 'ai' ? 'flex-start' : 'flex-end',
+                            background: msg.role === 'ai' ? 'white' : 'var(--dark-charcoal)',
+                            color: msg.role === 'ai' ? 'black' : 'white',
+                            padding: '1rem 1.5rem',
+                            borderRadius: msg.role === 'ai' ? '0 20px 20px 20px' : '20px 20px 0 20px',
+                            boxShadow: '0 5px 15px rgba(0,0,0,0.05)',
+                            maxWidth: '80%',
+                            fontSize: '0.95rem',
+                            lineHeight: '1.6',
+                            border: msg.role === 'ai' ? '1px solid #eee' : 'none'
+                        }}>
+                            {msg.text}
+                        </div>
+                    ))}
+                </div>
+            )}
 
             <div style={{ background: 'white', padding: '1.5rem', borderRadius: '15px', boxShadow: '0 5px 20px rgba(0,0,0,0.05)', marginBottom: '2rem' }}>
                 <textarea 
-                    placeholder="ضع كل رابط في سطر جديد..."
+                    placeholder={isCreativeMode ? "ضعي روابط الفيديو هنا وسأعتني بالباقي..." : "ضع كل رابط في سطر جديد..."}
                     value={urlsInput}
                     onChange={(e) => setUrlsInput(e.target.value)}
                     rows={6}
@@ -284,9 +357,14 @@ export default function BulkImportAssistant() {
                     onClick={processUrls} 
                     disabled={isProcessing || !urlsInput.trim()}
                     className="btn-primary"
-                    style={{ width: '100%', padding: '1rem', fontSize: '1.2rem' }}
+                    style={{ 
+                        width: '100%', 
+                        padding: '1rem', 
+                        fontSize: '1.2rem',
+                        background: isCreativeMode ? 'var(--dark-charcoal)' : 'var(--accent-rose)'
+                    }}
                 >
-                    {isProcessing ? 'جاري معالجة الروابط...' : 'ابدأ المعالجة الذكية'}
+                    {isProcessing ? 'جاري معالجة الروابط...' : (isCreativeMode ? 'ابدأ الاستيراد الإبداعي 🚀' : 'ابدأ المعالجة الذكية')}
                 </button>
             </div>
 
