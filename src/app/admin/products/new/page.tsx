@@ -45,6 +45,15 @@ export default function NewProductPage() {
             .catch(err => console.error('Error fetching categories:', err));
     }, []);
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (formData.videoUrl && !formData.image) {
+                captureThumbnail();
+            }
+        }, 2000);
+        return () => clearTimeout(timer);
+    }, [formData.videoUrl]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target as HTMLInputElement;
         const val = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
@@ -291,7 +300,18 @@ export default function NewProductPage() {
                             <input type="file" accept="image/*" onChange={handleImageChange} required={!formData.image && !formData.videoUrl} style={{ padding: '0.5rem', border: '1px solid #ddd', borderRadius: '8px' }} />
                         </div>
                     </div>
-                    {imagePreview && <div style={{ marginTop: '1rem' }}><img src={imagePreview} alt="Preview" style={{ maxWidth: '200px', borderRadius: '8px' }} /></div>}
+                    {imagePreview && <div style={{ marginTop: '1rem' }}><img src={imagePreview} alt="Preview" style={{ maxWidth: '200px', borderRadius: '8px', border: '1px solid #ddd' }} /></div>}
+                    {formData.videoUrl && (
+                        <div style={{ marginTop: '1rem' }}>
+                            <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '0.5rem' }}>معاينة الفيديو:</p>
+                            <video 
+                                src={formData.videoUrl} 
+                                controls 
+                                muted 
+                                style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', border: '1px solid #ddd' }} 
+                            />
+                        </div>
+                    )}
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
