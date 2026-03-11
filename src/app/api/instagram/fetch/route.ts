@@ -65,10 +65,9 @@ export async function POST(request: Request) {
         const colorsMatch = description.match(/(?:ألوان|colors?|couleurs?):\s*([^\n|]*)/i);
         const colors = colorsMatch ? colorsMatch[1].trim() : '';
 
-        // If it's a reel, the URL itself can be used as the video source for our embed-logic (later)
-        // or if we can find a direct video link in OG tags
+        // Only return videoUrl if we found a real direct link
         const videoMatch = html.match(/<meta[^>]*property="og:video"[^>]*content="([^"]*)"/i);
-        const videoUrl = videoMatch ? videoMatch[1] : (url.includes('/reel/') || url.includes('/p/') ? url : null);
+        const videoUrl = videoMatch ? videoMatch[1] : null;
 
         return NextResponse.json({
             name,
