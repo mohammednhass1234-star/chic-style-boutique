@@ -96,7 +96,28 @@ export default function ProductsClient() {
                 <div className={styles.productGrid} style={{ marginBottom: '8rem' }}>
                     {products.map((product) => (
                         <Link href={`/product/${product.id}`} key={product.id} className={styles.placeholderCard}>
-                            <div className={styles.imageBox} style={{ backgroundImage: `url("${product.image || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80'}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+                            <div 
+                                className={styles.imageBox} 
+                                style={{ 
+                                    backgroundImage: product.image ? `url("${product.image}")` : 'none', 
+                                    backgroundSize: 'cover', 
+                                    backgroundPosition: 'center',
+                                    backgroundColor: !product.image ? '#f0f0f0' : 'transparent',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    position: 'relative'
+                                }}
+                            >
+                                {!product.image && product.videoUrl && (
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-rose)' }}>
+                                        <div style={{ width: '50px', height: '50px', borderRadius: '50%', border: '2px solid var(--accent-rose)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <div style={{ width: 0, height: 0, borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderLeft: '15px solid var(--accent-rose)', marginLeft: '5px' }}></div>
+                                        </div>
+                                        <span style={{ fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>فيديو المنتج</span>
+                                    </div>
+                                )}
+                            </div>
                             <h3 className="elegant-text">{product.name}</h3>
                             <p style={{ color: 'var(--text-dark)', fontWeight: '500', fontSize: '1.2rem', margin: '0.5rem 0' }}>{product.price.toFixed(2)} درهم</p>
                             <span className="btn-primary" style={{ marginTop: '1rem', width: '80%' }}>{t('voir_details')}</span>

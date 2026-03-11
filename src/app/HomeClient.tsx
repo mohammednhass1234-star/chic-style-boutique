@@ -67,9 +67,29 @@ export default function HomeClient({ featuredOfferProducts, latestProducts }: { 
                 return (
                   <Link key={product.id} href={`/product/${product.id}`} className={styles.placeholderCard}>
                     <div className={styles.saleBadge}>خصم حصري {discount > 0 && `${discount}%`}</div>
-                    <div className={styles.imageBox} style={{ backgroundImage: `url("${product.image}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                    <div 
+                      className={styles.imageBox} 
+                      style={{ 
+                        backgroundImage: product.image ? `url("${product.image}")` : 'none', 
+                        backgroundSize: 'cover', 
+                        backgroundPosition: 'center',
+                        backgroundColor: !product.image ? '#f0f0f0' : 'transparent',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative'
+                      }}
+                    >
+                      {!product.image && product.videoUrl && (
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-rose)' }}>
+                          <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid var(--accent-rose)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div style={{ width: 0, height: 0, borderTop: '8px solid transparent', borderBottom: '8px solid transparent', borderLeft: '12px solid var(--accent-rose)', marginLeft: '4px' }}></div>
+                          </div>
+                          <span style={{ fontSize: '0.7rem', fontWeight: 'bold' }}>فيديو</span>
+                        </div>
+                      )}
                       {product.isOfferActive && product.offerExpiry && (
-                        <div style={{ position: 'absolute', bottom: '20px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                        <div style={{ position: 'absolute', bottom: '20px', width: '100%', display: 'flex', justifyContent: 'center', zIndex: 2 }}>
                           <CountdownTimer expiryDate={String(product.offerExpiry)} />
                         </div>
                       )}
@@ -98,7 +118,28 @@ export default function HomeClient({ featuredOfferProducts, latestProducts }: { 
           <div className={styles.productGrid}>
             {latestProducts.map(product => (
               <Link key={product.id} href={`/product/${product.id}`} className={styles.placeholderCard}>
-                <div className={styles.imageBox} style={{ backgroundImage: `url("${product.image || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80'}")`, backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
+                <div 
+                  className={styles.imageBox} 
+                  style={{ 
+                    backgroundImage: product.image ? `url("${product.image}")` : 'none', 
+                    backgroundSize: 'cover', 
+                    backgroundPosition: 'center',
+                    backgroundColor: !product.image ? '#f0f0f0' : 'transparent',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative'
+                  }}
+                >
+                  {!product.image && product.videoUrl && (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-rose)' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid var(--accent-rose)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 0, height: 0, borderTop: '8px solid transparent', borderBottom: '8px solid transparent', borderLeft: '12px solid var(--accent-rose)', marginLeft: '4px' }}></div>
+                      </div>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 'bold' }}>فيديو</span>
+                    </div>
+                  )}
+                </div>
                 <h3>{product.name}</h3>
                 <p style={{ color: 'var(--text-dark)', fontSize: '1.2rem', marginTop: '0.5rem', fontWeight: 500 }}>{product.price.toFixed(2)} درهم</p>
 

@@ -75,12 +75,27 @@ export default function AdminProducts() {
                                             style={{
                                                 width: '60px',
                                                 height: '60px',
-                                                backgroundImage: `url("${product.image || 'https://via.placeholder.com/60'}")`,
+                                                backgroundImage: product.image ? `url("${product.image}")` : 'none',
+                                                backgroundColor: !product.image ? '#f0f0f0' : 'transparent',
                                                 backgroundSize: 'cover',
                                                 backgroundPosition: 'center',
-                                                borderRadius: '8px'
+                                                borderRadius: '8px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                color: 'var(--accent-rose)',
+                                                fontSize: '0.7rem',
+                                                fontWeight: 'bold',
+                                                border: '1px solid #eee'
                                             }}
-                                        />
+                                        >
+                                            {!product.image && product.videoUrl && (
+                                                <div style={{ textAlign: 'center' }}>
+                                                    <div style={{ width: 0, height: 0, borderTop: '5px solid transparent', borderBottom: '5px solid transparent', borderLeft: '8px solid var(--accent-rose)', margin: '0 auto 2px auto' }}></div>
+                                                    <span>فيديو</span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </td>
                                     <td style={{ padding: '1rem', fontWeight: 'bold' }}>{product.name}</td>
                                     <td style={{ padding: '1rem' }}>{product.price.toFixed(2)} درهم</td>

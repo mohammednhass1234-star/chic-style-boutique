@@ -49,12 +49,27 @@ export default function CartPage() {
                             <div style={{
                                 width: '100px',
                                 height: '100px',
-                                backgroundImage: `url("${item.image}")`,
+                                backgroundImage: item.image ? `url("${item.image}")` : 'none',
+                                backgroundColor: !item.image ? '#f0f0f0' : 'transparent',
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
                                 borderRadius: '8px',
-                                flexShrink: 0
-                            }} />
+                                flexShrink: 0,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'var(--accent-rose)',
+                                fontSize: '0.8rem',
+                                fontWeight: 'bold',
+                                border: '1px solid #eee'
+                            }}>
+                                {!item.image && (
+                                    <div style={{ textAlign: 'center' }}>
+                                        <div style={{ width: 0, height: 0, borderTop: '6px solid transparent', borderBottom: '6px solid transparent', borderLeft: '10px solid var(--accent-rose)', margin: '0 auto 4px auto' }}></div>
+                                        <span>فيديو</span>
+                                    </div>
+                                )}
+                            </div>
                             <div style={{ flex: 1 }}>
                                 <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>{item.name}</h3>
                                 <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{t('taille_label')}: {item.size} | {t('couleur_label')}: {item.color}</p>

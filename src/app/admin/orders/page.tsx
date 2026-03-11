@@ -163,13 +163,30 @@ export default function AdminOrders() {
                                         <td style={{ padding: '1rem' }}>
                                             {order.items?.map((item: any, idx: number) => (
                                                 <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.5rem', background: '#fef2f2', padding: '0.4rem', borderRadius: '8px' }}>
-                                                    <div style={{ width: '40px', height: '40px', borderRadius: '4px', overflow: 'hidden', flexShrink: 0, border: '1px solid #eee' }}>
-                                                        <img 
-                                                            src={item.product?.image || item.image || '/placeholder.png'} 
-                                                            alt={item.name} 
-                                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                                            onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/40'; }}
-                                                        />
+                                                    <div style={{ 
+                                                        width: '40px', 
+                                                        height: '40px', 
+                                                        borderRadius: '4px', 
+                                                        overflow: 'hidden', 
+                                                        flexShrink: 0, 
+                                                        border: '1px solid #eee',
+                                                        backgroundImage: (item.product?.image || item.image) ? `url("${item.product?.image || item.image}")` : 'none',
+                                                        backgroundColor: !(item.product?.image || item.image) ? '#f0f0f0' : 'transparent',
+                                                        backgroundSize: 'cover',
+                                                        backgroundPosition: 'center',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        color: 'var(--accent-rose)',
+                                                        fontSize: '0.6rem',
+                                                        fontWeight: 'bold'
+                                                    }}>
+                                                        {!(item.product?.image || item.image) && (item.product?.videoUrl || item.videoUrl) && (
+                                                            <div style={{ textAlign: 'center' }}>
+                                                                <div style={{ width: 0, height: 0, borderTop: '4px solid transparent', borderBottom: '4px solid transparent', borderLeft: '6px solid var(--accent-rose)', margin: '0 auto 1px auto' }}></div>
+                                                                <span>فيديو</span>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                     <div style={{ fontSize: '0.8rem' }}>
                                                         <div style={{ fontWeight: 'bold' }}>{item.name || item.product?.name}</div>

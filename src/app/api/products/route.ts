@@ -108,10 +108,10 @@ export async function POST(request: Request) {
             section
         } = body;
 
-        // Validation
-        if (!name || !price || !image) {
+        // Validation: Either image or videoUrl must be present
+        if (!name || !price || (!image && !videoUrl)) {
             return NextResponse.json(
-                { error: 'Missing required fields: name, price, or image' },
+                { error: 'Missing required fields: name, price, and at least one media (image or video)' },
                 { status: 400 }
             );
         }

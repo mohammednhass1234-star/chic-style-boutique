@@ -132,22 +132,38 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
             {/* Split Screen Layout */}
             <div className="container" style={{ display: 'flex', flexWrap: 'wrap', gap: '6rem', alignItems: 'flex-start' }}>
 
-                {/* Left Side: Immersive Imagery */}
+                {/* Left Side: Immersive Imagery or Video */}
                 <div style={{ flex: '1.5', minWidth: '350px' }}>
                     <div
                         style={{
                             height: '80vh',
                             minHeight: '600px',
                             width: '100%',
-                            backgroundImage: `url("${product.image || 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80'}")`,
+                            backgroundImage: product.image ? `url("${product.image}")` : 'none',
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                             position: 'relative',
-                            boxShadow: 'var(--shadow-md)'
+                            boxShadow: 'var(--shadow-md)',
+                            backgroundColor: !product.image ? '#000' : 'transparent',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            overflow: 'hidden'
                         }}
                     >
+                        {!product.image && product.videoUrl ? (
+                            <video 
+                                src={product.videoUrl} 
+                                controls 
+                                autoPlay 
+                                muted 
+                                loop 
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            />
+                        ) : null}
+
                         {product.isOfferActive && product.offerExpiry && (
-                            <div style={{ position: 'absolute', top: '2rem', left: '2rem' }}>
+                            <div style={{ position: 'absolute', top: '2rem', left: '2rem', zIndex: 5 }}>
                                 <CountdownTimer expiryDate={product.offerExpiry} />
                             </div>
                         )}

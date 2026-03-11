@@ -225,11 +225,17 @@ export default function NewProductPage() {
                         <label htmlFor="isOfferActive" style={{ fontWeight: 'bold', color: 'var(--accent-rose)' }}>تفعيل كعرض خاص</label>
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <label>صورة المنتج:</label>
-                        <input type="file" accept="image/*" onChange={handleImageChange} required={!formData.image} style={{ padding: '0.5rem', border: '1px solid #ddd', borderRadius: '8px' }} />
-                        {imagePreview && <div style={{ marginTop: '1rem' }}><img src={imagePreview} alt="Preview" style={{ maxWidth: '200px', borderRadius: '8px' }} /></div>}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label>رابط فيديو (اختياري):</label>
+                            <input type="url" name="videoUrl" value={formData.videoUrl} onChange={handleChange} placeholder="https://..." style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }} />
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label>صورة المنتج:</label>
+                            <input type="file" accept="image/*" onChange={handleImageChange} required={!formData.image && !formData.videoUrl} style={{ padding: '0.5rem', border: '1px solid #ddd', borderRadius: '8px' }} />
+                        </div>
                     </div>
+                    {imagePreview && <div style={{ marginTop: '1rem' }}><img src={imagePreview} alt="Preview" style={{ maxWidth: '200px', borderRadius: '8px' }} /></div>}
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
