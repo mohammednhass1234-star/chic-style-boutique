@@ -178,8 +178,8 @@ export default function BulkImportAssistant() {
                 <Link href="/admin/products" style={{ color: 'var(--accent-rose)', textDecoration: 'none' }}>
                     &rarr; العودة للوحة التحكم
                 </Link>
-                <h1 className="elegant-text" style={{ marginTop: '1rem' }}>مساعد الاستيراد السريع</h1>
-                <p style={{ color: '#666' }}>قم بلصق روابط إنستقرام هنا وسيقوم المساعد بتعبئة المعلومات الأساسية بدلاً منك.</p>
+                <h1 className="elegant-text" style={{ marginTop: '1rem' }}>أداة الاستيراد السريع</h1>
+                <p style={{ color: '#666' }}>قم بلصق روابط إنستقرام هنا لتعبئة المعلومات الأساسية.</p>
             </header>
 
             <div style={{ background: 'white', padding: '1.5rem', borderRadius: '15px', boxShadow: '0 5px 20px rgba(0,0,0,0.05)', marginBottom: '2rem' }}>

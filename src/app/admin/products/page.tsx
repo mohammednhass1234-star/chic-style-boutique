@@ -49,8 +49,8 @@ export default function AdminProducts() {
             <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <h1 className="elegant-text">إدارة منتجات النساء 👗</h1>
                 <div style={{ display: 'flex', gap: '1rem' }}>
-                    <Link href="/admin/bulk-import" className="btn-primary" style={{ background: 'var(--dark-charcoal)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span>🤖</span> مساعد الاستيراد
+                    <Link href="/admin/bulk-import" className="btn-primary" style={{ background: 'var(--dark-charcoal)' }}>
+                        استيراد سريع
                     </Link>
                     <Link href="/admin/products/new" className="btn-primary">+ إضافة منتج جديد</Link>
                 </div>
