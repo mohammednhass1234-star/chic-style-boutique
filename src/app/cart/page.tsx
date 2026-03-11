@@ -98,6 +98,9 @@ export default function CartPage() {
                         <Link href="/checkout" className="btn-primary" style={{ display: 'block', textAlign: 'center', marginTop: '2rem', padding: '1rem' }}>
                             {t('passer_commande')}
                         </Link>
+                        <p style={{ marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                            {t('paiement_livraison')}
+                        </p>
                     </div>
                 </div>
             </div>

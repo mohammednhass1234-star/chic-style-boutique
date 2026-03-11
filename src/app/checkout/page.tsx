@@ -123,6 +123,10 @@ export default function CheckoutPage() {
                         <textarea id="address" value={formData.address} onChange={handleChange} placeholder={t('adresse_placeholder')} rows={3} style={{ padding: '0.8rem', border: '1px solid var(--border-color)', borderRadius: '4px' }} required></textarea>
                     </div>
 
+                    <div style={{ background: '#fffbeb', border: '1px solid #fbd38d', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '0.9rem', color: '#975a16' }}>
+                        <strong>تنبيه هام:</strong> يتم شحن الطلب مباشرة بعد إرسال صور وصل الدفع عبر الواتساب.
+                    </div>
+
                     <button type="submit" disabled={isLoading} className="btn-primary" style={{ padding: '1.2rem', fontSize: '1.1rem', marginTop: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}>
                         {isLoading ? 'جاري معالجة الطلب...' : 'تأكيد الطلب والإرسال عبر الواتساب'}
                     </button>
@@ -153,7 +157,7 @@ export default function CheckoutPage() {
                     </div>
 
                     <div style={{ marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                        * سيتم تزويدك بمعلومات الدفع عبر الواتساب بعد تأكيد الطلب.
+                        {t('paiement_livraison')}
                     </div>
                 </div>
             </div>

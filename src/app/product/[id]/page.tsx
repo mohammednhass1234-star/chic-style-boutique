@@ -199,6 +199,10 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                         </div>
                     </div>
 
+                    <div style={{ marginTop: '2rem', padding: '1rem', background: '#fffbeb', border: '1px solid #fbd38d', borderRadius: '4px', fontSize: '0.9rem', color: '#975a16' }}>
+                        {t('paiement_livraison')}
+                    </div>
+
                     <div style={{ marginTop: '2rem' }}>
                         <button
                             onClick={() => setShowOrderModal(true)}
@@ -315,6 +319,10 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                                 <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: '0.5rem 0' }}>اللون: {selectedColor} | المقاس: {selectedSize}</p>
                                 <p style={{ color: 'var(--dark-charcoal)', fontWeight: 600, fontSize: '1.2rem', margin: 0 }}>{product.price.toFixed(2)} درهم</p>
                             </div>
+                        </div>
+
+                        <div style={{ background: '#fffbeb', border: '1px solid #fbd38d', padding: '1rem', borderRadius: '8px', marginBottom: '2rem', fontSize: '0.9rem', color: '#975a16' }}>
+                            {t('paiement_livraison')}
                         </div>
 
                         <form onSubmit={handleOrderSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
