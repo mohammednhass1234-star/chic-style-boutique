@@ -167,7 +167,41 @@ export default function BulkImportAssistant() {
     };
 
     return (
-        <div className="container" dir="rtl" style={{ padding: '2rem' }}>
+        <div className="container" dir="rtl" style={{ padding: '2rem 1rem' }}>
+            <style jsx>{`
+                .bulk-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 2rem;
+                    gap: 1rem;
+                }
+                .product-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                    gap: 1.5rem;
+                }
+                .price-section-row {
+                    display: flex;
+                    gap: 0.5rem;
+                }
+                @media (max-width: 768px) {
+                    .bulk-header {
+                        flex-direction: column;
+                        align-items: flex-start;
+                    }
+                    .product-grid {
+                        grid-template-columns: 1fr;
+                    }
+                    .price-section-row {
+                        flex-direction: column;
+                    }
+                    .price-section-row input {
+                        width: 100% !important;
+                    }
+                }
+            `}</style>
+
             <header style={{ marginBottom: '2rem' }}>
                 <Link href="/admin/products" style={{ color: 'var(--accent-rose)', textDecoration: 'none' }}>
                     &rarr; العودة للوحة التحكم
@@ -176,7 +210,7 @@ export default function BulkImportAssistant() {
                 <p style={{ color: '#666' }}>قم بلصق روابط إنستقرام هنا وسيقوم المساعد بتعبئة كل شيء بدلاً منك.</p>
             </header>
 
-            <div style={{ background: 'white', padding: '2rem', borderRadius: '15px', boxShadow: '0 5px 20px rgba(0,0,0,0.05)', marginBottom: '2rem' }}>
+            <div style={{ background: 'white', padding: '1.5rem', borderRadius: '15px', boxShadow: '0 5px 20px rgba(0,0,0,0.05)', marginBottom: '2rem' }}>
                 <textarea 
                     placeholder="ضع كل رابط في سطر جديد..."
                     value={urlsInput}
@@ -196,18 +230,18 @@ export default function BulkImportAssistant() {
 
             {products.length > 0 && (
                 <div style={{ display: 'grid', gap: '1.5rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="bulk-header">
                         <h2 className="elegant-text">المنتجات المكتشفة ({products.length})</h2>
                         <button 
                             onClick={saveAll} 
                             disabled={isSaving || products.every(p => p.status !== 'success')}
-                            style={{ padding: '0.8rem 2rem', background: 'var(--dark-charcoal)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                            style={{ padding: '0.8rem 2rem', background: 'var(--dark-charcoal)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', width: '100%', maxWidth: '300px' }}
                         >
                             {isSaving ? 'جاري الحفظ...' : 'حفظ كل المنتجات الجاهزة'}
                         </button>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+                    <div className="product-grid">
                         {products.map((p, idx) => (
                             <div key={idx} style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', border: '1px solid #eee', opacity: p.status === 'error' ? 0.6 : 1 }}>
                                 {p.status === 'loading' && <div style={{ textAlign: 'center', padding: '2rem' }}>جاري الجلب...</div>}
@@ -219,9 +253,9 @@ export default function BulkImportAssistant() {
                                             value={p.name} 
                                             onChange={(e) => handleUpdateProduct(idx, 'name', e.target.value)}
                                             placeholder="اسم المنتج"
-                                            style={{ padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px', fontWeight: 'bold' }}
+                                            style={{ padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px', fontWeight: 'bold', width: '100%' }}
                                         />
-                                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <div className="price-section-row">
                                             <input 
                                                 value={p.price} 
                                                 onChange={(e) => handleUpdateProduct(idx, 'price', e.target.value)}
@@ -240,7 +274,7 @@ export default function BulkImportAssistant() {
                                         <select 
                                             value={p.categoryId} 
                                             onChange={(e) => handleUpdateProduct(idx, 'categoryId', e.target.value)}
-                                            style={{ padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                                            style={{ padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px', width: '100%' }}
                                         >
                                             <option value="">اختر الصنف</option>
                                             {categories.filter(c => c.section === p.section).map(cat => (
