@@ -247,7 +247,7 @@ export default function NewProductPage() {
                         <textarea name="description" value={formData.description} onChange={handleChange} rows={4} style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }} />
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+                    <div className="price-grid">
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <label>السعر الجديد:</label>
                             <input type="number" name="price" value={formData.price} onChange={handleChange} required style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }} />
@@ -262,7 +262,7 @@ export default function NewProductPage() {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className="form-grid">
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <label>الصنف الصغير:</label>
                             <select name="categoryId" value={formData.categoryId} onChange={handleChange} required style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', background: 'white' }}>
@@ -301,7 +301,7 @@ export default function NewProductPage() {
                         <label htmlFor="isOfferActive" style={{ fontWeight: 'bold', color: 'var(--accent-rose)' }}>تفعيل كعرض خاص</label>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className="form-grid">
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <label>رابط فيديو (اختياري):</label>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -335,7 +335,7 @@ export default function NewProductPage() {
                         </div>
                     )}
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className="form-grid">
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <label>المقاسات:</label>
                             <input type="text" name="sizes" value={formData.sizes} onChange={handleChange} style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }} />
