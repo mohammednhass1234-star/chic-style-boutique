@@ -49,15 +49,35 @@ export async function POST(request: Request) {
         // Remove "Like, Comment, Share..." if present
         description = description.split('Like,')[0].trim();
 
+        // Extract name from first line or first sentence
+        const firstLine = description.split('\n')[0].split('.')[0].trim();
+        const name = firstLine.length > 50 ? firstLine.substring(0, 50) + '...' : firstLine;
+
         // Try to extract price from description
-        // Look for patterns like "120 DH", "200 درهم", etc.
         const priceMatch = description.match(/(\d+(?:\.\d+)?)\s*(?:DH|درهم|Dhs|د)/i);
         const price = priceMatch ? priceMatch[1] : '';
 
+        // Extract sizes (Common patterns like S, M, L, XL, XXL or numbers)
+        const sizesMatch = description.match(/(?:مقاسات|sizes?|taille?|Taille):\s*([^\n|]*)/i);
+        const sizes = sizesMatch ? sizesMatch[1].trim() : '';
+
+        // Extract colors
+        const colorsMatch = description.match(/(?:ألوان|colors?|couleurs?):\s*([^\n|]*)/i);
+        const colors = colorsMatch ? colorsMatch[1].trim() : '';
+
+        // If it's a reel, the URL itself can be used as the video source for our embed-logic (later)
+        // or if we can find a direct video link in OG tags
+        const videoMatch = html.match(/<meta[^>]*property="og:video"[^>]*content="([^"]*)"/i);
+        const videoUrl = videoMatch ? videoMatch[1] : (url.includes('/reel/') || url.includes('/p/') ? url : null);
+
         return NextResponse.json({
+            name,
             image,
             description,
             price,
+            sizes,
+            colors,
+            videoUrl,
             success: true
         });
 

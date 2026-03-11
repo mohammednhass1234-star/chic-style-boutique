@@ -89,6 +89,41 @@ export default function NewProductPage() {
         }
     };
 
+    const captureThumbnail = () => {
+        if (!formData.videoUrl) return;
+        
+        setIsLoading(true);
+        const video = document.createElement('video');
+        video.crossOrigin = "anonymous";
+        video.src = formData.videoUrl;
+        video.currentTime = 1; // Capture at 1 second mark
+        
+        video.onloadeddata = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                try {
+                    const dataUrl = canvas.toDataURL('image/jpeg');
+                    setFormData(prev => ({ ...prev, image: dataUrl }));
+                    setImagePreview(dataUrl);
+                    alert('تم التقاط الصورة بنجاح!');
+                } catch (e) {
+                    console.error('CORS Error capturing thumbnail:', e);
+                    alert('عذراً، لا يمكن التقاط صورة من هذا الرابط بسبب قيود الحماية. يرجى رفع صورة يدوياً.');
+                }
+            }
+            setIsLoading(false);
+        };
+
+        video.onerror = () => {
+            alert('خطأ في تحميل الفيديو');
+            setIsLoading(false);
+        };
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -141,9 +176,19 @@ export default function NewProductPage() {
                             });
                             const data = await res.json();
                             if (data.success) {
-                                setFormData(prev => ({ ...prev, description: data.description, price: data.price || prev.price, image: data.image || prev.image, instagramUrl: url }));
+                                setFormData(prev => ({ 
+                                    ...prev, 
+                                    name: data.name || prev.name,
+                                    description: data.description || prev.description, 
+                                    price: data.price || prev.price, 
+                                    image: data.image || prev.image, 
+                                    instagramUrl: url,
+                                    videoUrl: data.videoUrl || prev.videoUrl,
+                                    sizes: data.sizes || prev.sizes,
+                                    colors: data.colors || prev.colors
+                                }));
                                 if (data.image) setImagePreview(data.image);
-                                alert('تم الجلب بنجاح!');
+                                alert('تم جلب البيانات بنجاح!');
                             } else alert(data.error || 'فشل الجلب');
                         } catch (e) { alert('خطأ اتصال'); } finally { setIsLoading(false); }
                     }} style={{ padding: '0.8rem 1.5rem', background: 'var(--dark-charcoal)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>جلب التفاصيل</button>
@@ -228,7 +273,18 @@ export default function NewProductPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <label>رابط فيديو (اختياري):</label>
-                            <input type="url" name="videoUrl" value={formData.videoUrl} onChange={handleChange} placeholder="https://..." style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }} />
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <input type="url" name="videoUrl" value={formData.videoUrl} onChange={handleChange} placeholder="https://..." style={{ flex: 1, padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }} />
+                                {formData.videoUrl && (
+                                    <button 
+                                        type="button" 
+                                        onClick={captureThumbnail} 
+                                        style={{ padding: '0 1rem', background: 'var(--accent-rose)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem' }}
+                                    >
+                                        📷 التقاط صورة
+                                    </button>
+                                )}
+                            </div>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <label>صورة المنتج:</label>
