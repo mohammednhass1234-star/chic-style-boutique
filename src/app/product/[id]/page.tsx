@@ -130,6 +130,16 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
             </div>
 
             {/* Split Screen Layout */}
+            <style jsx>{`
+                @media (max-width: 768px) {
+                    .product-media-preview {
+                        width: 80px !important;
+                        height: 110px !important;
+                        bottom: 1rem !important;
+                        right: 1rem !important;
+                    }
+                }
+            `}</style>
             <div className="container" style={{ display: 'flex', flexWrap: 'wrap', gap: '6rem', alignItems: 'flex-start' }}>
 
                 {/* Left Side: Immersive Imagery or Video */}
@@ -162,21 +172,23 @@ export default function ProductDetail({ params }: { params: Promise<{ id: string
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
                                 {product.image && (
-                                    <div style={{
-                                        position: 'absolute',
-                                        bottom: '1.5rem',
-                                        right: '1.5rem',
-                                        width: '120px',
-                                        height: '160px',
-                                        backgroundImage: `url("${product.image}")`,
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: 'center',
-                                        borderRadius: '8px',
-                                        border: '2px solid white',
-                                        boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
-                                        zIndex: 10,
-                                        cursor: 'pointer'
-                                    }} title="صورة المنتج (Montage)">
+                                    <div 
+                                        className="product-media-preview"
+                                        style={{
+                                            position: 'absolute',
+                                            bottom: '1.5rem',
+                                            right: '1.5rem',
+                                            width: '120px',
+                                            height: '160px',
+                                            backgroundImage: `url("${product.image}")`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                            borderRadius: '8px',
+                                            border: '2px solid white',
+                                            boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+                                            zIndex: 10,
+                                            cursor: 'pointer'
+                                        }} title="صورة المنتج (Montage)">
                                         <div style={{ 
                                             position: 'absolute', 
                                             top: '-10px', 

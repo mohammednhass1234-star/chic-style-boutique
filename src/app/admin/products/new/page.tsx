@@ -157,6 +157,31 @@ export default function NewProductPage() {
 
     return (
         <div className="container" dir="rtl">
+            <style jsx>{`
+                .form-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 1rem;
+                }
+                .price-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr 1fr;
+                    gap: 1rem;
+                }
+                .media-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 1rem;
+                }
+                @media (max-width: 768px) {
+                    .form-grid, .price-grid, .media-grid {
+                        grid-template-columns: 1fr !important;
+                    }
+                    .ig-import-box {
+                        flex-direction: column;
+                    }
+                }
+            `}</style>
             <header style={{ marginBottom: '2rem' }}>
                 <Link href="/admin/products" style={{ color: 'var(--accent-rose)', textDecoration: 'none', fontSize: '1rem' }}>
                     &rarr; العودة لإدارة المنتجات
@@ -168,7 +193,7 @@ export default function NewProductPage() {
                 <h3 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <span>📸</span> استيراد من Instagram
                 </h3>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem' }} className="ig-import-box">
                     <input type="url" placeholder="رابط المنشور..." id="ig-url" style={{ flex: 1, padding: '0.8rem', border: '1px solid #cbd5e1', borderRadius: '8px' }} />
                     <button onClick={async () => {
                         const url = (document.getElementById('ig-url') as HTMLInputElement).value;
@@ -203,7 +228,7 @@ export default function NewProductPage() {
 
             <form onSubmit={handleSubmit} style={{ background: 'white', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 25px rgba(0,0,0,0.1)', maxWidth: '800px' }}>
                 <div style={{ display: 'grid', gap: '1.5rem' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className="form-grid">
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <label style={{ fontWeight: 'bold' }}>القسم الرئيسي:</label>
                             <select name="section" value={formData.section} onChange={handleChange} required style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', background: '#fff9fa', color: 'var(--accent-rose)', fontWeight: 'bold' }}>
@@ -252,7 +277,7 @@ export default function NewProductPage() {
                     </div>
 
                     {isKidsCategory && (
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                        <div className="form-grid" style={{ padding: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                                 <label style={{ fontWeight: 'bold' }}>الجنس:</label>
                                 <select name="gender" value={formData.gender} onChange={handleChange} style={{ padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px' }}>
